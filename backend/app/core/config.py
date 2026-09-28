@@ -42,10 +42,11 @@ class Settings(BaseSettings):
     MAIL_USERNAME: str = "reuse.marketplace.help@gmail.com"
     MAIL_PASSWORD: str = ""
 
-    # Twilio & SendGrid Official Communications Engine
+    # Twilio & SendGrid & Brevo Official Communications Engine
     TWILIO_ACCOUNT_SID: str = ""
     TWILIO_AUTH_TOKEN: str = ""
     SENDGRID_API_KEY: str = ""
+    BREVO_API_KEY: str = ""
     TWILIO_PHONE_NUMBER: str = ""
 
     # Groq AI Cloud API Settings (Llama 3.3 Ultra-Fast LPU Engine)

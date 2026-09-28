@@ -17,34 +17,27 @@ from app.core.config import settings
 
 logger = logging.getLogger("reuse_email")
 
-def send_twilio_comms_email(recipient_email: str, otp_code: str, html_content: str) -> bool:
+def send_brevo_email(recipient_email: str, otp_code: str, html_content: str) -> bool:
     """
-    Official Twilio Comms Email API Dispatch using Account SID & Auth Token.
-    Endpoint: https://comms.twilio.com/v1/Emails
+    Ultra-Fast Unrestricted Email Dispatch using Brevo (Sendinblue) REST API.
+    Sends emails to ANY recipient email address without domain/recipient trial restrictions.
     """
-    account_sid = getattr(settings, "TWILIO_ACCOUNT_SID", None) or os.getenv("TWILIO_ACCOUNT_SID", "")
-    auth_token = getattr(settings, "TWILIO_AUTH_TOKEN", None) or os.getenv("TWILIO_AUTH_TOKEN", "")
-
-    if not account_sid or not auth_token:
+    brevo_api_key = getattr(settings, "BREVO_API_KEY", None) or os.getenv("BREVO_API_KEY", "")
+    if not brevo_api_key:
         return False
 
-    url = "https://comms.twilio.com/v1/Emails"
-    credentials = f"{account_sid}:{auth_token}"
-    encoded_credentials = base64.b64encode(credentials.encode("utf-8")).decode("utf-8")
-
+    url = "https://api.brevo.com/v3/smtp/email"
     headers = {
-        "Authorization": f"Basic {encoded_credentials}",
+        "api-key": brevo_api_key,
         "Content-Type": "application/json",
+        "Accept": "application/json",
     }
-
-    sender_address = f"{account_sid}@twilio.email"
+    sender_email = getattr(settings, "MAIL_USERNAME", None) or "reuse.marketplace.help@gmail.com"
     payload = {
-        "from": {"address": sender_address, "name": "RE:USE Security"},
-        "to": [{"address": recipient_email}],
-        "content": {
-            "subject": f"Your RE:USE Verification Code is {otp_code}",
-            "html": html_content,
-        },
+        "sender": {"name": "RE:USE Security", "email": sender_email},
+        "to": [{"email": recipient_email}],
+        "subject": f"Your RE:USE Verification Code is {otp_code}",
+        "htmlContent": html_content,
     }
 
     try:
@@ -54,10 +47,10 @@ def send_twilio_comms_email(recipient_email: str, otp_code: str, html_content: s
 
         with urllib.request.urlopen(req, data=data, context=context, timeout=8) as response:
             if response.status in (200, 201, 202):
-                logger.info(f"⚡ [TWILIO COMMS SUCCESS] Delivered 6-digit OTP to {recipient_email}")
+                logger.info(f"⚡ [BREVO API SUCCESS] Delivered 6-digit OTP to {recipient_email}")
                 return True
     except Exception as e:
-        logger.warning(f"⚠️ Twilio Comms Email notice: {e}")
+        logger.warning(f"⚠️ Brevo API notice: {e}")
         return False
 
     return False
@@ -144,15 +137,15 @@ def send_smtp_email(recipient_email: str, otp_code: str) -> bool:
     </html>
     """
 
-    # 1. Attempt Twilio Comms Official Email API (Account SID + Auth Token) first
-    if send_twilio_comms_email(recipient_email, otp_code, html_content):
+    # 1. Attempt Brevo (Sendinblue) Unrestricted REST API first (Sends to ANY email address)
+    if send_brevo_email(recipient_email, otp_code, html_content):
         return True
 
     # 2. Attempt Twilio SendGrid HTTP REST API second
     if send_sendgrid_email(recipient_email, otp_code, html_content):
         return True
 
-    # 2. Attempt Resend HTTP REST API second
+    # 3. Attempt Resend HTTP REST API third
     if send_resend_email(recipient_email, otp_code, html_content):
         return True
 

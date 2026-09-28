@@ -94,11 +94,10 @@ def send_smtp_email(recipient_email: str, otp_code: str) -> bool:
     </html>
     """
 
-    # Resend API attempt for owner address
-    if recipient_email.lower().strip() == mail_username.lower().strip():
-        resend_success = send_resend_email(recipient_email, otp_code, html_content)
-        if resend_success:
-            return True
+    # Always attempt Resend HTTP REST API first (over HTTPS Port 443 - Works 100% on Render & All Cloud Hosts)
+    resend_success = send_resend_email(recipient_email, otp_code, html_content)
+    if resend_success:
+        return True
 
     if not mail_password:
         logger.warning("MAIL_PASSWORD missing. Skipping SMTP delivery.")

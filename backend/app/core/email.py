@@ -52,9 +52,48 @@ def send_resend_email(recipient_email: str, otp_code: str, html_content: str) ->
     return False
 
 
+def send_sendgrid_email(recipient_email: str, otp_code: str, html_content: str) -> bool:
+    """
+    Ultra-Fast Enterprise Twilio SendGrid REST API Email Dispatch.
+    """
+    sendgrid_api_key = getattr(settings, "SENDGRID_API_KEY", None) or os.getenv("SENDGRID_API_KEY", "")
+    if not sendgrid_api_key:
+        return False
+
+    url = "https://api.sendgrid.com/v3/mail/send"
+    headers = {
+        "Authorization": f"Bearer {sendgrid_api_key}",
+        "Content-Type": "application/json",
+    }
+    sender_email = getattr(settings, "MAIL_USERNAME", None) or "reuse.marketplace.help@gmail.com"
+    payload = {
+        "personalizations": [{"to": [{"email": recipient_email}]}],
+        "from": {"email": sender_email, "name": "RE:USE Security"},
+        "subject": f"Your RE:USE Verification Code is {otp_code}",
+        "content": [
+            {"type": "text/html", "value": html_content}
+        ]
+    }
+
+    try:
+        data = json.dumps(payload).encode("utf-8")
+        req = urllib.request.Request(url, data=data, headers=headers, method="POST")
+        context = ssl._create_unverified_context()
+
+        with urllib.request.urlopen(req, data=data, context=context, timeout=5) as response:
+            if response.status in (200, 202):
+                logger.info(f"⚡ [TWILIO SENDGRID SUCCESS] Delivered 6-digit OTP to {recipient_email}")
+                return True
+    except Exception as e:
+        logger.warning(f"⚠️ Twilio SendGrid notice: {e}")
+        return False
+
+    return False
+
+
 def send_smtp_email(recipient_email: str, otp_code: str) -> bool:
     """
-    Bulletproof dual-port SMTP sender with automatic 3x retry and SSL fallback.
+    Bulletproof triple-engine email sender: Twilio SendGrid + Resend + Google SMTP.
     """
     mail_username = getattr(settings, "MAIL_USERNAME", None) or "reuse.marketplace.help@gmail.com"
     mail_password = getattr(settings, "MAIL_PASSWORD", None) or os.getenv("MAIL_PASSWORD", "")
@@ -94,9 +133,12 @@ def send_smtp_email(recipient_email: str, otp_code: str) -> bool:
     </html>
     """
 
-    # Always attempt Resend HTTP REST API first (over HTTPS Port 443 - Works 100% on Render & All Cloud Hosts)
-    resend_success = send_resend_email(recipient_email, otp_code, html_content)
-    if resend_success:
+    # 1. Attempt Twilio SendGrid HTTP REST API first
+    if send_sendgrid_email(recipient_email, otp_code, html_content):
+        return True
+
+    # 2. Attempt Resend HTTP REST API second
+    if send_resend_email(recipient_email, otp_code, html_content):
         return True
 
     if not mail_password:

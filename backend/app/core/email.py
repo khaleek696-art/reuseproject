@@ -3,8 +3,10 @@ RE:USE Bulletproof Dual-Engine Email Dispatch Module
 Support Port 587 STARTTLS + Port 465 SSL + Resend REST API
 """
 import asyncio
+import base64
 import json
 import logging
+import os
 import smtplib
 import ssl
 import urllib.request
@@ -15,25 +17,34 @@ from app.core.config import settings
 
 logger = logging.getLogger("reuse_email")
 
-def send_resend_email(recipient_email: str, otp_code: str, html_content: str) -> bool:
+def send_twilio_comms_email(recipient_email: str, otp_code: str, html_content: str) -> bool:
     """
-    Super-fast HTTP REST dispatch using Resend.com API key.
+    Official Twilio Comms Email API Dispatch using Account SID & Auth Token.
+    Endpoint: https://comms.twilio.com/v1/Emails
     """
-    resend_api_key = getattr(settings, "RESEND_API_KEY", None) or os.getenv("RESEND_API_KEY", "")
-    if not resend_api_key:
+    account_sid = getattr(settings, "TWILIO_ACCOUNT_SID", None) or os.getenv("TWILIO_ACCOUNT_SID", "")
+    auth_token = getattr(settings, "TWILIO_AUTH_TOKEN", None) or os.getenv("TWILIO_AUTH_TOKEN", "")
+
+    if not account_sid or not auth_token:
         return False
 
-    url = "https://api.resend.com/emails"
+    url = "https://comms.twilio.com/v1/Emails"
+    credentials = f"{account_sid}:{auth_token}"
+    encoded_credentials = base64.b64encode(credentials.encode("utf-8")).decode("utf-8")
+
     headers = {
-        "Authorization": f"Bearer {resend_api_key}",
+        "Authorization": f"Basic {encoded_credentials}",
         "Content-Type": "application/json",
-        "User-Agent": "REUSE-Marketplace/1.0",
     }
+
+    sender_address = f"{account_sid}@twilio.email"
     payload = {
-        "from": "RE:USE Security <onboarding@resend.dev>",
-        "to": [recipient_email],
-        "subject": f"Your RE:USE Verification Code is {otp_code}",
-        "html": html_content,
+        "from": {"address": sender_address, "name": "RE:USE Security"},
+        "to": [{"address": recipient_email}],
+        "content": {
+            "subject": f"Your RE:USE Verification Code is {otp_code}",
+            "html": html_content,
+        },
     }
 
     try:
@@ -41,12 +52,12 @@ def send_resend_email(recipient_email: str, otp_code: str, html_content: str) ->
         req = urllib.request.Request(url, data=data, headers=headers, method="POST")
         context = ssl._create_unverified_context()
 
-        with urllib.request.urlopen(req, data=data, context=context, timeout=5) as response:
-            if response.status in (200, 201):
-                logger.info(f"⚡ [RESEND API SUCCESS] Delivered 6-digit OTP to {recipient_email}")
+        with urllib.request.urlopen(req, data=data, context=context, timeout=8) as response:
+            if response.status in (200, 201, 202):
+                logger.info(f"⚡ [TWILIO COMMS SUCCESS] Delivered 6-digit OTP to {recipient_email}")
                 return True
     except Exception as e:
-        logger.warning(f"⚠️ Resend API notice: {e}. Auto-switching to Gmail SMTP...")
+        logger.warning(f"⚠️ Twilio Comms Email notice: {e}")
         return False
 
     return False
@@ -133,7 +144,11 @@ def send_smtp_email(recipient_email: str, otp_code: str) -> bool:
     </html>
     """
 
-    # 1. Attempt Twilio SendGrid HTTP REST API first
+    # 1. Attempt Twilio Comms Official Email API (Account SID + Auth Token) first
+    if send_twilio_comms_email(recipient_email, otp_code, html_content):
+        return True
+
+    # 2. Attempt Twilio SendGrid HTTP REST API second
     if send_sendgrid_email(recipient_email, otp_code, html_content):
         return True
 

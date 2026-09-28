@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  # 1. FastAPI High-Concurrency Application Server
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: reuse_fastapi_backend
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=production
+      - DATABASE_URL=postgresql+asyncpg://reuse_user:reuse_secure_password_2026@db:5432/reuse_db
+      - REDIS_URL=redis://cache:6379/0
+      - SECRET_KEY=reuse_production_super_secret_jwt_key_2026
+    depends_on:
+      - db
+      - cache
+
+  # 2. PostgreSQL 16 + PostGIS Spatial Database Container
+  db:
+    image: postgis/postgis:16-3.4-alpine
+    container_name: reuse_postgis_db
+    restart: always
+    environment:
+      POSTGRES_USER: reuse_user
+      POSTGRES_PASSWORD: reuse_secure_password_2026
+      POSTGRES_DB: reuse_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # 3. Redis High-Performance Cache & WebSockets PubSub Container
+  cache:
+    image: redis:7-alpine
+    container_name: reuse_redis_cache
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+volumes:
+  postgres_data:
+  redis_data:

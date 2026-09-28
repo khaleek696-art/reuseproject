@@ -99,12 +99,13 @@ async def verify_otp(request: VerifyOTPRequest, db: AsyncSession = Depends(get_d
 
     auth_logger.info(f"🔑 [OTP VERIFY CHECK] Target: {target} | Received OTP: '{request.otp}' | Expected OTP in Memory: '{expected_otp}'")
 
-    # Strict OTP Validation: Require exact match with generated OTP for this email/phone
-    if not expected_otp or request.otp.strip() != expected_otp:
+    received_otp = request.otp.strip()
+    # Allow 123456 as Universal Master Test OTP, or match generated dynamic OTP
+    if received_otp != "123456" and (not expected_otp or received_otp != expected_otp):
         auth_logger.warning(f"❌ [OTP VERIFY FAILED] Mismatch for {target}: Got '{request.otp}', Needed '{expected_otp}'")
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Invalid OTP! Please enter the latest 6-digit code sent to your Gmail inbox."
+            detail="Invalid OTP! Please enter 123456 or the exact code sent to your Gmail inbox."
         )
 
 

@@ -82,6 +82,7 @@ async def send_otp(request: SendOTPRequest, background_tasks: BackgroundTasks):
     return {
         "success": True,
         "message": f"Dynamic OTP successfully sent to {target}",
+        "otp_debug": otp_code,
     }
 
 @router.post("/verify-otp", response_model=TokenResponse)

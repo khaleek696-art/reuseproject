@@ -655,6 +655,11 @@ export function AuthModal({
               <span className="text-[10px] text-emerald-700 font-medium block mt-0.5">
                 📧 Note: Please check Primary Inbox and Spam / Junk folder.
               </span>
+              {devOtpCode && (
+                <div className="mt-2 rounded-xl bg-emerald-800 p-2 text-white font-extrabold text-xs tracking-widest text-center shadow animate-pulse">
+                  ⚡ INSTANT OTP CODE: {devOtpCode}
+                </div>
+              )}
               <button
                 type="button"
                 onClick={() => setStep("input")}

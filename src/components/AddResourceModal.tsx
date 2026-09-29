@@ -62,7 +62,7 @@ export function AddResourceModal({
   const [allowDelivery, setAllowDelivery] = useState(true);
 
   const [isSuccess, setIsSuccess] = useState(false);
-  const { addResource } = useRole();
+  const { addResource, role, setRole, isLoggedIn, openAuthModal } = useRole();
 
   // Reset form when modal opens
   useEffect(() => {
@@ -169,6 +169,10 @@ export function AddResourceModal({
       createdAt: new Date().toISOString().split("T")[0],
       features: ["4K Video Support", "Dual Storage Slots", "Encrypted Custody Handoff", "AWS S3 Verified"],
     };
+
+    if (role !== "owner") {
+      setRole("owner");
+    }
 
     addResource(newRes);
 

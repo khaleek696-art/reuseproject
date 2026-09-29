@@ -62,7 +62,7 @@ function ResourcesContent() {
     title: "Sony FX3 4K Cinema Camera Kit",
   });
 
-  const { resources, addResource } = useRole();
+  const { resources, addResource, role, setRole, isLoggedIn, openAuthModal } = useRole();
 
   // Sync URL search parameters whenever they change
   React.useEffect(() => {
@@ -185,13 +185,30 @@ function ResourcesContent() {
             </button>
           </div>
 
-          <button
-            onClick={() => setIsShareModalOpen(true)}
-            className="flex items-center gap-2 rounded-xl bg-emerald-800 hover:bg-emerald-900 px-4 py-2 text-xs sm:text-sm font-bold text-white shadow-xs active:scale-95 transition-all"
-          >
-            <PlusCircle className="h-4 w-4 text-emerald-300" />
-            <span>+ List Gear</span>
-          </button>
+          {role === "owner" ? (
+            <button
+              onClick={() => setIsShareModalOpen(true)}
+              className="flex items-center gap-2 rounded-xl bg-emerald-800 hover:bg-emerald-900 px-4 py-2 text-xs sm:text-sm font-bold text-white shadow-xs active:scale-95 transition-all"
+            >
+              <PlusCircle className="h-4 w-4 text-emerald-300" />
+              <span>+ List Gear</span>
+            </button>
+          ) : (
+            <button
+              onClick={() => {
+                if (!isLoggedIn) {
+                  openAuthModal("login");
+                  return;
+                }
+                setRole("owner");
+                setIsShareModalOpen(true);
+              }}
+              className="flex items-center gap-2 rounded-xl border border-emerald-300 bg-emerald-50 hover:bg-emerald-100 px-3.5 py-2 text-xs font-bold text-emerald-900 shadow-2xs active:scale-95 transition-all"
+            >
+              <PlusCircle className="h-4 w-4 text-emerald-700" />
+              <span>Become an Owner &amp; List Gear</span>
+            </button>
+          )}
         </div>
       </div>
 

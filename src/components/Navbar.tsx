@@ -211,24 +211,39 @@ export function Navbar({ onOpenShareModal }: NavbarProps) {
               )}
             </div>
 
-            {/* List Resource CTA */}
-            <button
-              onClick={() => {
-                if (!isLoggedIn) {
-                  openAuthModal("login");
-                  return;
-                }
-                if (role !== "owner") {
+            {/* List Resource CTA - Dynamic Role Check */}
+            {role === "owner" ? (
+              <button
+                onClick={() => {
+                  if (!isLoggedIn) {
+                    openAuthModal("login");
+                    return;
+                  }
+                  if (onOpenShareModal) onOpenShareModal();
+                  else router.push("/dashboard?action=list");
+                }}
+                className="hidden sm:flex items-center gap-1.5 rounded-xl bg-emerald-800 hover:bg-emerald-900 px-3.5 py-2 text-xs font-bold text-white shadow-xs active:scale-95 transition-all"
+              >
+                <PlusCircle className="h-3.5 w-3.5 text-emerald-300" />
+                <span>List Gear</span>
+              </button>
+            ) : (
+              <button
+                onClick={() => {
+                  if (!isLoggedIn) {
+                    openAuthModal("login");
+                    return;
+                  }
                   setRole("owner");
-                }
-                if (onOpenShareModal) onOpenShareModal();
-                else router.push("/resources?action=list");
-              }}
-              className="hidden sm:flex items-center gap-1.5 rounded-xl bg-emerald-800 hover:bg-emerald-900 px-3.5 py-2 text-xs font-bold text-white shadow-xs active:scale-95 transition-all"
-            >
-              <PlusCircle className="h-3.5 w-3.5 text-emerald-300" />
-              <span>List Gear</span>
-            </button>
+                  if (onOpenShareModal) onOpenShareModal();
+                  else router.push("/dashboard?action=list");
+                }}
+                className="hidden sm:flex items-center gap-1.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 px-3 py-1.5 text-xs font-bold text-slate-700 shadow-2xs transition-all"
+              >
+                <PlusCircle className="h-3.5 w-3.5 text-emerald-700" />
+                <span>Switch to Owner to List</span>
+              </button>
+            )}
 
             {/* USER PROFILE OR LOGIN BUTTON */}
             {isLoggedIn ? (

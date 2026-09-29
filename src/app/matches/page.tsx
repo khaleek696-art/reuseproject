@@ -39,7 +39,16 @@ function MatchesContent() {
     promptParam || "I need a professional DSLR camera near campus this Saturday under ₹600."
   );
   const [isExtracting, setIsExtracting] = useState(false);
-  const { algorithmWeights } = useRole();
+  const { algorithmWeights, isLoggedIn, openAuthModal } = useRole();
+
+  const handleStartBooking = (res: Resource) => {
+    if (!isLoggedIn) {
+      openAuthModal("login");
+      return;
+    }
+    setSelectedResourceForBooking(res);
+    setIsBookingOpen(true);
+  };
 
   const [selectedResourceForBooking, setSelectedResourceForBooking] =
     useState<Resource | null>(null);
@@ -364,10 +373,7 @@ function MatchesContent() {
                 </div>
 
                 <button
-                  onClick={() => {
-                    setSelectedResourceForBooking(item.resource);
-                    setIsBookingOpen(true);
-                  }}
+                  onClick={() => handleStartBooking(item.resource)}
                   className="w-full rounded-xl bg-emerald-800 text-white py-2 text-xs font-bold hover:bg-emerald-900"
                 >
                   Select This Gear
@@ -429,10 +435,7 @@ function MatchesContent() {
               {/* Actions */}
               <div className="flex flex-wrap items-center gap-3 pt-2">
                 <button
-                  onClick={() => {
-                    setSelectedResourceForBooking(topMatch.resource);
-                    setIsBookingOpen(true);
-                  }}
+                  onClick={() => handleStartBooking(topMatch.resource)}
                   className="rounded-xl bg-emerald-800 hover:bg-emerald-900 px-6 py-3 text-xs font-bold text-white shadow-md active:scale-95 transition-all"
                 >
                   Book Equipment Now (₹{topMatch.resource.pricePerDay}/day)

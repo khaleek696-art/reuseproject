@@ -90,7 +90,7 @@ export function BookingModal({
   // Verification & Receipt details
   const [handoverOtp, setHandoverOtp] = useState("");
   const [txnId, setTxnId] = useState("");
-  const { createBooking } = useRole();
+  const { createBooking, isLoggedIn, openAuthModal } = useRole();
 
   // RESET ALL STATE WHEN MODAL OPENS OR RESOURCE CHANGES
   useEffect(() => {
@@ -114,6 +114,53 @@ export function BookingModal({
   }, [isOpen, resource]);
 
   if (!isOpen || !resource) return null;
+
+  if (!isLoggedIn) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/75 backdrop-blur-md animate-in fade-in duration-200">
+        <div className="relative w-full max-w-md rounded-3xl bg-white p-6 sm:p-8 shadow-2xl border border-slate-200 text-center space-y-5">
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 rounded-full p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"
+          >
+            <X className="h-5 w-5" />
+          </button>
+
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-50 text-amber-700 border border-amber-200">
+            <Lock className="h-8 w-8 text-amber-600" />
+          </div>
+
+          <div>
+            <h3 className="text-xl font-black text-slate-900">Authentication Required</h3>
+            <p className="text-xs text-slate-500 mt-1.5 leading-relaxed font-medium">
+              To borrow equipment and protect peer owners via Escrow Vault, please Log In or Sign Up first.
+            </p>
+          </div>
+
+          <div className="space-y-2 pt-2">
+            <button
+              onClick={() => {
+                onClose();
+                openAuthModal("login");
+              }}
+              className="w-full rounded-2xl bg-emerald-800 hover:bg-emerald-900 py-3 text-xs font-bold text-white shadow-md active:scale-95 transition-all"
+            >
+              Log In to Borrow Equipment
+            </button>
+            <button
+              onClick={() => {
+                onClose();
+                openAuthModal("signup");
+              }}
+              className="w-full rounded-2xl border border-slate-200 bg-white py-3 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-all"
+            >
+              Create New Account
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const rate = resource.pricePerDay;
   const subtotal = rate * days;

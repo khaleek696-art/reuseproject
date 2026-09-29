@@ -29,7 +29,7 @@ interface PageProps {
 
 export default function ResourceDetailPage({ params }: PageProps) {
   const { id } = use(params);
-  const { resources, currentUser } = useRole();
+  const { resources, currentUser, isLoggedIn, openAuthModal } = useRole();
 
   const resource = resources.find((r) => r.id === id) || MOCK_RESOURCES.find((r) => r.id === id) || resources[0] || MOCK_RESOURCES[0];
   const isMine =
@@ -347,7 +347,13 @@ export default function ResourceDetailPage({ params }: PageProps) {
               </Link>
             ) : (
               <button
-                onClick={() => setIsBookingOpen(true)}
+                onClick={() => {
+                  if (!isLoggedIn) {
+                    openAuthModal("login");
+                    return;
+                  }
+                  setIsBookingOpen(true);
+                }}
                 className="w-full rounded-2xl bg-emerald-800 hover:bg-emerald-900 py-3.5 text-sm font-bold text-white shadow-md active:scale-95 transition-all"
               >
                 Request Booking

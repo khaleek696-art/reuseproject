@@ -5,6 +5,18 @@
 
 ---
 
+## 🚀 Live Deployments & Quick Links
+
+| Service / Platform | Live URL | Description & Status |
+|-------------------|----------|----------------------|
+| 🌐 **Frontend Web App** | [https://reuseproject-eight.vercel.app](https://reuseproject-eight.vercel.app) | Production Next.js 16 App deployed on Vercel 🟢 |
+| ⚡ **FastAPI Backend Gateway** | [https://reuse-backend-cbc3.onrender.com](https://reuse-backend-cbc3.onrender.com) | Python Async FastAPI Backend deployed on Render 🟢 |
+| 📖 **Interactive API Docs** | [https://reuse-backend-cbc3.onrender.com/docs](https://reuse-backend-cbc3.onrender.com/docs) | Swagger / OpenAPI 3.0 Interactive Documentation 🟢 |
+| 🩺 **Backend Health Endpoint** | [https://reuse-backend-cbc3.onrender.com/health](https://reuse-backend-cbc3.onrender.com/health) | Live System & Service Health Endpoint 🟢 |
+| 💻 **GitHub Repository** | [https://github.com/khaleek696-art/reuseproject](https://github.com/khaleek696-art/reuseproject) | Official Source Code Repository 🟢 |
+
+---
+
 ## 📊 Workflow & Architecture Diagrams
 
 ### 1️⃣ End-to-End System Workflow Diagram
@@ -119,6 +131,7 @@ graph LR
 - **Styling**: Tailwind CSS, Lucide React Icons
 - **State Management**: React Context (`RoleContext`) with client-side `localStorage` persistence
 - **Geospatial Radar**: Leaflet / React-Leaflet Map Engine
+- **Live Deployment**: Vercel (`https://reuseproject-eight.vercel.app`)
 
 ### Backend Architecture
 - **API Framework**: FastAPI (Python 3.11+)
@@ -127,6 +140,7 @@ graph LR
 - **AI Brain**: Groq API (`groq/llama-3.3-70b-versatile`, fallback to `qwen/qwen3.8-27b`)
 - **Email Infrastructure**: Brevo (Sendinblue) REST API over Port 443 HTTPS with Twilio SendGrid & Google SMTP fallback
 - **Storage**: AWS S3 Bucket (`reuse-app-storage`) with Base64 Data URL fallback
+- **Live Deployment**: Render (`https://reuse-backend-cbc3.onrender.com`)
 
 ---
 

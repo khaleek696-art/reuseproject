@@ -7,7 +7,6 @@ import {
   checkBackendHealth,
   fetchResourcesApi,
   advanceStageApi,
-  API_BASE_URL,
 } from "@/lib/api";
 
 export type UserRole = "borrower" | "owner" | "delivery" | "admin";
@@ -269,20 +268,18 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
     // Async push to FastAPI backend
     if (isBackendConnected) {
       try {
-        await fetch(`${API_BASE_URL}/resources`, {
+        await fetch("http://localhost:8000/api/v1/resources", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             title: newRes.title,
             category: newRes.category,
             condition: newRes.condition,
-            description: newRes.description,
             dailyRate: newRes.pricePerDay,
             deposit: newRes.deposit,
             neighborhood: newRes.location.campus || newRes.location.address || "Campus",
             lat: newRes.location.lat,
             lng: newRes.location.lng,
-            photos: newRes.photos,
           }),
         });
       } catch (e) {
@@ -312,7 +309,7 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
 
     if (isBackendConnected) {
       try {
-        await fetch(`${API_BASE_URL}/bookings`, {
+        await fetch("http://localhost:8000/api/v1/bookings", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

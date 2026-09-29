@@ -1,7 +1,5 @@
 "use client";
 
-import { API_ROOT_URL } from "@/lib/api";
-
 import React, { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 import {
@@ -81,7 +79,7 @@ export function AIChatDrawer() {
 
       // 2. Secondary fallback: Python FastAPI backend endpoint
       if (!res.ok) {
-        res = await fetch(`${API_ROOT_URL}/api/ai/chat`, {
+        res = await fetch("http://localhost:8000/api/ai/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

@@ -127,6 +127,83 @@ export function AddResourceModal({
 
   if (!isOpen) return null;
 
+  if (!isLoggedIn) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-slate-950/75 backdrop-blur-md animate-in fade-in">
+        <div className="relative w-full max-w-md rounded-3xl bg-white p-6 sm:p-8 shadow-2xl border border-slate-200 text-center space-y-5">
+          <button
+            type="button"
+            onClick={onClose}
+            className="absolute top-4 right-4 rounded-full p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-colors"
+          >
+            <X className="h-5 w-5" />
+          </button>
+
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700 border border-emerald-200">
+            <Lock className="h-8 w-8 text-emerald-700" />
+          </div>
+
+          <div>
+            <h3 className="text-xl font-black text-slate-900">Authentication Required</h3>
+            <p className="text-xs text-slate-500 mt-1.5 leading-relaxed font-medium">
+              Only registered Resource Owners can publish gear. Please log in or sign up to continue.
+            </p>
+          </div>
+
+          <div className="space-y-2 pt-2">
+            <button
+              onClick={() => {
+                onClose();
+                openAuthModal("login");
+              }}
+              className="w-full rounded-2xl bg-emerald-800 hover:bg-emerald-900 py-3 text-xs font-bold text-white shadow-md active:scale-95 transition-all"
+            >
+              Log In as Resource Owner
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (role !== "owner") {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-slate-950/75 backdrop-blur-md animate-in fade-in">
+        <div className="relative w-full max-w-md rounded-3xl bg-white p-6 sm:p-8 shadow-2xl border border-slate-200 text-center space-y-5">
+          <button
+            type="button"
+            onClick={onClose}
+            className="absolute top-4 right-4 rounded-full p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-colors"
+          >
+            <X className="h-5 w-5" />
+          </button>
+
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-50 text-amber-700 border border-amber-200">
+            <ShieldCheck className="h-8 w-8 text-amber-600" />
+          </div>
+
+          <div>
+            <h3 className="text-xl font-black text-slate-900">Resource Owner Mode Required</h3>
+            <p className="text-xs text-slate-500 mt-1.5 leading-relaxed font-medium">
+              You are currently in <strong className="text-slate-900 font-bold uppercase">{role} Mode</strong>. Borrowers explore and rent gear. To list equipment and monetize what you own, please switch to Resource Owner Mode.
+            </p>
+          </div>
+
+          <div className="space-y-2 pt-2">
+            <button
+              onClick={() => {
+                setRole("owner");
+              }}
+              className="w-full rounded-2xl bg-emerald-800 hover:bg-emerald-900 py-3 text-xs font-bold text-white shadow-md active:scale-95 transition-all"
+            >
+              Switch to Resource Owner Mode &amp; Continue
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const handleNext = (e: React.FormEvent) => {
     e.preventDefault();
     if (step < 5) {
@@ -169,10 +246,6 @@ export function AddResourceModal({
       createdAt: new Date().toISOString().split("T")[0],
       features: ["4K Video Support", "Dual Storage Slots", "Encrypted Custody Handoff", "AWS S3 Verified"],
     };
-
-    if (role !== "owner") {
-      setRole("owner");
-    }
 
     addResource(newRes);
 

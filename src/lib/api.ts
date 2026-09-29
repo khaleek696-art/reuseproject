@@ -3,16 +3,11 @@
  * Seamlessly connects Next.js Frontend to Python FastAPI Backend (http://localhost:8000/api/v1)
  */
 
-export const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL ||
-  process.env.NEXT_PUBLIC_API_URL ||
-  "https://reuse-backend-cbc3.onrender.com/api/v1";
-
-export const API_ROOT_URL = API_BASE_URL.replace(/\/api\/v1\/?$/, "");
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
 
 export async function checkBackendHealth() {
   try {
-    const res = await fetch(`${API_ROOT_URL}/health`, { cache: "no-store" });
+    const res = await fetch("http://localhost:8000/health", { cache: "no-store" });
     if (!res.ok) return false;
     const data = await res.json();
     return data.status === "healthy";

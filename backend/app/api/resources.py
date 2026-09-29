@@ -105,7 +105,7 @@ async def create_resource(new_res: ResourceCreate):
         "neighborhood": new_res.neighborhood,
         "lat": new_res.lat,
         "lng": new_res.lng,
-        "photos": new_res.photos if new_res.photos else ["https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&auto=format&fit=crop&q=80"],
+        "photos": ["https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&auto=format&fit=crop&q=80"],
         "serialNumber": new_res.serialNumber or "SN-GENERIC-99",
         "borrowerPolicy": new_res.borrowerPolicy or "verified_id",
         "allowPickup": new_res.allowPickup,

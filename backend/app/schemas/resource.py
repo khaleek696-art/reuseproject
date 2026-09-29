@@ -14,7 +14,6 @@ class ResourceCreate(BaseModel):
     neighborhood: Optional[str] = "Campus District"
     lat: float = 18.5204
     lng: float = 73.8567
-    photos: Optional[List[str]] = None
     serialNumber: Optional[str] = None
     borrowerPolicy: Optional[str] = "verified_id"
     allowPickup: bool = True

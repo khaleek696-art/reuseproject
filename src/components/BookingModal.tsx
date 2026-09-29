@@ -24,7 +24,6 @@ import {
 import { Resource, User } from "@/lib/types";
 import { formatPrice } from "@/lib/utils";
 import { useRole } from "@/lib/roleContext";
-import { API_ROOT_URL } from "@/lib/api";
 
 interface BookingModalProps {
   resource: Resource | null;
@@ -208,7 +207,7 @@ export function BookingModal({
     let razorpayKey = customRazorpayKey.trim() || "rzp_test_1DP5mmOlF5G5ag";
 
     try {
-      const res = await fetch(`${API_ROOT_URL}/api/payments/create-order`, {
+      const res = await fetch("http://localhost:8000/api/payments/create-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

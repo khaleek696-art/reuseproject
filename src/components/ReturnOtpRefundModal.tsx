@@ -1,5 +1,7 @@
 "use client";
 
+import { API_ROOT_URL } from "@/lib/api";
+
 import React, { useState } from "react";
 import {
   X,
@@ -76,7 +78,7 @@ export function ReturnOtpRefundModal({
 
     try {
       // Async call to backend refund API
-      const res = await fetch("http://localhost:8000/api/payments/refund-deposit", {
+      const res = await fetch(`${API_ROOT_URL}/api/payments/refund-deposit`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

@@ -12,7 +12,7 @@ import {
   WifiOff,
 } from "lucide-react";
 import { useRole } from "@/lib/roleContext";
-import { fetchChatMessages, sendChatMessage } from "@/lib/api";
+import { fetchChatMessages, sendChatMessage, API_BASE_URL } from "@/lib/api";
 
 interface MessageItem {
   id: string;
@@ -107,7 +107,8 @@ export function ChatDrawer({
     loadHistory();
 
     // 2. Establish Real-time WebSockets Connection
-    const wsUrl = `ws://localhost:8000/api/v1/ws/chat/${bookingId}`;
+    const baseWs = API_BASE_URL.replace(/^http/, "ws");
+    const wsUrl = `${baseWs}/ws/chat/${bookingId}`;
     try {
       const ws = new WebSocket(wsUrl);
       wsRef.current = ws;

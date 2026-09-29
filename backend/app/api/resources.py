@@ -93,9 +93,11 @@ async def create_resource(new_res: ResourceCreate):
     """
     Create a new equipment listing.
     """
+    photos = new_res.photos if (new_res.photos and len(new_res.photos) > 0) else ["https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&auto=format&fit=crop&q=80"]
     res_dict = {
         "id": f"r_{int(time.time())}",
         "ownerId": "u_owner_rahul",
+        "ownerName": new_res.ownerName or "Verified Owner",
         "title": new_res.title,
         "category": new_res.category,
         "condition": new_res.condition,
@@ -105,7 +107,7 @@ async def create_resource(new_res: ResourceCreate):
         "neighborhood": new_res.neighborhood,
         "lat": new_res.lat,
         "lng": new_res.lng,
-        "photos": ["https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&auto=format&fit=crop&q=80"],
+        "photos": photos,
         "serialNumber": new_res.serialNumber or "SN-GENERIC-99",
         "borrowerPolicy": new_res.borrowerPolicy or "verified_id",
         "allowPickup": new_res.allowPickup,

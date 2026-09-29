@@ -205,44 +205,43 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  // Sync with FastAPI backend on mount
+  // Sync with FastAPI backend on mount (production cloud URL or local)
   useEffect(() => {
     async function syncWithBackend() {
       const isHealthy = await checkBackendHealth();
       setIsBackendConnected(isHealthy);
-      if (isHealthy) {
-        const apiRes = await fetchResourcesApi();
-        if (apiRes && Array.isArray(apiRes)) {
-          const formattedRes: Resource[] = apiRes.map((r: any) => ({
-            id: r.id,
-            ownerId: r.ownerId,
-            title: r.title,
-            category: (r.category || "tech") as CategoryId,
-            condition: (r.condition || "like_new") as Condition,
-            description: r.description || "Clean working condition.",
-            pricePerDay: r.dailyRate,
-            deposit: r.deposit,
-            availableFrom: "09:00 AM",
-            availableTo: "09:00 PM",
-            instructions: "Handle with care and return on time.",
-            location: {
-              lat: r.lat || 18.5204,
-              lng: r.lng || 73.8567,
-              campus: r.neighborhood || "Campus District",
-              address: r.neighborhood || "Campus District",
-            },
-            photos: r.photos || ["https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&auto=format&fit=crop&q=80"],
-            status: r.isAvailable ? "active" : "borrowed",
-            createdAt: "2026-09-25",
-          }));
-          
-          setResources((prev) => {
-            const customOnly = prev.filter((r) => r.id.startsWith("r_"));
-            const customIds = new Set(customOnly.map((r) => r.id));
-            const filteredApi = formattedRes.filter((r) => !customIds.has(r.id));
-            return [...customOnly, ...filteredApi];
-          });
-        }
+      
+      const apiRes = await fetchResourcesApi();
+      if (apiRes && Array.isArray(apiRes)) {
+        const formattedRes: Resource[] = apiRes.map((r: any) => ({
+          id: r.id,
+          ownerId: r.ownerId || "u_owner_global",
+          title: r.title,
+          category: (r.category || "tech") as CategoryId,
+          condition: (r.condition || "like_new") as Condition,
+          description: r.description || "Clean working condition.",
+          pricePerDay: r.dailyRate,
+          deposit: r.deposit,
+          availableFrom: "09:00 AM",
+          availableTo: "09:00 PM",
+          instructions: "Handle with care and return on time.",
+          location: {
+            lat: r.lat || 18.5204,
+            lng: r.lng || 73.8567,
+            campus: r.neighborhood || "Campus District",
+            address: r.neighborhood || "Campus District",
+          },
+          photos: r.photos || ["https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&auto=format&fit=crop&q=80"],
+          status: r.isAvailable ? "active" : "borrowed",
+          createdAt: "2026-09-25",
+        }));
+        
+        setResources((prev) => {
+          const customOnly = prev.filter((r) => r.id.startsWith("r_"));
+          const customIds = new Set(customOnly.map((r) => r.id));
+          const filteredApi = formattedRes.filter((r) => !customIds.has(r.id));
+          return [...filteredApi, ...customOnly];
+        });
       }
     }
     syncWithBackend();
@@ -265,26 +264,32 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
       return updated;
     });
 
-    // Async push to FastAPI backend
-    if (isBackendConnected) {
-      try {
-        await fetch("http://localhost:8000/api/v1/resources", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            title: newRes.title,
-            category: newRes.category,
-            condition: newRes.condition,
-            dailyRate: newRes.pricePerDay,
-            deposit: newRes.deposit,
-            neighborhood: newRes.location.campus || newRes.location.address || "Campus",
-            lat: newRes.location.lat,
-            lng: newRes.location.lng,
-          }),
-        });
-      } catch (e) {
-        console.error("Backend sync failed:", e);
-      }
+    // Sync to Production Cloud FastAPI backend
+    const API_URL =
+      process.env.NEXT_PUBLIC_API_BASE_URL ||
+      process.env.NEXT_PUBLIC_API_URL ||
+      "https://reuse-backend-cbc3.onrender.com/api/v1";
+
+    try {
+      await fetch(`${API_URL}/resources`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: newRes.title,
+          category: newRes.category,
+          condition: newRes.condition,
+          description: newRes.description,
+          dailyRate: newRes.pricePerDay,
+          deposit: newRes.deposit,
+          neighborhood: newRes.location.campus || newRes.location.address || "Campus",
+          lat: newRes.location.lat,
+          lng: newRes.location.lng,
+          photos: newRes.photos,
+          ownerName: user.name || "Verified Owner",
+        }),
+      });
+    } catch (e) {
+      console.error("Global Cloud Backend Sync failed:", e);
     }
   };
 

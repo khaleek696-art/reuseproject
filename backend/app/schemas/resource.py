@@ -14,6 +14,8 @@ class ResourceCreate(BaseModel):
     neighborhood: Optional[str] = "Campus District"
     lat: float = 18.5204
     lng: float = 73.8567
+    photos: Optional[List[str]] = None
+    ownerName: Optional[str] = "Verified Owner"
     serialNumber: Optional[str] = None
     borrowerPolicy: Optional[str] = "verified_id"
     allowPickup: bool = True
@@ -22,6 +24,7 @@ class ResourceCreate(BaseModel):
 class ResourceResponse(BaseModel):
     id: str
     ownerId: str
+    ownerName: Optional[str] = "Verified Owner"
     title: str
     category: str
     condition: str

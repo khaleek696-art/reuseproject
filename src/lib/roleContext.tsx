@@ -66,6 +66,7 @@ interface RoleContextType {
   bookings: LiveBooking[];
   createBooking: (res: Resource, days?: number) => void;
   advanceBookingStage: (bookingId: string) => void;
+  updateBookingStage: (bookingId: string, stageIndex: number) => void;
   disputes: LiveDispute[];
   resolveDispute: (disputeId: string) => void;
   activeDisputesCount: number;
@@ -137,7 +138,7 @@ const RoleContext = createContext<RoleContextType | undefined>(undefined);
 
 export function RoleProvider({ children }: { children: React.ReactNode }) {
   const [role, setRole] = useState<UserRole>("borrower");
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [user, setUser] = useState<UserProfile>(defaultUser);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
   const [authModalMode, setAuthModalMode] = useState<"login" | "signup">("login");
@@ -158,10 +159,22 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
     trust: 10,
   });
 
-  // Load custom resources from localStorage on client mount (with automatic deduplication)
+  // Load session & custom resources from localStorage on client mount
   useEffect(() => {
     if (typeof window !== "undefined") {
       try {
+        const savedAuth = localStorage.getItem("reuse_is_logged_in");
+        if (savedAuth === "true") {
+          setIsLoggedIn(true);
+          const savedUser = localStorage.getItem("reuse_user_data");
+          if (savedUser) {
+            const parsedUser = JSON.parse(savedUser);
+            setUser((prev) => ({ ...prev, ...parsedUser }));
+          }
+        } else {
+          setIsLoggedIn(false);
+        }
+
         const saved = localStorage.getItem("reuse_custom_resources");
         if (saved) {
           const parsed = JSON.parse(saved);
@@ -187,7 +200,7 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
           }
         }
       } catch (e) {
-        console.error("Failed to load saved custom resources:", e);
+        console.error("Failed to load saved state:", e);
       }
     }
   }, []);
@@ -339,6 +352,27 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const updateBookingStage = (bookingId: string, stageIndex: number) => {
+    const stageTexts = [
+      "Requested",
+      "Accepted & Locked",
+      "In Transit (Pickup Verified)",
+      "Returned (Verification Pending)",
+      "Completed & Deposit Released",
+    ];
+    setBookings((prev) =>
+      prev.map((b) =>
+        b.id === bookingId
+          ? {
+              ...b,
+              stageIndex: Math.max(0, Math.min(4, stageIndex)),
+              statusText: stageTexts[Math.max(0, Math.min(4, stageIndex))],
+            }
+          : b
+      )
+    );
+  };
+
   const resolveDispute = (disputeId: string) => {
     setDisputes((prev) =>
       prev.map((d) => (d.id === disputeId ? { ...d, status: "resolved" } : d))
@@ -348,16 +382,31 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
   const login = (userData?: Partial<UserProfile>, newRole?: UserRole) => {
     setIsLoggedIn(true);
     if (userData || newRole) {
-      setUser((prev) => ({
-        ...prev,
-        ...userData,
-        role: newRole || prev.role,
-      }));
+      setUser((prev) => {
+        const updated = {
+          ...prev,
+          ...userData,
+          role: newRole || prev.role,
+        };
+        if (typeof window !== "undefined") {
+          localStorage.setItem("reuse_is_logged_in", "true");
+          localStorage.setItem("reuse_user_data", JSON.stringify(updated));
+        }
+        return updated;
+      });
+    } else {
+      if (typeof window !== "undefined") {
+        localStorage.setItem("reuse_is_logged_in", "true");
+      }
     }
   };
 
   const logout = () => {
     setIsLoggedIn(false);
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("reuse_is_logged_in");
+      localStorage.removeItem("reuse_user_data");
+    }
   };
 
   const openAuthModal = (mode: "login" | "signup" = "login") => {
@@ -389,6 +438,7 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
         bookings,
         createBooking,
         advanceBookingStage,
+        updateBookingStage,
         disputes,
         resolveDispute,
         activeDisputesCount,

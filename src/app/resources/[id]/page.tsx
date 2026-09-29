@@ -203,9 +203,9 @@ export default function ResourceDetailPage({ params }: PageProps) {
           </div>
         </div>
 
-        {/* Right Column: Sticky Booking Widget (5 Cols) */}
+        {/* Right Column: Booking Widget (Responsive Sticky on Desktop) */}
         <div className="lg:col-span-5 space-y-6">
-          <div className="sticky top-20 rounded-3xl border-2 border-slate-900 bg-white p-6 shadow-xl space-y-5">
+          <div className="lg:sticky lg:top-20 relative top-0 rounded-3xl border-2 border-slate-900 bg-white p-4 sm:p-6 shadow-xl space-y-5">
             {/* Header: Price & Security Deposit */}
             <div className="flex items-center justify-between border-b border-slate-100 pb-4">
               <div>

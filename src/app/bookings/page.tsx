@@ -79,26 +79,26 @@ function BookingsContent() {
         </div>
 
         {/* Tab Switcher */}
-        <div className="flex bg-slate-100 p-1 rounded-2xl border border-slate-200 self-start md:self-auto">
+        <div className="flex bg-slate-100 p-1 rounded-2xl border border-slate-200 w-full sm:w-auto">
           <button
             onClick={() => setActiveTab("borrower")}
-            className={`rounded-xl px-4 py-2 text-xs font-bold transition-all ${
+            className={`flex-1 sm:flex-initial rounded-xl px-3 sm:px-4 py-2 text-xs font-bold transition-all ${
               activeTab === "borrower"
                 ? "bg-white text-slate-900 shadow-xs"
                 : "text-slate-600 hover:text-slate-900"
             }`}
           >
-            My Rentals (Borrower) ({bookings.length})
+            My Rentals ({bookings.length})
           </button>
           <button
             onClick={() => setActiveTab("owner")}
-            className={`rounded-xl px-4 py-2 text-xs font-bold transition-all ${
+            className={`flex-1 sm:flex-initial rounded-xl px-3 sm:px-4 py-2 text-xs font-bold transition-all ${
               activeTab === "owner"
                 ? "bg-white text-slate-900 shadow-xs"
                 : "text-slate-600 hover:text-slate-900"
             }`}
           >
-            Incoming Requests (Owner) ({bookings.length})
+            Incoming Requests ({bookings.length})
           </button>
         </div>
       </div>

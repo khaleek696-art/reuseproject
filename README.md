@@ -1,62 +1,132 @@
 # 🌐 RE:USE — Hyperlocal Peer-to-Peer Equipment Sharing Marketplace
 
-> **Don't buy more. Share what already exists.**  
-> RE:USE is a full-stack, hyper-local peer-to-peer equipment sharing ecosystem powered by AI intent matching, 5-factor spatial scoring, single-use Redis OTP custody handoffs, and smart escrow vault payments.
+> **"Don't buy more. Share what already exists."**  
+> RE:USE is a full-stack, hyperlocal peer-to-peer equipment sharing ecosystem powered by AI intent matching, 5-factor spatial scoring, real-time OTP authentication, single-use custody handoffs, and smart escrow vault payments.
 
 ---
 
-## 🌟 Key Highlights & Architectural Modules
+## 📊 Workflow & Architecture Diagrams
 
-- 🎯 **4 Isolated User Roles**: Role-based access control (RBAC) enforcing distinct interfaces for **Borrowers**, **Resource Owners**, **Delivery Partners**, and **Platform Administrators**.
-- 🤖 **AI Smart Intent Engine (Groq LLM Integration)**: Natural language equipment search with automated budget, specs, and date extraction.
-- 📐 **5-Factor Mathematical Match Engine**: Spatial PostGIS distance, time overlap percentage, budget fit, compatibility, and peer trust score.
-- 🔐 **Verified Escrow Vault**: Refundable security deposit holds and automated release upon verified return.
-- 🚲 **Hyperlocal Courier & Physical Custody**: 6-digit single-use OTP handoff verification for fraud-free physical exchanges.
-- 🛡️ **PeerTrust Credibility Scoring**: Weighted mathematical trust algorithm factoring volume, rater credibility, and zero-dispute records.
+### 1️⃣ End-to-End System Workflow Diagram
+
+```mermaid
+flowchart TD
+    subgraph User Onboarding
+        A["Visitor / Guest"] -->|Sign Up / Login| B["Email OTP Dispatch"]
+        B -->|Brevo REST API| C["Gmail Inbox Code"]
+        C -->|Enter OTP| D["Verified User Session"]
+    end
+
+    subgraph Discovery & AI Matching
+        D -->|Natural Language Need| E["Groq AI Intent Engine"]
+        E -->|Extract Budget & Specs| F["5-Factor Weighted Scorer"]
+        F -->|Haversine + Trust Score| G["Ranked Equipment Matches"]
+    end
+
+    subgraph Booking & Escrow Vault
+        G -->|Select Item & Days| H["Razorpay Escrow Vault"]
+        H -->|Payment + Deposit Lock| I["STAGE 01: Booking Requested"]
+        I -->|Owner Approves| J["STAGE 02: Accepted & Locked"]
+    end
+
+    subgraph Handoff & Settlement
+        J -->|Courier Pickup OTP| K["STAGE 03: Active In Transit"]
+        K -->|Return Item| L["STAGE 04: Returned"]
+        L -->|Verify Condition| M["STAGE 05: Completed"]
+        M -->|Release Deposit| N["Borrower Refunded"]
+        M -->|Release Rental Fee| O["Owner Paid"]
+    end
+```
+
+---
+
+### 2️⃣ 5-Stage Custody & Escrow Vault Lifecycle
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor B as Borrower
+    participant S as RE:USE Escrow Vault
+    actor O as Resource Owner
+    actor C as Cargo Bike Courier
+
+    B->>S: 1. Request Booking & Lock Payment (Rental Fee + Deposit)
+    S-->>O: 2. Notify Incoming Rental Request
+    O->>S: 3. Approve & Lock Dates (STAGE 02: Accepted)
+    C->>O: 4. Physical Pickup with 6-Digit Redis OTP Verification
+    S->>C: 5. Transition Status (STAGE 03: Active In Transit)
+    C->>B: 6. Handover Equipment to Borrower
+    B->>O: 7. Return Equipment upon Rental Expiry (STAGE 04: Returned)
+    O->>S: 8. Verify Item Condition & Authorize Refund
+    S->>B: 9. Instant Deposit Refund Released to Borrower UPI (STAGE 05: Completed)
+    S->>O: 10. Net Rental Earnings Disbursed to Owner
+```
+
+---
+
+### 3️⃣ Multi-Role Ecosystem Architecture
+
+```mermaid
+graph LR
+    subgraph Platform Core
+        REUSE["RE:USE Engine (Next.js 16 + FastAPI)"]
+    end
+
+    subgraph Personas
+        Borrower["Borrower Persona"]
+        Owner["Owner Persona"]
+        Courier["Delivery Courier"]
+        Admin["Platform Admin"]
+    end
+
+    Borrower -->|AI Search & Escrow Rent| REUSE
+    Owner -->|List Gear & Approve Requests| REUSE
+    Courier -->|4km Radar & OTP Handoff| REUSE
+    Admin -->|Arbitrate Disputes & Weight Tuning| REUSE
+```
+
+---
+
+## 🌟 Key Highlights & Modules
+
+- 🎯 **4 Isolated User Personas**: Role-based access control (RBAC) enforcing distinct interfaces for **Borrowers**, **Resource Owners**, **Delivery Partners**, and **Platform Administrators**.
+- 🤖 **AI Smart Intent Engine (Groq Llama-3.3 Integration)**: Natural language equipment search with automated budget, technical specs, and date extraction.
+- 📐 **5-Factor Mathematical Match Engine**: Spatial PostGIS/Haversine distance, time overlap percentage, budget fit, feature compatibility, and PeerTrust credibility score.
+- 🔐 **Verified Escrow Vault**: Refundable security deposit holds and automated release upon verified return via Razorpay integration.
+- 📧 **Production-Grade Email OTP System**: Multi-engine email dispatch (Brevo REST API + SendGrid + Google SMTP fallback) for real 6-digit email OTPs.
+- 🚲 **Hyperlocal Cargo Bike Courier Console**: 6-digit single-use OTP handoff verification for fraud-free physical exchanges within a 4 km radius.
+- 🛡️ **PeerTrust Credibility Scoring**: Weighted mathematical trust algorithm factoring volume, rater credibility, on-time returns, and zero-dispute records.
+- 📊 **Dynamic Live Bookings Synchronization**: Instant bidirectional sync between Borrower rentals and Owner incoming request consoles.
 
 ---
 
 ## 🏗️ Role-Based System Architecture
 
-| Role | Target User | Core Capabilities | Restricted Actions |
-|------|-------------|-------------------|-------------------|
-| **Borrower** | Campus Students / Seekers | Search catalog, AI intent matches, rent gear, Escrow payment, OTP receive, leave reviews | Cannot list items, cannot access admin console |
-| **Resource Owner** | Gear Owners / Lenders | 5-step item listing, set daily rates & deposit holds, approve/reject requests, verify returns | Cannot borrow own items, cannot access courier console |
+| Role | Target Persona | Core Capabilities | Access Boundaries |
+|------|----------------|-------------------|-------------------|
+| **Borrower** | Campus Students & Seekers | Catalog search, AI intent matches, rent gear, Escrow payment, OTP receive, contract inspection, leave reviews | Cannot list items, cannot access admin console |
+| **Resource Owner** | Equipment Owners & Lenders | Gear listing modal, daily rate & deposit holds, approve/reject requests, verify returns & release refunds | Cannot borrow own items, cannot access courier console |
 | **Delivery Partner** | Cargo Bike Couriers | Dispatch radar (within 4km), accept pickup jobs, 6-digit OTP custody verification, earn delivery fees | Cannot access admin console or edit listings |
 | **Platform Administrator** | Superusers / Admins | Platform KPIs, dispute arbitration, escrow hold overrides, 5-factor algorithm weight tuning | Cannot personally list or borrow gear |
 
 ---
 
-## 📊 Complete System Flow & Custody Lifecycle
+## 🛠️ Complete Tech Stack
 
-```
-[Borrower Requests Gear] ──► [Escrow Funds Locked] ──► [Owner Approves Request]
-                                                               │
-[Deposit Auto-Refunded] ◄── [Return OTP Verified] ◄── [Courier Handoff OTP]
-```
-
-1. **STAGE 01 — REQUESTED**: Borrower selects rental duration & pays Escrow vault (Daily Rate × Days + Refundable Deposit).
-2. **STAGE 02 — ACCEPTED**: Equipment owner approves request and locks availability dates.
-3. **STAGE 03 — ACTIVE IN TRANSIT**: Courier/Owner verifies physical pickup via 6-digit single-use Redis OTP code.
-4. **STAGE 04 — RETURNED**: Borrower hands back equipment; owner verifies condition.
-5. **STAGE 05 — COMPLETED**: Security deposit released back to Borrower; rental fee disbursed to Owner.
-
----
-
-## 🛠️ Tech Stack
-
-### Frontend
+### Frontend Architecture
 - **Framework**: Next.js 16 (App Router, Webpack)
-- **Language**: TypeScript (Strict Mode)
+- **Language**: TypeScript (Strict Type Checking)
 - **Styling**: Tailwind CSS, Lucide React Icons
-- **State Management**: React Context (`RoleContext`) with client-side persistence
+- **State Management**: React Context (`RoleContext`) with client-side `localStorage` persistence
+- **Geospatial Radar**: Leaflet / React-Leaflet Map Engine
 
-### Backend & Infrastructure
+### Backend Architecture
 - **API Framework**: FastAPI (Python 3.11+)
 - **Server**: Uvicorn ASGI Server (`http://localhost:8000`)
 - **Database**: SQLite / PostgreSQL with PostGIS Spatial Extensions
-- **AI Models**: Groq API (`openai/gpt-oss-120b`, fallback to `qwen/qwen3.8-27b`)
-- **Object Storage**: AWS S3 Bucket (`reuse-app-storage`) with Base64 Data URL fallback
+- **AI Brain**: Groq API (`groq/llama-3.3-70b-versatile`, fallback to `qwen/qwen3.8-27b`)
+- **Email Infrastructure**: Brevo (Sendinblue) REST API over Port 443 HTTPS with Twilio SendGrid & Google SMTP fallback
+- **Storage**: AWS S3 Bucket (`reuse-app-storage`) with Base64 Data URL fallback
 
 ---
 
@@ -88,7 +158,7 @@ cp .env.example .env
 uvicorn app.main:app --reload --port 8000
 ```
 
-> The backend will start at `http://localhost:8000` with interactive API docs at `http://localhost:8000/docs`.
+> 🌐 Backend API Gateway will launch at `http://localhost:8000` with interactive Swagger docs at `http://localhost:8000/docs`.
 
 ---
 
@@ -101,43 +171,39 @@ cd ..
 # Install dependencies
 npm install
 
-# Copy environment variable template
-cp .env.example .env.local
-
 # Run Next.js development server
 npm run dev
 ```
 
-> Open `http://localhost:3000` in your browser. Look for the **`🟢 FastAPI Live`** badge in the navigation bar to confirm backend integration!
+> 💻 Open `http://localhost:3000` in your browser. Look for the **`🟢 FastAPI Live`** badge in the navigation header to confirm backend integration!
 
 ---
 
 ## 🔐 Environment Variables Configuration
 
-Copy `.env.example` to `.env` (backend) or `.env.local` (frontend) and configure your credentials:
+Configure your `.env` (backend) credentials:
 
 ```ini
-# API & WebSockets
-NEXT_PUBLIC_API_URL=http://localhost:8000
-NEXT_PUBLIC_WS_URL=ws://localhost:8000
+# FastAPI Settings
+PROJECT_NAME="RE:USE Hyperlocal Circular Marketplace"
+ENVIRONMENT="development"
+
+# Brevo (Sendinblue) REST Email API Key
+BREVO_API_KEY=your_brevo_api_key_here
 
 # Groq AI Key
 GROQ_API_KEY=your_groq_api_key_here
 
-# AWS S3 Storage
-AWS_ACCESS_KEY_ID=your_aws_access_key_id_here
-AWS_SECRET_ACCESS_KEY=your_aws_secret_access_key_here
-AWS_REGION=ap-south-1
-S3_BUCKET_NAME=reuse-app-storage
+# Mail SMTP Credentials (Fallback)
+MAIL_USERNAME=reuse.marketplace.help@gmail.com
+MAIL_PASSWORD=your_app_password_here
 ```
-
-> ⚠️ **Security Notice**: Never commit real secret keys or `.env` files to git repository. All environment files are excluded via `.gitignore`.
 
 ---
 
-## 🧪 Production Build Verification
+## 🧪 Production Build & Verification
 
-To verify that all TypeScript types, routes, and components compile cleanly:
+To verify clean TypeScript compilation and build output across all 17 routes:
 
 ```bash
 npm run build

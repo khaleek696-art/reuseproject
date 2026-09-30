@@ -12,12 +12,14 @@ import {
   Compass,
 } from "lucide-react";
 import { MOCK_RESOURCES, MOCK_USERS, CATEGORIES } from "@/data/mockData";
-import { CategoryId } from "@/lib/types";
+import { CategoryId, Resource } from "@/lib/types";
 import { haversine } from "@/lib/utils";
 import dynamic from "next/dynamic";
 import { SearchBar } from "@/components/SearchBar";
 import { FilterSidebar, FilterState } from "@/components/FilterSidebar";
 import { ResourceCard } from "@/components/ResourceCard";
+
+import { useRole } from "@/lib/roleContext";
 
 const InteractiveMap = dynamic(
   () => import("@/components/InteractiveMap").then((mod) => mod.InteractiveMap),
@@ -33,9 +35,9 @@ const InteractiveMap = dynamic(
 );
 
 const defaultFilters: FilterState = {
-  maxDistance: 10,
+  maxDistance: 25,
   minPrice: 0,
-  maxPrice: 1000,
+  maxPrice: 5000,
   freeOnly: false,
   minTrust: 2.0,
   conditions: [],
@@ -49,6 +51,7 @@ function ExploreContent() {
   const categoryParam = (searchParams.get("category") as CategoryId) || "all";
   const queryParam = searchParams.get("q") || "";
 
+  const { resources } = useRole();
   const [searchQuery, setSearchQuery] = useState(queryParam);
   const [selectedCategory, setSelectedCategory] = useState<CategoryId | "all">(categoryParam);
   const [filters, setFilters] = useState<FilterState>(defaultFilters);
@@ -60,16 +63,28 @@ function ExploreContent() {
     []
   );
 
+  const uniqueResources = useMemo(() => {
+    const seen = new Set<string>();
+    const list: Resource[] = [];
+    for (const r of resources) {
+      if (r && r.id && !seen.has(r.id)) {
+        seen.add(r.id);
+        list.push(r);
+      }
+    }
+    return list;
+  }, [resources]);
+
   // SEARCH & FILTER PIPELINE
   const filteredResources = useMemo(() => {
-    return MOCK_RESOURCES.filter((res) => {
+    return uniqueResources.filter((res) => {
       // STEP 1: Text Search
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase().trim();
         const matchesTitle = res.title.toLowerCase().includes(q);
         const matchesDesc = res.description.toLowerCase().includes(q);
         const matchesCat = res.category.toLowerCase().includes(q);
-        const matchesFeatures = res.features?.some((f) => f.toLowerCase().includes(q));
+        const matchesFeatures = res.features?.some((f: string) => f.toLowerCase().includes(q));
         if (!matchesTitle && !matchesDesc && !matchesCat && !matchesFeatures) {
           return false;
         }
@@ -134,7 +149,7 @@ function ExploreContent() {
           return 0;
       }
     });
-  }, [searchQuery, selectedCategory, filters, usersMap]);
+  }, [uniqueResources, searchQuery, selectedCategory, filters, usersMap]);
 
   const handleResetFilters = () => {
     setFilters(defaultFilters);

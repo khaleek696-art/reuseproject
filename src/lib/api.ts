@@ -156,3 +156,63 @@ export async function sendChatMessage(bookingId: string, senderId: string, sende
   }
 }
 
+export interface StressTestResult {
+  baseline_rating: number | null;
+  tested_rating: number | null;
+  rating_sensitivity: number | null;
+  excluded_group_size: number;
+  excluded_counterparty_count: number;
+  status: string;
+  explanation: string;
+}
+
+export interface TrustLensProfile {
+  user_id: string;
+  eligible_review_count: number;
+  average_rating: number | null;
+  completed_rental_count: number;
+  distinct_counterparty_count: number;
+  reputation_confidence: "insufficient_evidence" | "limited_evidence" | "moderate_evidence" | "stronger_evidence";
+  confidence_headline: string;
+  stress_test: StressTestResult;
+  reason_codes: string[];
+  explanations: string[];
+  analyzed_at: string;
+}
+
+export async function fetchTrustLensProfile(userId: string): Promise<TrustLensProfile | null> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/trust/${userId}`, { cache: "no-store" });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch (e) {
+    return null;
+  }
+}
+
+export async function submitReviewApi(review: {
+  booking_id: string;
+  reviewee_id: string;
+  rating: number;
+  condition_rating?: number;
+  communication_rating?: number;
+  comment?: string;
+}) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/trust/reviews`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(review),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      return { success: false, error: err.detail || "Failed to submit review" };
+    }
+    const data = await res.json();
+    return { success: true, ...data };
+  } catch (e) {
+    return { success: false, error: "Network error submitting review" };
+  }
+}
+
+

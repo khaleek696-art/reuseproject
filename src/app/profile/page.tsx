@@ -15,6 +15,8 @@ import {
   User,
 } from "lucide-react";
 import { useRole } from "@/lib/roleContext";
+import { TrustLensPanel } from "@/components/TrustLensPanel";
+import { submitReviewApi } from "@/lib/api";
 
 export default function ProfilePage() {
   const { currentUser, isLoggedIn, openAuthModal } = useRole();
@@ -24,6 +26,7 @@ export default function ProfilePage() {
   const [commRating, setCommRating] = useState(5);
   const [comment, setComment] = useState("");
   const [reviewSubmitted, setReviewSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (!isLoggedIn) {
     return (
@@ -55,14 +58,29 @@ export default function ProfilePage() {
     );
   }
 
-  const handleSubmitReview = (e: React.FormEvent) => {
+  const handleSubmitReview = async (e: React.FormEvent) => {
     e.preventDefault();
-    setReviewSubmitted(true);
-    setTimeout(() => {
-      setReviewSubmitted(false);
-      setIsReviewModalOpen(false);
-      setComment("");
-    }, 1200);
+    setIsSubmitting(true);
+    try {
+      await submitReviewApi({
+        booking_id: "bk_seed_101",
+        reviewee_id: currentUser.id === "u_borrower_aman" ? "u_owner_rahul" : "u_borrower_aman",
+        rating,
+        condition_rating: conditionRating,
+        communication_rating: commRating,
+        comment,
+      });
+    } catch (e) {
+      // Graceful demo handling
+    } finally {
+      setIsSubmitting(false);
+      setReviewSubmitted(true);
+      setTimeout(() => {
+        setReviewSubmitted(false);
+        setIsReviewModalOpen(false);
+        setComment("");
+      }, 1200);
+    }
   };
 
   return (
@@ -206,6 +224,9 @@ export default function ProfilePage() {
         </div>
       </div>
 
+      {/* TRUSTLENS: REPUTATION CONFIDENCE ENGINE */}
+      <TrustLensPanel userId={currentUser.id} userName={currentUser.name} />
+
       {/* REVIEW SUBMISSION MODAL (SCREEN 10) */}
       {isReviewModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-in fade-in">
@@ -298,9 +319,10 @@ export default function ProfilePage() {
                   </button>
                   <button
                     type="submit"
-                    className="rounded-xl bg-emerald-800 hover:bg-emerald-900 px-5 py-2.5 text-xs font-bold text-white shadow-xs"
+                    disabled={isSubmitting}
+                    className="rounded-xl bg-emerald-800 hover:bg-emerald-900 px-5 py-2.5 text-xs font-bold text-white shadow-xs disabled:opacity-50"
                   >
-                    Submit Review
+                    {isSubmitting ? "Submitting Review..." : "Submit Review"}
                   </button>
                 </div>
               </form>

@@ -61,8 +61,12 @@ async def init_tiger_connection() -> Dict[str, Any]:
     # Format URL for asyncpg if needed
     if raw_url.startswith("postgres://"):
         raw_url = raw_url.replace("postgres://", "postgresql+asyncpg://", 1)
-    elif raw_url.startswith("postgresql://"):
+    elif raw_url.startswith("postgresql://") and not raw_url.startswith("postgresql+asyncpg://"):
         raw_url = raw_url.replace("postgresql://", "postgresql+asyncpg://", 1)
+
+    # Normalize sslmode parameter for asyncpg compatibility
+    if "sslmode=" in raw_url:
+        raw_url = raw_url.replace("sslmode=require", "ssl=require").replace("sslmode=prefer", "ssl=prefer")
 
     try:
         tiger_engine = create_async_engine(

@@ -68,6 +68,19 @@ async def init_tiger_connection() -> Dict[str, Any]:
     if "sslmode=" in raw_url:
         raw_url = raw_url.replace("sslmode=require", "ssl=require").replace("sslmode=prefer", "ssl=prefer")
 
+    # Safely handle special characters (e.g. '@' in password)
+    try:
+        import urllib.parse
+        if "://" in raw_url and "@" in raw_url:
+            scheme, rest = raw_url.split("://", 1)
+            auth, host_part = rest.rsplit("@", 1)
+            if ":" in auth:
+                user, password = auth.split(":", 1)
+                safe_pass = urllib.parse.quote(urllib.parse.unquote(password))
+                raw_url = f"{scheme}://{user}:{safe_pass}@{host_part}"
+    except Exception:
+        pass
+
     try:
         tiger_engine = create_async_engine(
             raw_url,

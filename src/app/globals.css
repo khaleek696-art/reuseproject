@@ -1,30 +1,69 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Silkscreen:wght@400;700&family=Space+Grotesk:wght@600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 @import "tailwindcss";
 
+@theme {
+  --color-surface: #131313;
+  --color-surface-dim: #131313;
+  --color-surface-bright: #393939;
+  --color-surface-container-lowest: #0e0e0e;
+  --color-surface-container-low: #1c1b1b;
+  --color-surface-container: #201f1f;
+  --color-surface-container-high: #2a2a2a;
+  --color-surface-container-highest: #353534;
+  --color-primary: #8bd6b6;
+  --color-primary-container: #065f46;
+  --color-secondary: #7bd8b1;
+  --color-secondary-container: #017756;
+  --color-tertiary: #65a832;
+  --color-tertiary-container: #2d5f00;
+  --color-on-primary: #003828;
+  --color-on-primary-container: #8bd6b7;
+  --color-on-secondary: #003827;
+  --color-on-tertiary: #183800;
+  --color-on-surface: #e5e2e1;
+  --color-on-surface-variant: #bec9c2;
+  --color-outline: #89938d;
+  --color-outline-variant: #3f4944;
+}
+
 :root {
-  --canvas: #f8fafc;
-  --card: #ffffff;
-  --border: #e2e8f0;
-  --brand-forest: #14532d;
-  --brand-mint: #10b981;
-  --brand-mint-bright: #22c55e;
-  --slate-heading: #0f172a;
-  --slate-body: #334155;
-  --slate-subtext: #64748b;
-  --badge-neutral-bg: #f1f5f9;
-  --badge-neutral-text: #475569;
-  --badge-trust-bg: #dcfce7;
-  --badge-trust-text: #166534;
-  --alert-amber-bg: #fef3c7;
-  --alert-amber-text: #92400e;
-  --error-crimson-bg: #fef2f2;
-  --error-crimson-text: #dc2626;
-  --font-sans: "Plus Jakarta Sans", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --canvas: #131313;
+  --card: #1c1b1b;
+  --card-elevated: #201f1f;
+  --card-hover: #262626;
+  --border: #2a2a2a;
+  --border-subtle: #201f1f;
+  --border-accent: #065f46;
+  
+  --brand-forest: #065f46;
+  --brand-mint: #8bd6b6;
+  --brand-mint-bright: #7bd8b1;
+  --brand-emerald-dark: #003828;
+  
+  --slate-heading: #f3f4f6;
+  --slate-body: #e5e2e1;
+  --slate-subtext: #9ca3af;
+  
+  --badge-neutral-bg: #201f1f;
+  --badge-neutral-text: #bec9c2;
+  --badge-trust-bg: #065f46;
+  --badge-trust-text: #8bd6b6;
+  
+  --alert-amber-bg: #2a2004;
+  --alert-amber-text: #fbbf24;
+  --error-crimson-bg: #301010;
+  --error-crimson-text: #f87171;
+  
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-heading: "Space Grotesk", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
 }
 
 body {
-  background-color: var(--canvas);
-  color: var(--slate-body);
-  font-family: var(--font-sans);
+  background-color: #131313;
+  color: #e5e2e1;
+  font-family: 'Inter', sans-serif;
   letter-spacing: -0.012em;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -36,23 +75,94 @@ body {
 }
 .card-hover-lift:hover {
   transform: translateY(-3px);
-  box-shadow: 0 16px 32px -8px rgba(15, 23, 42, 0.08), 0 2px 6px 0 rgba(15, 23, 42, 0.03);
+  box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.6), 0 2px 6px 0 rgba(0, 0, 0, 0.3);
 }
 
-/* Scrollbars */
+/* Voxel Tactile Elevation Utilities */
+.voxel-box {
+  background-color: #242424;
+  border: 2px solid #3a3a3a;
+  box-shadow: 0 4px 0 0 #0f0f0f;
+}
+
+.voxel-inset {
+  box-shadow: inset 2px 2px 0px #0f0f0f, inset -2px -2px 0px #2e2e2e;
+}
+
+.voxel-btn-primary {
+  background-color: #065f46;
+  color: #ffffff;
+  border: 2px solid #047857;
+  box-shadow: 0 4px 0 0 #003828;
+  transition: all 0.1s ease;
+}
+
+.voxel-btn-primary:hover {
+  background-color: #047857;
+}
+
+.voxel-btn-primary:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 0 #003828;
+}
+
+/* Stitch Typography Roles */
+.font-headline-lg {
+  font-family: 'Space Grotesk', sans-serif !important;
+  font-size: 32px !important;
+  font-weight: 700 !important;
+  line-height: 40px !important;
+  letter-spacing: -0.01em !important;
+}
+
+.font-headline-md {
+  font-family: 'Space Grotesk', sans-serif !important;
+  font-size: 22px !important;
+  font-weight: 700 !important;
+  line-height: 30px !important;
+  letter-spacing: 0.02em !important;
+}
+
+.font-headline-sm {
+  font-family: 'Space Grotesk', sans-serif !important;
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  line-height: 26px !important;
+  letter-spacing: 0.02em !important;
+}
+
+.font-label-code {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  line-height: 18px !important;
+  letter-spacing: 0.03em !important;
+}
+
+.font-label-badge {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  line-height: 14px !important;
+  letter-spacing: 0.05em !important;
+}
+
+/* Custom Voxel Tactical Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: #0e0e0e;
+  border-left: 1px solid #201f1f;
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 9999px;
+  background: #065f46;
+  border: 1px solid #047857;
+  border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #047857;
 }
 
 .no-scrollbar::-webkit-scrollbar {

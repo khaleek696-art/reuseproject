@@ -46,7 +46,7 @@ export function SearchBar({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
-          className="w-full rounded-2xl border border-slate-900/[0.1] bg-white py-3.5 pl-11 pr-24 text-sm font-medium text-slate-900 shadow-sm placeholder:text-slate-400 focus:border-slate-950 focus:outline-none focus:ring-4 focus:ring-slate-950/5 transition-all"
+          className="w-full rounded-xl border border-[#2a2a2a] bg-[#1c1b1b] py-3.5 pl-11 pr-24 text-sm font-medium text-[#e5e2e1] shadow-[inset_2px_2px_0_#0a0a0a] placeholder:text-[#89938d] focus:border-[#8bd6b6] focus:outline-none transition-all"
         />
 
         <div className="absolute right-2.5 flex items-center gap-1.5">
@@ -54,7 +54,7 @@ export function SearchBar({
             <button
               type="button"
               onClick={() => onChange("")}
-              className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"
+              className="rounded-lg p-1.5 text-slate-400 hover:bg-[#2a2a2a] hover:text-white transition-colors"
               title="Clear search"
             >
               <X className="h-4 w-4" />
@@ -63,7 +63,7 @@ export function SearchBar({
 
           <button
             type="submit"
-            className="flex items-center gap-1 rounded-xl bg-slate-950 px-3.5 py-1.5 text-xs font-bold text-white hover:bg-slate-900 active:scale-95 transition-all shadow-2xs"
+            className="flex items-center gap-1 rounded-lg bg-[#065f46] hover:bg-[#047857] px-3.5 py-1.5 text-xs font-bold font-headline-sm uppercase tracking-wider text-white border border-[#047857] shadow-[0_2px_0_0_#003828] active:translate-y-0.5 transition-all cursor-pointer"
           >
             <span>Search</span>
           </button>
@@ -73,8 +73,8 @@ export function SearchBar({
       {/* Suggested Quick Terms */}
       {showSuggestions && (
         <div className="mt-3 flex items-center gap-2 overflow-x-auto pb-1 text-xs no-scrollbar">
-          <span className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 shrink-0">
-            <Sparkles className="h-3 w-3 text-emerald-500" />
+          <span className="flex items-center gap-1 text-[10px] font-mono font-bold uppercase tracking-wider text-[#8bd6b6] shrink-0">
+            <Sparkles className="h-3 w-3 text-[#8bd6b6]" />
             Trending:
           </span>
           {POPULAR_SEARCHES.map((term) => (
@@ -85,7 +85,7 @@ export function SearchBar({
                 onChange(term);
                 if (onSearch) onSearch(term);
               }}
-              className="shrink-0 rounded-full border border-slate-200/90 bg-white px-3 py-1 text-slate-700 font-medium hover:border-slate-900 hover:bg-slate-950 hover:text-white transition-all shadow-2xs text-[11px]"
+              className="shrink-0 rounded-lg border border-[#2a2a2a] bg-[#1c1b1b] px-3 py-1 text-[#bec9c2] font-mono text-[11px] hover:border-[#047857] hover:bg-[#065f46] hover:text-white transition-all shadow-[0_2px_0_0_#0e0e0e]"
             >
               {term}
             </button>

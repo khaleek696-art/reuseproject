@@ -104,18 +104,18 @@ export function Navbar({ onOpenShareModal }: NavbarProps) {
 
   return (
     <>
-      <header className="sticky top-0 z-40 w-full border-b border-slate-200 bg-white/95 backdrop-blur-md transition-all">
+      <header className="sticky top-0 z-40 w-full border-b border-[#262626] bg-[#131313]/95 backdrop-blur-md transition-all">
         {/* Top Header Bar */}
         <div className="w-full flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
           {/* Logo */}
           <div className="flex items-center gap-3">
             <Link href="/" className="flex items-center gap-2 group shrink-0">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-800 text-white font-black text-lg shadow-sm transition-transform group-hover:scale-105">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#065f46] text-[#8bd6b6] font-black text-lg shadow-sm border border-[#047857] transition-transform group-hover:scale-105">
                 R
               </div>
               <div className="flex flex-col">
-                <span className="font-black text-xl tracking-tight text-slate-900 font-sans leading-none">
-                  RE<span className="text-emerald-600">:</span>USE
+                <span className="font-black text-xl tracking-tight text-white font-sans leading-none">
+                  RE<span className="text-[#8bd6b6]">:</span>USE
                 </span>
                 <span className="text-[9px] font-bold text-slate-400 tracking-wider uppercase mt-0.5">
                   Hyperlocal Marketplace
@@ -125,10 +125,10 @@ export function Navbar({ onOpenShareModal }: NavbarProps) {
 
             {/* FastAPI Backend Connection Live Badge */}
             {isBackendConnected && (
-              <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+              <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-[#065f46]/40 text-[#8bd6b6] border border-[#047857]/60">
                 <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#8bd6b6] opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[#8bd6b6]"></span>
                 </span>
                 FastAPI Live
               </span>
@@ -146,13 +146,13 @@ export function Navbar({ onOpenShareModal }: NavbarProps) {
                   href={link.href}
                   className={`flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-bold transition-all whitespace-nowrap ${
                     isActive
-                      ? "bg-emerald-50 text-emerald-900 font-extrabold border border-emerald-200/60"
-                      : "text-slate-600 hover:bg-slate-50 hover:text-slate-950"
+                      ? "bg-[#065f46] text-[#8bd6b6] font-extrabold border border-[#047857]"
+                      : "text-slate-300 hover:bg-[#201f1f] hover:text-white"
                   }`}
                 >
                   <Icon
                     className={`h-3.5 w-3.5 ${
-                      isActive ? "text-emerald-700" : "text-slate-400"
+                      isActive ? "text-[#8bd6b6]" : "text-slate-400"
                     }`}
                   />
                   <span>{link.name}</span>
@@ -167,21 +167,21 @@ export function Navbar({ onOpenShareModal }: NavbarProps) {
             <div className="relative">
               <button
                 onClick={() => setRoleDropdownOpen(!roleDropdownOpen)}
-                className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-bold text-slate-900 hover:border-slate-300 transition-colors shadow-2xs"
+                className="flex items-center gap-2 rounded-xl border border-[#333333] bg-[#1c1b1b] px-3 py-1.5 text-xs font-bold text-white hover:border-[#444444] transition-colors shadow-2xs"
               >
-                <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                <span className="h-2 w-2 rounded-full bg-[#8bd6b6]" />
                 <span className="capitalize">
                   {role === "borrower" && "Borrower Mode"}
                   {role === "owner" && "Owner Mode"}
                   {role === "delivery" && "Delivery Partner"}
                   {role === "admin" && "Platform Admin"}
                 </span>
-                <ChevronDown className="h-3.5 w-3.5 text-slate-500" />
+                <ChevronDown className="h-3.5 w-3.5 text-slate-400" />
               </button>
 
               {roleDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-white p-2 shadow-2xl border border-slate-200 z-50 animate-in fade-in">
-                  <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 border-b border-slate-100 mb-1">
+                <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-[#1c1b1b] p-2 shadow-2xl border border-[#2e2e2e] z-50 animate-in fade-in">
+                  <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 border-b border-[#262626] mb-1">
                     Role Switcher
                   </div>
                   {rolesList.map((r) => (
@@ -190,14 +190,14 @@ export function Navbar({ onOpenShareModal }: NavbarProps) {
                       onClick={() => handleRoleSelect(r.id)}
                       className={`w-full text-left p-2.5 rounded-xl text-xs transition-colors flex flex-col ${
                         role === r.id
-                          ? "bg-emerald-50 text-emerald-900 font-bold border border-emerald-200"
-                          : "hover:bg-slate-50 text-slate-700"
+                          ? "bg-[#065f46] text-[#8bd6b6] font-bold border border-[#047857]"
+                          : "hover:bg-[#262626] text-slate-200"
                       }`}
                     >
                       <div className="flex items-center justify-between">
                         <span>{r.title}</span>
                         {role === r.id && (
-                          <span className="text-[10px] font-black text-emerald-700">
+                          <span className="text-[10px] font-black text-[#8bd6b6]">
                             ACTIVE
                           </span>
                         )}
@@ -234,38 +234,38 @@ export function Navbar({ onOpenShareModal }: NavbarProps) {
               <div className="relative">
                 <button
                   onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                  className="flex items-center gap-2 rounded-xl p-1 hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-200"
+                  className="flex items-center gap-2 rounded-xl p-1 hover:bg-[#201f1f] transition-colors border border-transparent hover:border-[#333333]"
                 >
                   <div className="relative">
                     <img
                       src={currentUser.avatar}
                       alt={currentUser.name}
-                      className="h-8 w-8 rounded-full object-cover ring-2 ring-emerald-500/30"
+                      className="h-8 w-8 rounded-full object-cover ring-2 ring-[#065f46]"
                     />
                     <span
-                      className="absolute -bottom-0.5 -right-0.5 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-emerald-600 text-white shadow-2xs"
+                      className="absolute -bottom-0.5 -right-0.5 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-[#065f46] text-[#8bd6b6] shadow-2xs"
                       title="Verified Identity"
                     >
                       <ShieldCheck className="h-2 w-2" />
                     </span>
                   </div>
                   <div className="hidden xl:flex flex-col text-left">
-                    <span className="text-xs font-bold text-slate-900 leading-tight">
+                    <span className="text-xs font-bold text-white leading-tight">
                       {currentUser.name}
                     </span>
-                    <span className="text-[10px] font-bold text-emerald-700">
+                    <span className="text-[10px] font-bold text-[#8bd6b6]">
                       ★ 4.9 Verified
                     </span>
                   </div>
                 </button>
 
                 {userDropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-52 rounded-2xl bg-white p-2 shadow-2xl border border-slate-200 z-50 animate-in fade-in">
-                    <div className="px-3 py-2 border-b border-slate-100 mb-1">
-                      <span className="block text-xs font-bold text-slate-900">
+                  <div className="absolute right-0 mt-2 w-52 rounded-2xl bg-[#1c1b1b] p-2 shadow-2xl border border-[#2e2e2e] z-50 animate-in fade-in">
+                    <div className="px-3 py-2 border-b border-[#262626] mb-1">
+                      <span className="block text-xs font-bold text-white">
                         {currentUser.name}
                       </span>
-                      <span className="text-[10px] font-semibold text-emerald-700">
+                      <span className="text-[10px] font-semibold text-[#8bd6b6]">
                         {currentUser.neighborhood}
                       </span>
                     </div>
@@ -273,9 +273,9 @@ export function Navbar({ onOpenShareModal }: NavbarProps) {
                     <Link
                       href="/profile"
                       onClick={() => setUserDropdownOpen(false)}
-                      className="flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors"
+                      className="flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-bold text-slate-200 hover:bg-[#262626] transition-colors"
                     >
-                      <User className="h-4 w-4 text-emerald-700" />
+                      <User className="h-4 w-4 text-[#8bd6b6]" />
                       <span>My Trust Profile</span>
                     </Link>
 

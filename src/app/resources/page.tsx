@@ -148,39 +148,44 @@ function ResourcesContent() {
   return (
     <div className="mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8 py-8">
       {/* Top Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 border-b border-slate-200 pb-5">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 border-b border-[#201f1f] pb-5">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-            Explore Local Equipment ({filtered.length} Items Available)
-          </h1>
-          <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
-            Verified equipment available within {maxDistance} km radius
+          <div className="flex items-center gap-2">
+            <h1 className="text-2xl sm:text-3xl font-black text-white font-['Silkscreen'] tracking-wider">
+              EXPLORE LOCAL GEAR
+            </h1>
+            <span className="rounded-md bg-[#065f46] px-2.5 py-0.5 text-xs font-mono font-bold text-[#8bd6b6] border border-[#047857]">
+              {filtered.length} Items Available
+            </span>
+          </div>
+          <p className="text-xs sm:text-sm text-[#9ca3af] mt-1 font-medium">
+            Verified equipment available within {maxDistance} km radius in your neighborhood mesh.
           </p>
         </div>
 
         <div className="flex items-center gap-3">
           {/* Grid vs Map View Switcher */}
-          <div className="flex bg-slate-100 p-1 rounded-2xl border border-slate-200">
+          <div className="flex bg-[#1c1b1b] p-1 rounded-xl border border-[#2a2a2a]">
             <button
               onClick={() => setViewMode("grid")}
-              className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold transition-all ${
+              className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold font-headline-sm uppercase tracking-wider transition-all cursor-pointer ${
                 viewMode === "grid"
-                  ? "bg-white text-slate-900 shadow-sm"
-                  : "text-slate-500 hover:text-slate-900"
+                  ? "bg-[#065f46] text-white shadow-sm border border-[#047857]"
+                  : "text-[#bec9c2] hover:text-white"
               }`}
             >
-              <LayoutGrid className="h-3.5 w-3.5" />
+              <LayoutGrid className="h-3.5 w-3.5 text-[#8bd6b6]" />
               <span>Grid View</span>
             </button>
             <button
               onClick={() => setViewMode("map")}
-              className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold transition-all ${
+              className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold font-headline-sm uppercase tracking-wider transition-all cursor-pointer ${
                 viewMode === "map"
-                  ? "bg-emerald-800 text-white shadow-sm"
-                  : "text-slate-500 hover:text-slate-900"
+                  ? "bg-[#065f46] text-white shadow-sm border border-[#047857]"
+                  : "text-[#bec9c2] hover:text-white"
               }`}
             >
-              <Map className="h-3.5 w-3.5" />
+              <Map className="h-3.5 w-3.5 text-[#fbbf24]" />
               <span>Radar Map View</span>
             </button>
           </div>
@@ -189,9 +194,9 @@ function ResourcesContent() {
           {role === "owner" && (
             <button
               onClick={() => setIsShareModalOpen(true)}
-              className="flex items-center gap-2 rounded-xl bg-emerald-800 hover:bg-emerald-900 px-4 py-2 text-xs sm:text-sm font-bold text-white shadow-xs active:scale-95 transition-all"
+              className="flex items-center gap-2 rounded-xl bg-[#065f46] hover:bg-[#047857] px-4 py-2 text-xs sm:text-sm font-bold font-headline-sm uppercase tracking-wider text-white border border-[#047857] shadow-[0_2px_0_0_#003828] active:translate-y-0.5 transition-all cursor-pointer"
             >
-              <PlusCircle className="h-4 w-4 text-emerald-300" />
+              <PlusCircle className="h-4 w-4 text-[#8bd6b6]" />
               <span>+ List Gear</span>
             </button>
           )}
@@ -201,13 +206,13 @@ function ResourcesContent() {
       {/* Top Bar: Search & Category Pills */}
       <div className="mb-6 space-y-3">
         <div className="relative">
-          <Search className="absolute left-3.5 top-3.5 h-4 w-4 text-slate-400" />
+          <Search className="absolute left-3.5 top-3.5 h-4 w-4 text-[#8bd6b6]" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search catalog by title, lens, tool, model..."
-            className="w-full rounded-2xl border border-slate-200 bg-white py-3 pl-10 pr-4 text-xs sm:text-sm font-medium focus:border-emerald-600 focus:outline-none shadow-2xs"
+            className="w-full rounded-xl border border-[#2a2a2a] bg-[#1c1b1b] py-3 pl-10 pr-4 text-xs sm:text-sm font-medium text-[#e5e2e1] placeholder:text-[#89938d] focus:border-[#8bd6b6] focus:outline-none shadow-[inset_2px_2px_0_#0a0a0a]"
           />
         </div>
 
@@ -215,10 +220,10 @@ function ResourcesContent() {
         <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
           <button
             onClick={() => setSelectedCategory("all")}
-            className={`rounded-xl px-3.5 py-1.5 text-xs font-bold shrink-0 transition-all ${
+            className={`rounded-xl px-3.5 py-1.5 text-xs font-bold font-headline-sm uppercase tracking-wider shrink-0 transition-all cursor-pointer ${
               selectedCategory === "all"
-                ? "bg-slate-900 text-white"
-                : "bg-white border border-slate-200 text-slate-700 hover:bg-slate-50"
+                ? "bg-[#065f46] text-white border border-[#047857]"
+                : "bg-[#1c1b1b] border border-[#2a2a2a] text-[#bec9c2] hover:bg-[#252525]"
             }`}
           >
             All Items
@@ -227,10 +232,10 @@ function ResourcesContent() {
             <button
               key={c.id}
               onClick={() => setSelectedCategory(c.id)}
-              className={`rounded-xl px-3.5 py-1.5 text-xs font-bold shrink-0 transition-all ${
+              className={`rounded-xl px-3.5 py-1.5 text-xs font-bold font-headline-sm uppercase tracking-wider shrink-0 transition-all cursor-pointer ${
                 selectedCategory === c.id
-                  ? "bg-emerald-800 text-white"
-                  : "bg-white border border-slate-200 text-slate-700 hover:bg-slate-50"
+                  ? "bg-[#065f46] text-white border border-[#047857]"
+                  : "bg-[#1c1b1b] border border-[#2a2a2a] text-[#bec9c2] hover:bg-[#252525]"
               }`}
             >
               {c.name}
@@ -242,15 +247,15 @@ function ResourcesContent() {
       {/* Main Layout: Filters Sidebar + Grid/Map */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         {/* FILTERS SIDEBAR */}
-        <div className="lg:col-span-1 space-y-6 rounded-3xl border border-slate-200 bg-white p-5 shadow-xs h-fit">
-          <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-            <span className="font-black text-sm text-slate-900 flex items-center gap-1.5">
-              <Filter className="h-4 w-4 text-emerald-800" />
+        <div className="lg:col-span-1 space-y-6 rounded-2xl border border-[#2a2a2a] bg-[#1c1b1b] p-5 shadow-[0_4px_0_0_#0e0e0e] h-fit">
+          <div className="flex items-center justify-between border-b border-[#2a2a2a] pb-3">
+            <span className="font-headline-sm uppercase tracking-wider text-sm text-white flex items-center gap-1.5 font-bold">
+              <Filter className="h-4 w-4 text-[#8bd6b6]" />
               <span>Refine Filters</span>
             </span>
             <button
               onClick={handleReset}
-              className="text-[11px] font-bold text-slate-400 hover:text-emerald-800 flex items-center gap-1"
+              className="text-[11px] font-bold text-slate-400 hover:text-[#8bd6b6] flex items-center gap-1 cursor-pointer"
             >
               <RotateCcw className="h-3 w-3" />
               <span>Reset</span>
@@ -259,22 +264,22 @@ function ResourcesContent() {
 
           {/* Date Picker Filter */}
           <div className="space-y-2">
-            <label className="block text-xs font-bold text-slate-700 flex items-center gap-1">
-              <Calendar className="h-3.5 w-3.5 text-emerald-800" />
-              <span>Borrowing Dates Availability</span>
+            <label className="block text-xs font-bold font-headline-sm uppercase tracking-wider text-[#bec9c2] flex items-center gap-1">
+              <Calendar className="h-3.5 w-3.5 text-[#8bd6b6]" />
+              <span>Borrowing Dates</span>
             </label>
             <div className="grid grid-cols-2 gap-2">
               <input
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-2 py-1.5 text-[11px] font-semibold text-slate-700 focus:bg-white focus:outline-none"
+                className="w-full rounded-lg border border-[#2a2a2a] bg-[#0e0e0e] px-2 py-1.5 text-[11px] font-mono font-semibold text-[#e5e2e1] focus:border-[#8bd6b6] focus:outline-none"
               />
               <input
                 type="date"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-2 py-1.5 text-[11px] font-semibold text-slate-700 focus:bg-white focus:outline-none"
+                className="w-full rounded-lg border border-[#2a2a2a] bg-[#0e0e0e] px-2 py-1.5 text-[11px] font-mono font-semibold text-[#e5e2e1] focus:border-[#8bd6b6] focus:outline-none"
               />
             </div>
           </div>
@@ -282,11 +287,11 @@ function ResourcesContent() {
           {/* PostGIS Radius Slider */}
           <div className="space-y-2">
             <div className="flex justify-between items-center text-xs font-bold">
-              <span className="text-slate-700 flex items-center gap-1">
-                <MapPin className="h-3.5 w-3.5 text-emerald-800" />
+              <span className="text-[#bec9c2] flex items-center gap-1 font-headline-sm uppercase tracking-wider">
+                <MapPin className="h-3.5 w-3.5 text-[#8bd6b6]" />
                 <span>Radius Distance</span>
               </span>
-              <span className="text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+              <span className="text-[#8bd6b6] bg-[#065f46]/30 px-2 py-0.5 rounded border border-[#065f46] font-mono">
                 {maxDistance} km
               </span>
             </div>
@@ -297,18 +302,18 @@ function ResourcesContent() {
               step={0.5}
               value={maxDistance}
               onChange={(e) => setMaxDistance(parseFloat(e.target.value))}
-              className="w-full accent-emerald-800"
+              className="w-full accent-[#8bd6b6] cursor-pointer"
             />
           </div>
 
           {/* Price Range Slider */}
           <div className="space-y-2">
             <div className="flex justify-between items-center text-xs font-bold">
-              <span className="text-slate-700 flex items-center gap-1">
-                <IndianRupee className="h-3.5 w-3.5 text-emerald-800" />
+              <span className="text-[#bec9c2] flex items-center gap-1 font-headline-sm uppercase tracking-wider">
+                <IndianRupee className="h-3.5 w-3.5 text-[#fbbf24]" />
                 <span>Max Daily Rate</span>
               </span>
-              <span className="text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+              <span className="text-[#fbbf24] bg-[#2a2004] px-2 py-0.5 rounded border border-[#4a3505] font-mono">
                 ₹{priceRange}/day
               </span>
             </div>
@@ -319,14 +324,14 @@ function ResourcesContent() {
               step={100}
               value={priceRange}
               onChange={(e) => setPriceRange(parseInt(e.target.value))}
-              className="w-full accent-emerald-800"
+              className="w-full accent-[#fbbf24] cursor-pointer"
             />
           </div>
 
           {/* Trust Level Requirement */}
           <div className="space-y-2">
-            <label className="block text-xs font-bold text-slate-700 flex items-center gap-1">
-              <ShieldCheck className="h-3.5 w-3.5 text-emerald-800" />
+            <label className="block text-xs font-bold font-headline-sm uppercase tracking-wider text-[#bec9c2] flex items-center gap-1">
+              <ShieldCheck className="h-3.5 w-3.5 text-[#8bd6b6]" />
               <span>Owner Trust Level</span>
             </label>
             <div className="space-y-1.5">
@@ -338,10 +343,10 @@ function ResourcesContent() {
                 <button
                   key={t.id}
                   onClick={() => setTrustFilter(t.id as any)}
-                  className={`w-full text-left rounded-xl px-3 py-2 text-xs font-bold transition-all ${
+                  className={`w-full text-left rounded-lg px-3 py-2 text-xs font-bold font-mono transition-all cursor-pointer ${
                     trustFilter === t.id
-                      ? "bg-emerald-50 text-emerald-900 border border-emerald-300"
-                      : "bg-slate-50 text-slate-600 hover:bg-slate-100"
+                      ? "bg-[#065f46] text-white border border-[#047857]"
+                      : "bg-[#0e0e0e] border border-[#2a2a2a] text-[#bec9c2] hover:bg-[#1a1a1a]"
                   }`}
                 >
                   {t.label}
@@ -362,15 +367,15 @@ function ResourcesContent() {
           ) : (
             <>
               {filtered.length === 0 ? (
-                <div className="rounded-3xl border border-slate-200 bg-white p-12 text-center">
-                  <Compass className="h-10 w-10 text-slate-300 mx-auto mb-3" />
-                  <h3 className="text-base font-bold text-slate-900">No resources matched your filters</h3>
-                  <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
+                <div className="rounded-2xl border border-dashed border-[#2a2a2a] bg-[#1c1b1b] p-12 text-center">
+                  <Compass className="h-10 w-10 text-[#8bd6b6] mx-auto mb-3" />
+                  <h3 className="text-base font-bold font-headline-sm text-white">No resources matched your filters</h3>
+                  <p className="text-xs text-[#9ca3af] mt-1 max-w-sm mx-auto">
                     Try expanding your radius distance or resetting category filters.
                   </p>
                   <button
                     onClick={handleReset}
-                    className="mt-4 rounded-xl bg-slate-900 text-white px-4 py-2 text-xs font-bold"
+                    className="mt-4 rounded-xl bg-[#065f46] hover:bg-[#047857] text-white border border-[#047857] px-4 py-2 text-xs font-bold font-headline-sm uppercase tracking-wider shadow-[0_2px_0_0_#003828] active:translate-y-0.5 transition-all cursor-pointer"
                   >
                     Reset All Filters
                   </button>

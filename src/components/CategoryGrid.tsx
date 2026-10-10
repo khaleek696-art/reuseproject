@@ -38,18 +38,18 @@ export function CategoryGrid({
     <div className="w-full">
       <div className="flex items-center justify-between mb-5">
         <div>
-          <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
-            Campus Inventory
+          <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#8bd6b6]">
+            Campus Inventory Mesh
           </span>
-          <h2 className="text-2xl sm:text-3xl font-black text-slate-950 tracking-tight">
-            Browse by Department
+          <h2 className="text-xl sm:text-2xl font-black text-white font-['Silkscreen'] tracking-wider mt-1">
+            BROWSE INVENTORY SLOTS
           </h2>
         </div>
         <Link
           href="/explore"
-          className="group hidden sm:flex items-center gap-1.5 text-xs font-bold text-slate-900 hover:text-emerald-700 transition-colors"
+          className="group hidden sm:flex items-center gap-1.5 text-xs font-bold font-headline-sm uppercase tracking-wider text-[#8bd6b6] hover:text-[#7bd8b1] transition-colors"
         >
-          <span>View All 8 Categories</span>
+          <span>View All Categories</span>
           <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
         </Link>
       </div>
@@ -61,34 +61,34 @@ export function CategoryGrid({
 
           const content = (
             <div
-              className={`card-hover-lift group flex flex-col items-center text-center p-4 rounded-3xl transition-all border cursor-pointer ${
+              className={`card-hover-lift group flex flex-col items-center text-center p-3 sm:p-4 rounded-2xl transition-all border cursor-pointer ${
                 isSelected
-                  ? "border-slate-950 bg-slate-950 text-white shadow-md"
-                  : "border-slate-900/[0.07] bg-white hover:border-slate-300 shadow-xs"
+                  ? "border-[#047857] bg-[#065f46] text-white shadow-[inset_2px_2px_0_#003828,0_4px_0_0_#003828]"
+                  : "border-[#201f1f] bg-[#0e0e0e] hover:bg-[#1a1a1a] hover:border-[#353534] shadow-[inset_2px_2px_0_#0a0a0a,0_4px_0_0_#060606]"
               }`}
             >
               <div
-                className={`flex h-12 w-12 items-center justify-center rounded-2xl mb-3 transition-transform group-hover:scale-110 ${
+                className={`flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-xl mb-2.5 transition-transform group-hover:scale-110 ${
                   isSelected
                     ? "bg-white/20 text-white"
-                    : `${cat.bgColor} ${cat.color}`
+                    : "bg-[#1c1b1b] border border-[#2a2a2a] text-[#8bd6b6]"
                 }`}
               >
-                <Icon className="h-6 w-6" />
+                <Icon className="h-5 w-5 sm:h-6 sm:w-6" />
               </div>
               <span
-                className={`text-xs font-bold line-clamp-1 leading-snug ${
-                  isSelected ? "text-white" : "text-slate-900"
+                className={`text-xs font-bold font-headline-sm uppercase tracking-wider line-clamp-1 leading-snug ${
+                  isSelected ? "text-white" : "text-[#e5e2e1]"
                 }`}
               >
                 {cat.name}
               </span>
               <span
-                className={`text-[10px] font-semibold mt-1 ${
-                  isSelected ? "text-slate-300" : "text-slate-400"
+                className={`text-[10px] font-mono mt-1 ${
+                  isSelected ? "text-emerald-100" : "text-[#89938d]"
                 }`}
               >
-                {cat.count} listings
+                {cat.count} items
               </span>
             </div>
           );

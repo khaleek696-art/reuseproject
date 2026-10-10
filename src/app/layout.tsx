@@ -18,7 +18,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="h-full antialiased scroll-smooth" data-scroll-behavior="smooth">
-      <body className="min-h-full flex flex-col bg-[#F8FAFC] text-[#334155] selection:bg-emerald-600 selection:text-white pb-16 lg:pb-0">
+      <body className="min-h-full flex flex-col bg-[#131313] text-[#e5e2e1] selection:bg-emerald-600 selection:text-white pb-16 lg:pb-0">
         <RoleProvider>
           <Navbar />
           <main className="flex-1">{children}</main>

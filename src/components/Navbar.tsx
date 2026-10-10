@@ -52,8 +52,8 @@ export function Navbar({ onOpenShareModal }: NavbarProps) {
   const rolesList: { id: UserRole; title: string; desc: string }[] = [
     { id: "borrower", title: "Borrower Mode", desc: "Seek local gear within 5km" },
     { id: "owner", title: "Resource Owner", desc: "Monetize idle equipment safely" },
-    { id: "delivery", title: "Delivery Partner", desc: "Hyperlocal bike courier console" },
-    { id: "admin", title: "Platform Administrator", desc: "Safety, escrow & algorithm weights" },
+    { id: "delivery", title: "Delivery Partner", desc: "Hyperlocal courier console" },
+    { id: "admin", title: "Platform Administrator", desc: "Safety, escrow & weights" },
   ];
 
   const getNavLinksForRole = (currentRole: UserRole) => {
@@ -104,39 +104,40 @@ export function Navbar({ onOpenShareModal }: NavbarProps) {
 
   return (
     <>
-      <header className="sticky top-0 z-40 w-full border-b border-[#262626] bg-[#131313]/95 backdrop-blur-md transition-all">
-        {/* Top Header Bar */}
-        <div className="w-full flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
-          {/* Logo */}
-          <div className="flex items-center gap-3">
-            <Link href="/" className="flex items-center gap-2 group shrink-0">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#065f46] text-[#8bd6b6] font-black text-lg shadow-sm border border-[#047857] transition-transform group-hover:scale-105">
-                R
+      <header className="sticky top-0 z-50 w-full bg-[#171717] transition-all">
+        {/* Main Header Bar */}
+        <div className="h-16 max-w-[1440px] mx-auto px-4 lg:px-6 flex items-center justify-between gap-3">
+          {/* Brand Logo with Minecraft Voxel Block */}
+          <div className="flex items-center gap-3 shrink-0">
+            <Link href="/" className="flex items-center gap-2.5 group">
+              {/* Voxel Grass/Dirt Block Icon */}
+              <div className="w-8 h-8 rounded-none border border-[#2d5f00] relative overflow-hidden flex flex-col shadow-[inset_1px_1px_0_#94db5e,inset_-1px_-1px_0_#183800] bg-[#60452F]">
+                <div className="h-4 w-full bg-[#65A832] relative flex">
+                  <div className="absolute bottom-0 left-1 w-1.5 h-1.5 bg-[#4A7A23]"></div>
+                  <div className="absolute bottom-[-2px] left-3 w-1.5 h-1.5 bg-[#65A832]"></div>
+                  <div className="absolute bottom-[-1px] left-5 w-1.5 h-1.5 bg-[#4A7A23]"></div>
+                </div>
+                <div className="h-4 w-full bg-[#60452F] relative">
+                  <div className="absolute top-1 left-2 w-1 h-1 bg-[#3f2b1d]"></div>
+                  <div className="absolute top-2 left-5 w-1 h-1 bg-[#805a3e]"></div>
+                </div>
               </div>
-              <div className="flex flex-col">
-                <span className="font-black text-xl tracking-tight text-white font-sans leading-none">
-                  RE<span className="text-[#8bd6b6]">:</span>USE
-                </span>
-                <span className="text-[9px] font-bold text-slate-400 tracking-wider uppercase mt-0.5">
-                  Hyperlocal Marketplace
-                </span>
-              </div>
+              <span className="font-['Silkscreen'] text-lg font-bold tracking-wider text-[#65A832] group-hover:text-[#8bd6b6] transition-colors">
+                RE:USE
+              </span>
             </Link>
 
             {/* FastAPI Backend Connection Live Badge */}
             {isBackendConnected && (
-              <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-[#065f46]/40 text-[#8bd6b6] border border-[#047857]/60">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#8bd6b6] opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[#8bd6b6]"></span>
-                </span>
+              <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 bg-[#201f1f] border border-[#047857] text-[#8bd6b6] font-mono text-[10px] tracking-wider uppercase shadow-[inset_1px_1px_0_#0a0a0a]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#8bd6b6] animate-pulse"></span>
                 FastAPI Live
               </span>
             )}
           </div>
 
-          {/* Desktop Nav Links */}
-          <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
+          {/* Desktop Navigation Links */}
+          <nav className="hidden md:flex items-center h-16">
             {navLinks.map((link) => {
               const isActive = pathname === link.href;
               const Icon = link.icon;
@@ -144,65 +145,63 @@ export function Navbar({ onOpenShareModal }: NavbarProps) {
                 <Link
                   key={link.name}
                   href={link.href}
-                  className={`flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-bold transition-all whitespace-nowrap ${
+                  className={`h-16 flex items-center gap-2 px-3.5 xl:px-4 font-headline-sm uppercase tracking-wider text-[12px] xl:text-[13px] transition-colors ${
                     isActive
-                      ? "bg-[#065f46] text-[#8bd6b6] font-extrabold border border-[#047857]"
-                      : "text-slate-300 hover:bg-[#201f1f] hover:text-white"
+                      ? "bg-[#065f46] text-white font-bold shadow-[inset_0_-3px_0_0_#8bd6b6]"
+                      : "text-[#bec9c2] hover:text-white hover:bg-[#201f1f]"
                   }`}
                 >
-                  <Icon
-                    className={`h-3.5 w-3.5 ${
-                      isActive ? "text-[#8bd6b6]" : "text-slate-400"
-                    }`}
-                  />
+                  <Icon className={`h-4 w-4 ${isActive ? "text-[#8bd6b6]" : "text-[#89938d]"}`} />
                   <span>{link.name}</span>
                 </Link>
               );
             })}
           </nav>
 
-          {/* Right Action Controls */}
-          <div className="flex items-center gap-2.5 shrink-0">
-            {/* ROLE SWITCHER DROPDOWN */}
+          {/* Right Tools & Role Switcher */}
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+            {/* Persona / Role Switcher in Voxel Tactical Well */}
             <div className="relative">
               <button
+                type="button"
                 onClick={() => setRoleDropdownOpen(!roleDropdownOpen)}
-                className="flex items-center gap-2 rounded-xl border border-[#333333] bg-[#1c1b1b] px-3 py-1.5 text-xs font-bold text-white hover:border-[#444444] transition-colors shadow-2xs"
+                className="relative flex items-center bg-[#201f1f] border-2 border-[#047857] px-2.5 py-1.5 gap-2 shadow-[inset_2px_2px_0_#0e0e0e,inset_-2px_-2px_0_#2a2a2a] cursor-pointer hover:border-[#8bd6b6] transition-colors"
+                title="Switch User Role"
               >
-                <span className="h-2 w-2 rounded-full bg-[#8bd6b6]" />
-                <span className="capitalize">
-                  {role === "borrower" && "Borrower Mode"}
-                  {role === "owner" && "Owner Mode"}
-                  {role === "delivery" && "Delivery Partner"}
-                  {role === "admin" && "Platform Admin"}
+                <span className="w-2 h-2 rounded-full bg-[#8bd6b6] shadow-[0_0_6px_#8bd6b6] animate-pulse"></span>
+                <span className="font-mono text-[11px] sm:text-xs font-bold uppercase tracking-wider text-[#e5e2e1]">
+                  {role === "borrower" && "Borrower"}
+                  {role === "owner" && "Owner"}
+                  {role === "delivery" && "Courier"}
+                  {role === "admin" && "Admin"}
                 </span>
-                <ChevronDown className="h-3.5 w-3.5 text-slate-400" />
+                <ChevronDown className="h-3.5 w-3.5 text-[#bec9c2]" />
               </button>
 
               {roleDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-[#1c1b1b] p-2 shadow-2xl border border-[#2e2e2e] z-50 animate-in fade-in">
-                  <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 border-b border-[#262626] mb-1">
-                    Role Switcher
+                <div className="absolute right-0 mt-2 w-64 rounded-none bg-[#1c1b1b] p-2 shadow-[0_8px_0_0_#0e0e0e] border-2 border-[#2a2a2a] z-50 animate-in fade-in">
+                  <div className="px-3 py-1.5 text-[10px] font-mono font-bold uppercase tracking-wider text-[#8bd6b6] border-b border-[#262626] mb-1">
+                    Ecosystem Persona Switcher
                   </div>
                   {rolesList.map((r) => (
                     <button
                       key={r.id}
                       onClick={() => handleRoleSelect(r.id)}
-                      className={`w-full text-left p-2.5 rounded-xl text-xs transition-colors flex flex-col ${
+                      className={`w-full text-left p-2.5 text-xs transition-colors flex flex-col cursor-pointer ${
                         role === r.id
-                          ? "bg-[#065f46] text-[#8bd6b6] font-bold border border-[#047857]"
-                          : "hover:bg-[#262626] text-slate-200"
+                          ? "bg-[#065f46] text-white font-bold border border-[#047857]"
+                          : "hover:bg-[#262626] text-[#bec9c2]"
                       }`}
                     >
                       <div className="flex items-center justify-between">
-                        <span>{r.title}</span>
+                        <span className="font-headline-sm uppercase tracking-wider">{r.title}</span>
                         {role === r.id && (
-                          <span className="text-[10px] font-black text-[#8bd6b6]">
+                          <span className="text-[10px] font-mono font-black text-[#8bd6b6]">
                             ACTIVE
                           </span>
                         )}
                       </div>
-                      <span className="text-[10px] text-slate-400 mt-0.5">
+                      <span className="text-[10px] text-[#89938d] mt-0.5">
                         {r.desc}
                       </span>
                     </button>
@@ -211,9 +210,10 @@ export function Navbar({ onOpenShareModal }: NavbarProps) {
               )}
             </div>
 
-            {/* List Resource CTA — ONLY visible for Resource Owner role */}
+            {/* List Equipment Action CTA — ONLY visible for Resource Owner role */}
             {role === "owner" && (
               <button
+                type="button"
                 onClick={() => {
                   if (!isLoggedIn) {
                     openAuthModal("login");
@@ -222,81 +222,74 @@ export function Navbar({ onOpenShareModal }: NavbarProps) {
                   if (onOpenShareModal) onOpenShareModal();
                   else router.push("/resources?action=list");
                 }}
-                className="hidden sm:flex items-center gap-1.5 rounded-xl bg-emerald-800 hover:bg-emerald-900 px-3.5 py-2 text-xs font-bold text-white shadow-xs active:scale-95 transition-all"
+                className="flex items-center gap-1.5 bg-[#065F46] hover:bg-[#047857] text-white border-2 border-[#047857] px-3 py-1.5 font-headline-sm uppercase tracking-wider shadow-[0_4px_0_0_#003828] active:translate-y-0.5 active:shadow-[0_2px_0_0_#003828] transition-all cursor-pointer text-xs"
               >
-                <PlusCircle className="h-3.5 w-3.5 text-emerald-300" />
-                <span>List Gear</span>
+                <span className="text-[#FBBF24] font-bold text-base leading-none">+</span>
+                <span className="font-headline-sm text-[12px] tracking-wider leading-none text-white hidden sm:inline">
+                  List Equipment
+                </span>
               </button>
             )}
 
-            {/* USER PROFILE OR LOGIN BUTTON */}
+            {/* Auth Controls / User Profile */}
             {isLoggedIn ? (
               <div className="relative">
                 <button
+                  type="button"
                   onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                  className="flex items-center gap-2 rounded-xl p-1 hover:bg-[#201f1f] transition-colors border border-transparent hover:border-[#333333]"
+                  className="relative p-1 border-2 border-[#60452F] hover:border-[#8bd6b6] bg-[#1a1a1a] shadow-[inset_1px_1px_0_#0F0F0F] transition-colors cursor-pointer flex items-center gap-2"
+                  title={`Signed in as ${currentUser.name}`}
                 >
-                  <div className="relative">
-                    <img
-                      src={currentUser.avatar}
-                      alt={currentUser.name}
-                      className="h-8 w-8 rounded-full object-cover ring-2 ring-[#065f46]"
-                    />
-                    <span
-                      className="absolute -bottom-0.5 -right-0.5 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-[#065f46] text-[#8bd6b6] shadow-2xs"
-                      title="Verified Identity"
-                    >
-                      <ShieldCheck className="h-2 w-2" />
-                    </span>
-                  </div>
-                  <div className="hidden xl:flex flex-col text-left">
-                    <span className="text-xs font-bold text-white leading-tight">
-                      {currentUser.name}
-                    </span>
-                    <span className="text-[10px] font-bold text-[#8bd6b6]">
-                      ★ 4.9 Verified
-                    </span>
-                  </div>
+                  <img
+                    src={currentUser.avatar}
+                    alt={currentUser.name}
+                    className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover"
+                  />
+                  <span className="hidden xl:inline text-xs font-headline-sm uppercase text-[#e5e2e1]">
+                    {currentUser.name.split(" ")[0]}
+                  </span>
+                  <ChevronDown className="h-3 w-3 text-[#bec9c2] hidden sm:block" />
                 </button>
 
                 {userDropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-52 rounded-2xl bg-[#1c1b1b] p-2 shadow-2xl border border-[#2e2e2e] z-50 animate-in fade-in">
+                  <div className="absolute right-0 mt-2 w-56 rounded-none bg-[#1c1b1b] p-2 shadow-[0_8px_0_0_#0e0e0e] border-2 border-[#2a2a2a] z-50 animate-in fade-in">
                     <div className="px-3 py-2 border-b border-[#262626] mb-1">
-                      <span className="block text-xs font-bold text-white">
+                      <span className="block text-xs font-bold text-white font-headline-sm uppercase">
                         {currentUser.name}
                       </span>
-                      <span className="text-[10px] font-semibold text-[#8bd6b6]">
-                        {currentUser.neighborhood}
+                      <span className="text-[10px] font-mono text-[#8bd6b6]">
+                        ★ {currentUser.trustScore || 4.9} Verified Peer
                       </span>
                     </div>
 
                     <Link
                       href="/profile"
                       onClick={() => setUserDropdownOpen(false)}
-                      className="flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-bold text-slate-200 hover:bg-[#262626] transition-colors"
+                      className="flex items-center gap-2 px-3 py-2 text-xs font-headline-sm uppercase tracking-wider text-[#bec9c2] hover:bg-[#262626] hover:text-white transition-colors"
                     >
-                      <User className="h-4 w-4 text-[#8bd6b6]" />
+                      <User className="h-3.5 w-3.5 text-[#8bd6b6]" />
                       <span>My Trust Profile</span>
                     </Link>
 
                     <Link
                       href="/bookings"
                       onClick={() => setUserDropdownOpen(false)}
-                      className="flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors"
+                      className="flex items-center gap-2 px-3 py-2 text-xs font-headline-sm uppercase tracking-wider text-[#bec9c2] hover:bg-[#262626] hover:text-white transition-colors"
                     >
-                      <Package className="h-4 w-4 text-emerald-700" />
+                      <Package className="h-3.5 w-3.5 text-[#8bd6b6]" />
                       <span>My Bookings</span>
                     </Link>
 
                     <button
+                      type="button"
                       onClick={() => {
                         setUserDropdownOpen(false);
                         logout();
                         router.push("/");
                       }}
-                      className="w-full flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-bold text-red-600 hover:bg-red-50 transition-colors mt-1 border-t border-slate-100"
+                      className="w-full flex items-center gap-2 px-3 py-2 text-xs font-headline-sm uppercase tracking-wider text-rose-400 hover:bg-[#2a1a1a] hover:text-rose-300 transition-colors mt-1 border-t border-[#262626] cursor-pointer"
                     >
-                      <LogOut className="h-4 w-4 text-red-500" />
+                      <LogOut className="h-3.5 w-3.5 text-rose-400" />
                       <span>Log Out</span>
                     </button>
                   </div>
@@ -305,14 +298,16 @@ export function Navbar({ onOpenShareModal }: NavbarProps) {
             ) : (
               <div className="flex items-center gap-2">
                 <button
+                  type="button"
                   onClick={() => openAuthModal("login")}
-                  className="rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 hover:border-slate-300 hover:bg-slate-50 transition-colors shadow-2xs"
+                  className="bg-[#201f1f] hover:bg-[#2a2a2a] text-[#e5e2e1] font-headline-sm uppercase text-xs px-3 py-1.5 border-2 border-[#353534] shadow-[0_2px_0_0_#0e0e0e] active:translate-y-0.5 active:shadow-none transition-all cursor-pointer"
                 >
                   Log In
                 </button>
                 <button
+                  type="button"
                   onClick={() => openAuthModal("signup")}
-                  className="rounded-xl bg-emerald-800 hover:bg-emerald-900 px-3.5 py-1.5 text-xs font-bold text-white shadow-xs active:scale-95 transition-all"
+                  className="bg-[#065f46] hover:bg-[#047857] text-white font-headline-sm uppercase text-xs px-3.5 py-1.5 border-2 border-[#047857] shadow-[0_2px_0_0_#003828] active:translate-y-0.5 active:shadow-none transition-all cursor-pointer"
                 >
                   Sign Up
                 </button>
@@ -321,23 +316,32 @@ export function Navbar({ onOpenShareModal }: NavbarProps) {
 
             {/* Mobile Menu Button */}
             <button
+              type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden rounded-lg p-2 text-slate-600 hover:bg-slate-100"
+              className="md:hidden p-2 text-[#bec9c2] hover:text-white bg-[#201f1f] border border-[#2a2a2a] cursor-pointer"
             >
               {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
           </div>
         </div>
 
+        {/* Stepped Grass & Dirt Divider Underneath */}
+        <div className="w-full flex flex-col pointer-events-none select-none">
+          <div className="h-1 w-full bg-[#65A832] relative overflow-hidden flex">
+            <div className="w-full h-full bg-[linear-gradient(90deg,#65A832_0%,#4A7A23_50%,#65A832_100%)] bg-[length:16px_4px]"></div>
+          </div>
+          <div className="h-1.5 w-full bg-[#60452F] shadow-[0_2px_0_0_#0e0e0e]"></div>
+        </div>
+
         {/* Mobile Dropdown Drawer */}
         {mobileMenuOpen && (
-          <div className="lg:hidden border-b border-slate-200 bg-white px-4 pt-3 pb-5 shadow-xl animate-in slide-in-from-top-2 space-y-4">
+          <div className="md:hidden border-b-2 border-[#201f1f] bg-[#171717] px-4 pt-3 pb-6 shadow-2xl animate-in slide-in-from-top-2 space-y-4">
             {/* Role Switcher in Mobile Drawer */}
-            <div className="bg-slate-50 p-3 rounded-2xl border border-slate-200">
-              <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">
+            <div className="bg-[#201f1f] p-3 border-2 border-[#2a2a2a]">
+              <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#8bd6b6] mb-2">
                 Switch Ecosystem Role
               </div>
-              <div className="grid grid-cols-2 gap-1.5 text-xs font-bold">
+              <div className="grid grid-cols-2 gap-2 text-xs font-bold">
                 {rolesList.map((r) => (
                   <button
                     key={r.id}
@@ -345,10 +349,10 @@ export function Navbar({ onOpenShareModal }: NavbarProps) {
                       handleRoleSelect(r.id);
                       setMobileMenuOpen(false);
                     }}
-                    className={`p-2 rounded-xl text-left transition-all text-[11px] ${
+                    className={`p-2.5 text-left transition-all text-[11px] font-headline-sm uppercase tracking-wider cursor-pointer ${
                       role === r.id
-                        ? "bg-emerald-800 text-white font-extrabold shadow-2xs"
-                        : "bg-white text-slate-700 border border-slate-200 hover:bg-slate-100"
+                        ? "bg-[#065f46] text-white border border-[#047857] shadow-[0_2px_0_0_#003828]"
+                        : "bg-[#0e0e0e] text-[#bec9c2] border border-[#2a2a2a] hover:bg-[#252525]"
                     }`}
                   >
                     <div className="truncate">{r.title}</div>
@@ -360,6 +364,7 @@ export function Navbar({ onOpenShareModal }: NavbarProps) {
             {/* List Gear CTA for Resource Owner in Mobile Drawer */}
             {role === "owner" && (
               <button
+                type="button"
                 onClick={() => {
                   setMobileMenuOpen(false);
                   if (!isLoggedIn) {
@@ -369,14 +374,14 @@ export function Navbar({ onOpenShareModal }: NavbarProps) {
                   if (onOpenShareModal) onOpenShareModal();
                   else router.push("/resources?action=list");
                 }}
-                className="w-full flex items-center justify-center gap-2 rounded-xl bg-emerald-800 hover:bg-emerald-900 py-2.5 text-xs font-bold text-white shadow-xs"
+                className="w-full flex items-center justify-center gap-2 bg-[#065F46] hover:bg-[#047857] text-white border-2 border-[#047857] py-2.5 text-xs font-headline-sm uppercase tracking-wider shadow-[0_4px_0_0_#003828] active:translate-y-0.5"
               >
-                <PlusCircle className="h-4 w-4 text-emerald-300" />
-                <span>+ List Equipment Asset</span>
+                <PlusCircle className="h-4 w-4 text-[#8bd6b6]" />
+                <span>+ List Equipment</span>
               </button>
             )}
 
-            {/* Nav Links */}
+            {/* Mobile Nav Links */}
             <div className="space-y-1">
               {navLinks.map((link) => {
                 const isActive = pathname === link.href;
@@ -386,14 +391,14 @@ export function Navbar({ onOpenShareModal }: NavbarProps) {
                     key={link.name}
                     href={link.href}
                     onClick={() => setMobileMenuOpen(false)}
-                    className={`flex items-center justify-between rounded-xl px-3 py-2.5 text-xs font-bold ${
+                    className={`flex items-center justify-between px-3 py-2.5 text-xs font-headline-sm uppercase tracking-wider transition-colors ${
                       isActive
-                        ? "bg-emerald-50 text-emerald-900 font-extrabold border border-emerald-200/60"
-                        : "text-slate-700 hover:bg-slate-50"
+                        ? "bg-[#065f46] text-white border border-[#047857]"
+                        : "text-[#bec9c2] hover:bg-[#201f1f] hover:text-white"
                     }`}
                   >
                     <div className="flex items-center gap-2.5">
-                      <Icon className="h-4 w-4 text-emerald-700" />
+                      <Icon className="h-4 w-4 text-[#8bd6b6]" />
                       <span>{link.name}</span>
                     </div>
                   </Link>
@@ -401,47 +406,52 @@ export function Navbar({ onOpenShareModal }: NavbarProps) {
               })}
             </div>
 
-            {/* Profile / Auth Controls */}
+            {/* Mobile Profile / Auth Controls */}
             {isLoggedIn ? (
-              <div className="border-t border-slate-100 pt-3 space-y-2">
-                <div className="flex items-center gap-2 px-2">
-                  <div className="h-8 w-8 rounded-full bg-emerald-100 text-emerald-800 font-bold flex items-center justify-center text-xs">
-                    {currentUser.name.charAt(0)}
-                  </div>
+              <div className="border-t border-[#2a2a2a] pt-3 space-y-2">
+                <div className="flex items-center gap-2.5 px-1">
+                  <img
+                    src={currentUser.avatar}
+                    alt={currentUser.name}
+                    className="w-8 h-8 rounded-full object-cover border border-[#047857]"
+                  />
                   <div>
-                    <div className="text-xs font-bold text-slate-900">{currentUser.name}</div>
-                    <div className="text-[10px] text-emerald-700 font-semibold">{currentUser.neighborhood}</div>
+                    <div className="text-xs font-bold text-white font-headline-sm uppercase">{currentUser.name}</div>
+                    <div className="text-[10px] text-[#8bd6b6] font-mono">{currentUser.neighborhood}</div>
                   </div>
                 </div>
                 <button
+                  type="button"
                   onClick={() => {
                     setMobileMenuOpen(false);
                     logout();
                     router.push("/");
                   }}
-                  className="w-full flex items-center justify-center gap-2 rounded-xl bg-rose-50 border border-rose-200 py-2 text-xs font-bold text-rose-700"
+                  className="w-full flex items-center justify-center gap-2 bg-[#2a1a1a] border border-[#4a2020] py-2 text-xs font-headline-sm uppercase tracking-wider text-rose-400"
                 >
-                  <LogOut className="h-4 w-4 text-rose-600" />
+                  <LogOut className="h-4 w-4 text-rose-400" />
                   <span>Log Out</span>
                 </button>
               </div>
             ) : (
-              <div className="grid grid-cols-2 gap-2 border-t border-slate-100 pt-3">
+              <div className="grid grid-cols-2 gap-2 border-t border-[#2a2a2a] pt-3">
                 <button
+                  type="button"
                   onClick={() => {
                     setMobileMenuOpen(false);
                     openAuthModal("login");
                   }}
-                  className="w-full rounded-xl border border-slate-300 py-2.5 text-xs font-bold text-slate-700"
+                  className="w-full bg-[#201f1f] text-white border-2 border-[#353534] py-2.5 text-xs font-headline-sm uppercase tracking-wider"
                 >
                   Log In
                 </button>
                 <button
+                  type="button"
                   onClick={() => {
                     setMobileMenuOpen(false);
                     openAuthModal("signup");
                   }}
-                  className="w-full rounded-xl bg-emerald-800 py-2.5 text-xs font-bold text-white shadow-xs"
+                  className="w-full bg-[#065f46] text-white border-2 border-[#047857] py-2.5 text-xs font-headline-sm uppercase tracking-wider shadow-[0_2px_0_0_#003828]"
                 >
                   Sign Up
                 </button>

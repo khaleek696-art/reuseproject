@@ -97,14 +97,10 @@ export function AddResourceModal({
 
       try {
         for (const file of filesArray) {
-          // Read file as Base64 Data URL for persistent image display
-          const base64Url = await readFileAsDataUrl(file);
-          setUploadedPhotos((prev) => [...prev, base64Url]);
-
           const formData = new FormData();
           formData.append("file", file);
 
-          // Upload to /api/upload endpoint
+          // Upload directly to AWS S3 via upload endpoint
           const res = await fetch("/api/upload", {
             method: "POST",
             body: formData,
@@ -112,13 +108,15 @@ export function AddResourceModal({
 
           if (res.ok) {
             const data = await res.json();
-            if (data.s3_url) {
-              setS3UploadedUrls((prev) => [...prev, data.s3_url]);
+            const realS3Url = data.direct_s3_url || data.s3_url;
+            if (realS3Url) {
+              setS3UploadedUrls((prev) => [...prev, realS3Url]);
+              setUploadedPhotos((prev) => [...prev, realS3Url]);
             }
           }
         }
       } catch (err) {
-        console.warn("AWS S3 Upload fallback:", err);
+        console.warn("AWS S3 Upload error:", err);
       } finally {
         setIsUploadingS3(false);
       }
@@ -214,14 +212,14 @@ export function AddResourceModal({
   };
 
   const handleFinalSubmit = () => {
-    // Prefer real S3 URLs if available, otherwise fallback to local/unsplash
+    // Strict AWS S3 Cloud Storage URLs
     const finalPhotos =
       s3UploadedUrls.length > 0
         ? s3UploadedUrls
-        : uploadedPhotos.length > 0
-        ? uploadedPhotos
+        : uploadedPhotos.filter((p) => p.startsWith("http")).length > 0
+        ? uploadedPhotos.filter((p) => p.startsWith("http"))
         : [
-            "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&auto=format&fit=crop&q=80",
+            "https://reuse-gear-images-2026.s3.ap-south-1.amazonaws.com/equipment/default_gear.jpg",
           ];
 
     const newRes: Resource = {
@@ -296,7 +294,7 @@ export function AddResourceModal({
               Resource Published to AWS S3 &amp; Live!
             </h3>
             <p className="mt-1 text-xs text-slate-500 max-w-md mx-auto">
-              Photos uploaded to AWS S3 Bucket <code className="text-emerald-700 font-mono">reuse-app-storage (ap-south-1)</code>. Live on spatial radar map!
+              Photos uploaded to AWS S3 Bucket <code className="text-emerald-700 font-mono">reuse-gear-images-2026 (ap-south-1)</code>. Live on spatial radar map!
             </p>
           </div>
         ) : (
@@ -506,7 +504,7 @@ export function AddResourceModal({
                       </label>
                       <span className="text-[10px] text-emerald-700 font-bold flex items-center gap-1">
                         <Cloud className="h-3 w-3" />
-                        <span>S3 Bucket: reuse-app-storage</span>
+                        <span>S3 Bucket: reuse-gear-images-2026</span>
                       </span>
                     </div>
 
@@ -536,7 +534,7 @@ export function AddResourceModal({
                             Click here to browse photos from your Mac/PC folder
                           </div>
                           <div className="text-[10px] text-slate-400 mt-1">
-                            Uploaded securely to AWS S3 (reuse-app-storage)
+                            Uploaded securely to AWS S3 (reuse-gear-images-2026)
                           </div>
                         </>
                       )}

@@ -3,15 +3,37 @@ Resource Catalog & Geo-Spatial Search API Router
 """
 import time
 from typing import List, Optional
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, UploadFile, File
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db
+from app.core.storage import upload_file_to_s3_or_local
 from app.models.resource import Resource as ResourceModel
 from app.schemas.resource import ResourceCreate, ResourceResponse
 
 router = APIRouter(prefix="/resources", tags=["Resources"])
+
+@router.post("/upload")
+async def upload_resource_image(file: UploadFile = File(...)):
+    """
+    Upload equipment photo directly to AWS S3 bucket ('reuse-gear-images-2026') using Boto3 SDK.
+    Returns permanent public S3 HTTPS URL.
+    """
+    file_bytes = await file.read()
+    success, s3_url, storage_type = await upload_file_to_s3_or_local(
+        file_bytes=file_bytes,
+        original_filename=file.filename or "equipment.jpg",
+        folder_prefix="equipment"
+    )
+    return {
+        "success": success,
+        "url": s3_url,
+        "s3_url": s3_url,
+        "storage_type": storage_type,
+        "filename": file.filename
+    }
+
 
 # Fallback initial resources list
 SEED_RESOURCES = [

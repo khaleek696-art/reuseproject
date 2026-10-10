@@ -159,7 +159,7 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
     trust: 10,
   });
 
-  // Load session & custom resources from localStorage on client mount
+  // Load session from localStorage on client mount (user login session only, NOT marketplace resources)
   useEffect(() => {
     if (typeof window !== "undefined") {
       try {
@@ -174,45 +174,20 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
         } else {
           setIsLoggedIn(false);
         }
-
-        const saved = localStorage.getItem("reuse_custom_resources");
-        if (saved) {
-          const parsed = JSON.parse(saved);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            // Deduplicate stored custom items by ID
-            const seen = new Set<string>();
-            const cleanParsed: Resource[] = [];
-            for (const item of parsed) {
-              if (item && item.id && !seen.has(item.id)) {
-                seen.add(item.id);
-                cleanParsed.push(item);
-              }
-            }
-
-            // Overwrite localStorage with clean deduplicated items
-            localStorage.setItem("reuse_custom_resources", JSON.stringify(cleanParsed));
-
-            setResources((prev) => {
-              const customIds = new Set(cleanParsed.map((r: Resource) => r.id));
-              const filteredPrev = prev.filter((r) => !customIds.has(r.id));
-              return [...cleanParsed, ...filteredPrev];
-            });
-          }
-        }
       } catch (e) {
-        console.error("Failed to load saved state:", e);
+        console.error("Failed to load saved session:", e);
       }
     }
   }, []);
 
-  // Sync with FastAPI backend on mount (production cloud URL or local)
+  // Sync with FastAPI backend on mount (Fetch live listings directly from Cloud Database)
   useEffect(() => {
     async function syncWithBackend() {
       const isHealthy = await checkBackendHealth();
       setIsBackendConnected(isHealthy);
       
       const apiRes = await fetchResourcesApi();
-      if (apiRes && Array.isArray(apiRes)) {
+      if (apiRes && Array.isArray(apiRes) && apiRes.length > 0) {
         const formattedRes: Resource[] = apiRes.map((r: any) => ({
           id: r.id,
           ownerId: r.ownerId || "u_owner_global",
@@ -220,8 +195,8 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
           category: (r.category || "tech") as CategoryId,
           condition: (r.condition || "like_new") as Condition,
           description: r.description || "Clean working condition.",
-          pricePerDay: r.dailyRate,
-          deposit: r.deposit,
+          pricePerDay: r.dailyRate || r.pricePerDay || 500,
+          deposit: r.deposit || 1500,
           availableFrom: "09:00 AM",
           availableTo: "09:00 PM",
           instructions: "Handle with care and return on time.",
@@ -231,47 +206,35 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
             campus: r.neighborhood || "Campus District",
             address: r.neighborhood || "Campus District",
           },
-          photos: r.photos || ["https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&auto=format&fit=crop&q=80"],
+          photos: r.photos && r.photos.length > 0 ? r.photos : ["https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&auto=format&fit=crop&q=80"],
           status: r.isAvailable ? "active" : "borrowed",
           createdAt: "2026-09-25",
         }));
         
-        setResources((prev) => {
-          const customOnly = prev.filter((r) => r.id.startsWith("r_"));
-          const customIds = new Set(customOnly.map((r) => r.id));
-          const filteredApi = formattedRes.filter((r) => !customIds.has(r.id));
-          return [...filteredApi, ...customOnly];
-        });
+        // Central Cloud API is the single source of truth for all users/devices
+        setResources(formattedRes);
       }
     }
     syncWithBackend();
   }, []);
 
   const addResource = async (newRes: Resource) => {
+    // Optimistically show on UI immediately
     setResources((prev) => {
       if (prev.some((r) => r.id === newRes.id)) {
         return prev;
       }
-      const updated = [newRes, ...prev];
-      if (typeof window !== "undefined") {
-        try {
-          const customOnly = updated.filter((r) => r.id.startsWith("r_"));
-          localStorage.setItem("reuse_custom_resources", JSON.stringify(customOnly));
-        } catch (e) {
-          console.error("Failed to persist custom resource:", e);
-        }
-      }
-      return updated;
+      return [newRes, ...prev];
     });
 
-    // Sync to Production Cloud FastAPI backend
+    // Save directly to Central Cloud FastAPI Backend & PostgreSQL Database
     const API_URL =
       process.env.NEXT_PUBLIC_API_BASE_URL ||
       process.env.NEXT_PUBLIC_API_URL ||
       "https://reuse-backend-cbc3.onrender.com/api/v1";
 
     try {
-      await fetch(`${API_URL}/resources`, {
+      const res = await fetch(`${API_URL}/resources`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -288,6 +251,36 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
           ownerName: user.name || "Verified Owner",
         }),
       });
+
+      if (res.ok) {
+        // Fetch fresh list from database so all clients are strictly in sync
+        const apiRes = await fetchResourcesApi();
+        if (apiRes && Array.isArray(apiRes) && apiRes.length > 0) {
+          const formattedRes: Resource[] = apiRes.map((r: any) => ({
+            id: r.id,
+            ownerId: r.ownerId || "u_owner_global",
+            title: r.title,
+            category: (r.category || "tech") as CategoryId,
+            condition: (r.condition || "like_new") as Condition,
+            description: r.description || "Clean working condition.",
+            pricePerDay: r.dailyRate || r.pricePerDay || 500,
+            deposit: r.deposit || 1500,
+            availableFrom: "09:00 AM",
+            availableTo: "09:00 PM",
+            instructions: "Handle with care and return on time.",
+            location: {
+              lat: r.lat || 18.5204,
+              lng: r.lng || 73.8567,
+              campus: r.neighborhood || "Campus District",
+              address: r.neighborhood || "Campus District",
+            },
+            photos: r.photos && r.photos.length > 0 ? r.photos : ["https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&auto=format&fit=crop&q=80"],
+            status: r.isAvailable ? "active" : "borrowed",
+            createdAt: "2026-09-25",
+          }));
+          setResources(formattedRes);
+        }
+      }
     } catch (e) {
       console.error("Global Cloud Backend Sync failed:", e);
     }

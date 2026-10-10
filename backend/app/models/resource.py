@@ -9,7 +9,7 @@ class Resource(Base):
     __tablename__ = "resources"
 
     id = Column(String(50), primary_key=True, index=True)
-    owner_id = Column(String(50), ForeignKey("users.id"), nullable=False)
+    owner_id = Column(String(50), nullable=False, default="u_owner_rahul", index=True)
     title = Column(String(150), nullable=False, index=True)
     category = Column(String(50), nullable=False, index=True)
     condition = Column(String(50), nullable=False)

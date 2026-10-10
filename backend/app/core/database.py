@@ -14,14 +14,18 @@ logger = logging.getLogger("reuse_db")
 # Base Model Class for SQLAlchemy ORM
 Base = declarative_base()
 
-# Primary PostgreSQL Async Engine
+# Primary PostgreSQL Async Engine (Supabase / Render)
+db_url = settings.DATABASE_URL
+if db_url.startswith("postgresql://"):
+    db_url = db_url.replace("postgresql://", "postgresql+asyncpg://", 1)
+
 postgres_engine = create_async_engine(
-    settings.DATABASE_URL,
+    db_url,
     echo=False,
     future=True,
     pool_pre_ping=True,  # Auto-reconnect lost DB pool connections
-    pool_size=20,         # High concurrency connection pool size
-    max_overflow=10       # Peak traffic burst buffer
+    pool_size=10,         # High concurrency connection pool size
+    max_overflow=5       # Peak traffic buffer
 )
 
 # SQLite Fallback Async Engine (For zero-config local development without Postgres daemon)

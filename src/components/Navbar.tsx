@@ -20,6 +20,7 @@ import {
   Heart,
   LogOut,
   LogIn,
+  Activity,
 } from "lucide-react";
 import { useRole, UserRole } from "@/lib/roleContext";
 import { AuthModal } from "@/components/AuthModal";
@@ -62,12 +63,14 @@ export function Navbar({ onOpenShareModal }: NavbarProps) {
         return [
           { name: "Explore Gear", href: "/resources", icon: Compass },
           { name: "AI Matches", href: "/matches", icon: Sparkles },
+          { name: "DemandPulse", href: "/demandpulse", icon: Activity },
           { name: "My Bookings", href: "/bookings", icon: Package },
           { name: "Impact", href: "/impact", icon: Heart },
         ];
       case "owner":
         return [
           { name: "My Dashboard", href: "/dashboard", icon: Package },
+          { name: "DemandPulse", href: "/demandpulse", icon: Activity },
           { name: "Explore Gear", href: "/resources", icon: Compass },
           { name: "Rental Requests", href: "/bookings?tab=requests", icon: Sparkles },
           { name: "Impact", href: "/impact", icon: Heart },
@@ -80,6 +83,7 @@ export function Navbar({ onOpenShareModal }: NavbarProps) {
       case "admin":
         return [
           { name: "Admin Console", href: "/admin", icon: ShieldAlert },
+          { name: "DemandPulse", href: "/demandpulse", icon: Activity },
           { name: "Impact", href: "/impact", icon: Heart },
         ];
       default:

@@ -12,6 +12,7 @@ from app.api.chat import router as chat_router
 from app.api.payments import router as payments_router
 from app.api.ai_assistant import router as ai_router
 from app.api.trust import router as trust_router
+from app.api.analytics import router as analytics_router
 
 api_router = APIRouter()
 
@@ -25,3 +26,4 @@ api_router.include_router(payments_router)
 api_router.include_router(ai_router)
 api_router.include_router(admin_router)
 api_router.include_router(trust_router)
+api_router.include_router(analytics_router)

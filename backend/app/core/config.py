@@ -18,13 +18,16 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 1440
     
-    # Cloud Database
+    # Cloud Database (Primary Marketplace: Supabase PostgreSQL)
     DATABASE_URL: str = os.getenv(
         "DATABASE_URL", 
         "postgresql+asyncpg://reuse:reuse_password@localhost:5432/reuse_db"
     )
     SQLITE_FALLBACK_URL: str = os.getenv("SQLITE_FALLBACK_URL", "sqlite+aiosqlite:///./reuse_local.db")
     REDIS_URL: str = os.getenv("REDIS_URL", "redis://localhost:6379/0")
+    
+    # Tiger Cloud / TimescaleDB Analytics Database (DemandPulse Time-Series)
+    TIGER_DATABASE_URL: str = os.getenv("TIGER_DATABASE_URL", "")
     
     # AWS S3 Cloud Storage Credentials
     AWS_ACCESS_KEY_ID: str = ""

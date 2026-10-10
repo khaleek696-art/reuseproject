@@ -3,7 +3,7 @@ Resource Catalog & Geo-Spatial Search API Router
 """
 import time
 from typing import List, Optional
-from fastapi import APIRouter, Depends, Query, UploadFile, File
+from fastapi import APIRouter, Depends, Query, UploadFile, File, BackgroundTasks
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -11,6 +11,7 @@ from app.core.database import get_db
 from app.core.storage import upload_file_to_s3_or_local
 from app.models.resource import Resource as ResourceModel
 from app.schemas.resource import ResourceCreate, ResourceResponse
+from app.services.demandpulse import DemandPulseEngine
 
 router = APIRouter(prefix="/resources", tags=["Resources"])
 
@@ -103,11 +104,28 @@ SEED_RESOURCES = [
 async def get_resources(
     category: Optional[str] = None,
     query: Optional[str] = None,
+    background_tasks: BackgroundTasks = BackgroundTasks(),
     db: AsyncSession = Depends(get_db)
 ):
     """
     Fetch resources list from SQLAlchemy Database with category & keyword search filtering.
+    Emits non-blocking time-series search event into Tiger Cloud (TimescaleDB).
     """
+    # Track time-series search activity asynchronously
+    cat_map = {
+        "tech": "Cameras & Photography",
+        "tools": "Power Tools & Hardware",
+        "outdoors": "Camping & Outdoor Gear",
+        "audio": "Audio & Musical Equipment",
+    }
+    mapped_cat = cat_map.get(category, "Cameras & Photography" if not category or category == "all" else category)
+    background_tasks.add_task(
+        DemandPulseEngine.record_event,
+        event_type="search_performed",
+        category=mapped_cat,
+        locality="Indiranagar"
+    )
+
     try:
         stmt = select(ResourceModel)
         if category and category != "all":

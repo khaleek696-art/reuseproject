@@ -29,7 +29,9 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
+*.db
 backend/reuse_local.db
+reuse_local.db
 backend/uploads/
 
 # OS & Logs

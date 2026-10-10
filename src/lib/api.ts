@@ -215,4 +215,126 @@ export async function submitReviewApi(review: {
   }
 }
 
+// ----------------------------------------------------
+// TIGER CLOUD (TIMESCALEDB) DEMANDPULSE ANALYTICS API
+// ----------------------------------------------------
+
+export interface TigerStatus {
+  status: string;
+  is_cloud_active: boolean;
+  service_name: string;
+  database: string;
+  host: string;
+  port: number;
+  timescale_hypertable: boolean;
+  table_name: string;
+}
+
+export interface DemandSummary {
+  time_window_hours: number;
+  total_searches: number;
+  total_rental_requests: number;
+  total_rentals_completed: number;
+  total_cancellations: number;
+  demand_velocity_pct: number;
+  unmet_demand_index: string;
+  circular_efficiency_score: string;
+  total_economic_circulation: number;
+  tiger_cloud_status: TigerStatus;
+}
+
+export interface CategoryDemandTrend {
+  category: string;
+  searches: number;
+  requests: number;
+  completed: number;
+  total_volume: number;
+  growth_trend: string;
+  est_daily_market_val: number;
+}
+
+export interface DemandVsSupply {
+  category: string;
+  searches: number;
+  active_listings: number;
+  demand_supply_ratio: string;
+  market_urgency: "high" | "medium" | "low";
+  recommendation: string;
+}
+
+export interface HourlyDemandPoint {
+  hour: string;
+  searches: number;
+  requests: number;
+  completed: number;
+}
+
+export interface HotspotLocality {
+  locality: string;
+  total_activity: number;
+  rental_requests: number;
+  status: string;
+}
+
+export async function fetchTigerStatus(): Promise<TigerStatus | null> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/analytics/status`, { cache: "no-store" });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
+}
+
+export async function fetchDemandSummary(hours: number = 24): Promise<DemandSummary | null> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/analytics/demand-summary?hours=${hours}`, { cache: "no-store" });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
+}
+
+export async function fetchCategoryDemandTrends(): Promise<CategoryDemandTrend[]> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/analytics/category-trends`, { cache: "no-store" });
+    if (!res.ok) return [];
+    return await res.json();
+  } catch {
+    return [];
+  }
+}
+
+export async function fetchDemandVsSupply(): Promise<DemandVsSupply[]> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/analytics/demand-vs-supply`, { cache: "no-store" });
+    if (!res.ok) return [];
+    return await res.json();
+  } catch {
+    return [];
+  }
+}
+
+export async function fetchHourlyDemandSeries(): Promise<HourlyDemandPoint[]> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/analytics/hourly-series`, { cache: "no-store" });
+    if (!res.ok) return [];
+    return await res.json();
+  } catch {
+    return [];
+  }
+}
+
+export async function fetchHotspotLocalities(): Promise<HotspotLocality[]> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/analytics/hotspots`, { cache: "no-store" });
+    if (!res.ok) return [];
+    return await res.json();
+  } catch {
+    return [];
+  }
+}
+
+
 

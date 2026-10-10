@@ -9,6 +9,7 @@ from fastapi.responses import JSONResponse
 
 from app.core.config import settings
 from app.core.database import init_db_connection
+from app.core.tiger_db import init_tiger_connection
 from app.core.redis import redis_manager
 from app.api.router import api_router
 
@@ -20,13 +21,20 @@ logger = logging.getLogger("reuse_api")
 async def lifespan(app: FastAPI):
     """
     Application Lifespan Events (Startup & Shutdown)
-    Automatically initializes DB connection (with seamless SQLite fallback if Postgres is down)
+    Automatically initializes Primary DB (Supabase / local fallback),
+    Tiger Cloud TimescaleDB (DemandPulse Analytics),
     and Redis connection pool upon startup.
     """
     logger.info("Initializing RE:USE FastAPI application...")
     
-    # Auto-initialize DB connection with seamless fallback
+    # Auto-initialize Primary Marketplace DB
     await init_db_connection()
+    
+    # Auto-initialize Tiger Cloud TimescaleDB Analytics Engine
+    try:
+        await init_tiger_connection()
+    except Exception as te:
+        logger.warning(f"Tiger Cloud TimescaleDB non-fatal startup note: {te}")
     
     # Initialize Redis Pool
     await redis_manager.connect()

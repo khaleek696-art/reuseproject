@@ -3,8 +3,9 @@ Bookings & 5-Stage Custody Stepper API Router
 """
 import time
 from typing import List
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status, BackgroundTasks
 from app.schemas.booking import BookingCreate, StageAdvanceRequest, BookingResponse
+from app.services.demandpulse import DemandPulseEngine
 
 router = APIRouter(prefix="/bookings", tags=["Bookings"])
 
@@ -34,7 +35,10 @@ async def get_bookings():
     return SEED_BOOKINGS
 
 @router.post("", response_model=BookingResponse)
-async def create_booking(booking: BookingCreate):
+async def create_booking(
+    booking: BookingCreate,
+    background_tasks: BackgroundTasks = BackgroundTasks()
+):
     """
     Create a new booking request.
     """
@@ -53,10 +57,25 @@ async def create_booking(booking: BookingCreate):
         "escrowStatus": "HELD"
     }
     SEED_BOOKINGS.append(new_bk)
+
+    # Emit time-series rental_requested event into Tiger Cloud
+    background_tasks.add_task(
+        DemandPulseEngine.record_event,
+        event_type="rental_requested",
+        category="Cameras & Photography",
+        resource_id=booking.resourceId,
+        estimated_amount=float(booking.totalAmount or 0.0),
+        user_id="u_borrower_aman"
+    )
+
     return new_bk
 
 @router.post("/{booking_id}/advance-stage", response_model=BookingResponse)
-async def advance_booking_stage(booking_id: str, request: StageAdvanceRequest):
+async def advance_booking_stage(
+    booking_id: str, 
+    request: StageAdvanceRequest,
+    background_tasks: BackgroundTasks = BackgroundTasks()
+):
     """
     Advance 5-stage custody progress (REQUESTED -> ACCEPTED -> ACTIVE -> RETURNED -> COMPLETED).
     Includes OTP verification and automatic deposit refund upon completion.
@@ -76,6 +95,15 @@ async def advance_booking_stage(booking_id: str, request: StageAdvanceRequest):
             # Auto refund escrow deposit when advancing to COMPLETED
             if target == "COMPLETED":
                 bk["escrowStatus"] = "REFUNDED_TO_BORROWER"
+                # Emit time-series rental_completed event
+                background_tasks.add_task(
+                    DemandPulseEngine.record_event,
+                    event_type="rental_completed",
+                    category="Cameras & Photography",
+                    resource_id=bk.get("resourceId"),
+                    estimated_amount=float(bk.get("totalAmount") or 0.0),
+                    user_id=bk.get("borrowerId")
+                )
             
             bk["stage"] = target
             return bk

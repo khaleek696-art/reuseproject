@@ -1,3 +1,4 @@
+<!-- RE:USE Hyperlocal Resource Sharing & Circular Marketplace (Production Release) -->
 # 🌐 RE:USE — Hyperlocal Peer-to-Peer Equipment Sharing Marketplace
 
 > **"Don't buy more. Share what already exists."**  

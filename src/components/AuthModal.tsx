@@ -327,25 +327,34 @@ export function AuthModal({
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 overflow-y-auto">
-      <div className="relative w-full max-w-lg rounded-3xl bg-white p-6 sm:p-8 shadow-2xl border border-slate-200 animate-in fade-in zoom-in-95 max-h-[92vh] overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 overflow-y-auto select-none">
+      <div className="relative w-full max-w-lg bg-[#0e0e0e]/95 backdrop-blur-md border-2 border-[#201f1f] shadow-[0_16px_0_0_#060606,inset_1px_1px_0_#2a2a2a] p-6 sm:p-8 animate-in fade-in zoom-in-95 max-h-[92vh] overflow-y-auto">
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute right-5 top-5 rounded-full p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-colors"
+          className="absolute right-5 top-5 p-1.5 text-slate-400 hover:text-white bg-[#1c1b1b] border border-[#2a2a2a] transition-colors cursor-pointer"
         >
           <X className="h-5 w-5" />
         </button>
 
         {/* Modal Header */}
         <div className="text-center mb-6">
-          <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-800 font-black text-xl mb-3 shadow-xs">
-            R
+          {/* Voxel Grass/Dirt Block Icon */}
+          <div className="w-9 h-9 border border-[#2d5f00] relative overflow-hidden flex flex-col shadow-[inset_1px_1px_0_#94db5e,inset_-1px_-1px_0_#183800] bg-[#60452F] mx-auto mb-2.5">
+            <div className="h-4.5 w-full bg-[#65A832] relative flex">
+              <div className="absolute bottom-0 left-1 w-1.5 h-1.5 bg-[#4A7A23]"></div>
+              <div className="absolute bottom-[-2px] left-3 w-1.5 h-1.5 bg-[#65A832]"></div>
+              <div className="absolute bottom-[-1px] left-5 w-1.5 h-1.5 bg-[#4A7A23]"></div>
+            </div>
+            <div className="h-4.5 w-full bg-[#60452F] relative">
+              <div className="absolute top-1 left-2 w-1 h-1 bg-[#3f2b1d]"></div>
+              <div className="absolute top-2 left-6 w-1 h-1 bg-[#805a3e]"></div>
+            </div>
           </div>
-          <h2 className="text-2xl font-black text-slate-900 tracking-tight">
-            {mode === "login" ? "Log In to RE:USE Account" : "Create New Verified Account"}
+          <h2 className="text-xl sm:text-2xl font-black text-white font-['Silkscreen'] tracking-wider">
+            {mode === "login" ? "LOG IN TO RE:USE" : "CREATE NEW ACCOUNT"}
           </h2>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs text-[#bec9c2] mt-1 font-mono">
             {mode === "login"
               ? "Access your bookings, gear listings & owner dashboard"
               : "Step 1 of 3: Enter Details & Password -> Verify Gmail OTP -> ID Proof"}
@@ -353,80 +362,80 @@ export function AuthModal({
         </div>
 
         {/* Quick 1-Click Demo Accounts Section */}
-        <div className="mb-6 rounded-2xl border border-emerald-200 bg-emerald-50/60 p-4">
-          <div className="flex items-center gap-1.5 text-xs font-black text-emerald-900 mb-2">
-            <Zap className="h-4 w-4 text-emerald-700 animate-pulse" />
+        <div className="mb-6 bg-[#171717] border-2 border-[#262626] p-3.5 shadow-[inset_2px_2px_0_#0a0a0a]">
+          <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-[#8bd6b6] mb-2.5">
+            <Zap className="h-4 w-4 text-[#8bd6b6] animate-pulse" />
             <span>⚡ Quick 1-Click Demo Logins (Instant Test)</span>
           </div>
           <div className="grid grid-cols-2 gap-2">
             <button
               type="button"
               onClick={() => handleQuickDemoLogin("borrower")}
-              className="flex items-center gap-2 rounded-xl bg-white p-2.5 text-left border border-slate-200 hover:border-emerald-600 hover:bg-emerald-50/80 transition-all shadow-2xs"
+              className="flex items-center gap-2 bg-[#0e0e0e] p-2.5 text-left border border-[#2a2a2a] hover:border-[#047857] hover:bg-[#1a1a1a] transition-all cursor-pointer shadow-[0_2px_0_0_#060606]"
             >
-              <User className="h-4 w-4 text-emerald-700 shrink-0" />
+              <User className="h-4 w-4 text-[#8bd6b6] shrink-0" />
               <div>
-                <span className="block text-xs font-bold text-slate-900 leading-tight">Customer / Borrower</span>
-                <span className="text-[10px] font-semibold text-slate-500">Aman (Borrower)</span>
+                <span className="block text-xs font-bold text-white font-headline-sm uppercase leading-tight">Borrower</span>
+                <span className="text-[10px] font-mono text-[#89938d]">Aman (Borrower)</span>
               </div>
             </button>
 
             <button
               type="button"
               onClick={() => handleQuickDemoLogin("owner")}
-              className="flex items-center gap-2 rounded-xl bg-white p-2.5 text-left border border-slate-200 hover:border-blue-600 hover:bg-blue-50/80 transition-all shadow-2xs"
+              className="flex items-center gap-2 bg-[#0e0e0e] p-2.5 text-left border border-[#2a2a2a] hover:border-[#047857] hover:bg-[#1a1a1a] transition-all cursor-pointer shadow-[0_2px_0_0_#060606]"
             >
-              <Package className="h-4 w-4 text-blue-700 shrink-0" />
+              <Package className="h-4 w-4 text-[#FBBF24] shrink-0" />
               <div>
-                <span className="block text-xs font-bold text-slate-900 leading-tight">Equipment Owner</span>
-                <span className="text-[10px] font-semibold text-slate-500">Priya (Owner)</span>
+                <span className="block text-xs font-bold text-white font-headline-sm uppercase leading-tight">Owner</span>
+                <span className="text-[10px] font-mono text-[#89938d]">Priya (Owner)</span>
               </div>
             </button>
 
             <button
               type="button"
               onClick={() => handleQuickDemoLogin("delivery")}
-              className="flex items-center gap-2 rounded-xl bg-white p-2.5 text-left border border-slate-200 hover:border-amber-600 hover:bg-amber-50/80 transition-all shadow-2xs"
+              className="flex items-center gap-2 bg-[#0e0e0e] p-2.5 text-left border border-[#2a2a2a] hover:border-[#047857] hover:bg-[#1a1a1a] transition-all cursor-pointer shadow-[0_2px_0_0_#060606]"
             >
-              <Truck className="h-4 w-4 text-amber-700 shrink-0" />
+              <Truck className="h-4 w-4 text-[#7bd8b1] shrink-0" />
               <div>
-                <span className="block text-xs font-bold text-slate-900 leading-tight">Delivery Courier</span>
-                <span className="text-[10px] font-semibold text-slate-500">Vikram (Courier)</span>
+                <span className="block text-xs font-bold text-white font-headline-sm uppercase leading-tight">Courier</span>
+                <span className="text-[10px] font-mono text-[#89938d]">Vikram (Courier)</span>
               </div>
             </button>
 
             <button
               type="button"
               onClick={() => handleQuickDemoLogin("admin")}
-              className="flex items-center gap-2 rounded-xl bg-white p-2.5 text-left border border-slate-200 hover:border-purple-600 hover:bg-purple-50/80 transition-all shadow-2xs"
+              className="flex items-center gap-2 bg-[#0e0e0e] p-2.5 text-left border border-[#2a2a2a] hover:border-[#047857] hover:bg-[#1a1a1a] transition-all cursor-pointer shadow-[0_2px_0_0_#060606]"
             >
-              <ShieldAlert className="h-4 w-4 text-purple-700 shrink-0" />
+              <ShieldAlert className="h-4 w-4 text-[#adf676] shrink-0" />
               <div>
-                <span className="block text-xs font-bold text-slate-900 leading-tight">Platform Admin</span>
-                <span className="text-[10px] font-semibold text-slate-500">Superuser Ops</span>
+                <span className="block text-xs font-bold text-white font-headline-sm uppercase leading-tight">Admin</span>
+                <span className="text-[10px] font-mono text-[#89938d]">Superuser Ops</span>
               </div>
             </button>
           </div>
         </div>
 
         {/* Mode Switcher Tabs */}
-        <div className="flex rounded-2xl bg-slate-100 p-1 mb-5 border border-slate-200">
+        <div className="grid grid-cols-2 p-1 bg-[#1a1a1a] border-2 border-[#2a2a2a] shadow-[inset_2px_2px_0_#0a0a0a] mb-5">
           <button
             onClick={() => resetFormState("login")}
-            className={`w-1/2 rounded-xl py-2 text-xs font-bold transition-all ${
+            className={`py-2 text-xs font-headline-sm uppercase tracking-wider transition-all cursor-pointer ${
               mode === "login"
-                ? "bg-white text-slate-900 shadow-sm"
-                : "text-slate-500 hover:text-slate-900"
+                ? "bg-[#065F46] text-white border border-[#047857] shadow-[0_2px_0_0_#003828]"
+                : "text-[#bec9c2] hover:text-white"
             }`}
           >
             Log In
           </button>
           <button
             onClick={() => resetFormState("signup")}
-            className={`w-1/2 rounded-xl py-2 text-xs font-bold transition-all ${
+            className={`py-2 text-xs font-headline-sm uppercase tracking-wider transition-all cursor-pointer ${
               mode === "signup"
-                ? "bg-emerald-800 text-white shadow-sm"
-                : "text-slate-500 hover:text-slate-900"
+                ? "bg-[#065F46] text-white border border-[#047857] shadow-[0_2px_0_0_#003828]"
+                : "text-[#bec9c2] hover:text-white"
             }`}
           >
             Create Account
@@ -438,10 +447,15 @@ export function AuthModal({
           <form onSubmit={handleNextFromInput} className="space-y-4">
             {/* ROLE SELECTION CARDS */}
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-2">
-                Select Your Account Role:
-              </label>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="flex items-center justify-between mb-2">
+                <label className="font-headline-sm text-xs text-[#e5e2e1] uppercase tracking-wider">
+                  Select Your Account Role:
+                </label>
+                <span className="font-mono text-[10px] text-[#89938d]">
+                  ACTIVE: {selectedRole.toUpperCase()}
+                </span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {roleCards.map((rc) => {
                   const Icon = rc.icon;
                   const isSelected = selectedRole === rc.id;
@@ -450,29 +464,36 @@ export function AuthModal({
                       key={rc.id}
                       type="button"
                       onClick={() => setSelectedRole(rc.id)}
-                      className={`flex items-start gap-2.5 rounded-2xl p-3 text-left border transition-all ${
+                      className={`p-2.5 text-left border-2 transition-all cursor-pointer flex items-start gap-2.5 relative ${
                         isSelected
-                          ? "bg-emerald-50/90 border-emerald-600 ring-2 ring-emerald-600/20 shadow-xs"
-                          : "bg-slate-50/60 border-slate-200 hover:bg-slate-100/80"
+                          ? "bg-[#065F46]/25 border-[#047857] shadow-[inset_2px_2px_0_#003828,0_2px_0_#003828]"
+                          : "bg-[#181818] hover:bg-[#202020] border-[#2a2a2a] shadow-[inset_1px_1px_0_#0a0a0a]"
                       }`}
                     >
                       <div
-                        className={`p-2 rounded-xl border ${
+                        className={`w-7 h-7 flex items-center justify-center shrink-0 border ${
                           isSelected
-                            ? "bg-emerald-800 text-white border-emerald-900"
-                            : "bg-white text-slate-600 border-slate-200"
+                            ? "bg-[#065F46] border-[#8bd6b6] text-white shadow-[0_0_8px_rgba(139,214,182,0.4)]"
+                            : "bg-[#242424] border-[#3a3a3a] text-[#89938d]"
                         }`}
                       >
                         <Icon className="h-4 w-4" />
                       </div>
-                      <div>
-                        <span className="block text-xs font-bold text-slate-900 leading-tight">
+                      <div className="flex flex-col min-w-0">
+                        <span
+                          className={`font-headline-sm text-xs tracking-wider leading-tight ${
+                            isSelected ? "text-[#8bd6b6]" : "text-[#e5e2e1]"
+                          }`}
+                        >
                           {rc.title}
                         </span>
-                        <span className="text-[10px] text-slate-500 line-clamp-1 mt-0.5">
+                        <span className="font-body-sm text-[10px] text-[#89938d] line-clamp-1 mt-0.5 leading-snug">
                           {rc.desc}
                         </span>
                       </div>
+                      {isSelected && (
+                        <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-[#8bd6b6] shadow-[0_0_6px_#8bd6b6]"></span>
+                      )}
                     </button>
                   );
                 })}
@@ -482,28 +503,30 @@ export function AuthModal({
             {/* Signup Name Field */}
             {mode === "signup" && (
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Full Name</label>
+                <label className="block text-xs font-bold text-[#e5e2e1] uppercase tracking-wider mb-1.5 font-mono">
+                  Full Name
+                </label>
                 <div className="relative">
-                  <User className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
+                  <User className="absolute left-3 top-3 h-4 w-4 text-[#89938d]" />
                   <input
                     type="text"
                     required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="e.g. Rahul Sharma"
-                    className="w-full rounded-xl border border-slate-300 bg-slate-50/50 pl-10 pr-3 py-2.5 text-xs font-semibold text-slate-900 focus:bg-white focus:border-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-700/20"
+                    className="w-full bg-[#1c1b1b] border-2 border-[#2a2a2a] pl-10 pr-3 py-2.5 text-xs font-medium text-[#e5e2e1] placeholder:text-[#89938d] shadow-[inset_2px_2px_0_#0a0a0a] focus:border-[#8bd6b6] focus:outline-none transition-colors"
                   />
                 </div>
               </div>
             )}
 
             {/* Auth Method Selector */}
-            <div className="flex justify-between items-center text-xs font-bold text-slate-700 mb-1">
+            <div className="flex justify-between items-center text-xs font-bold text-[#e5e2e1] uppercase tracking-wider mb-1">
               <span>{authMethod === "phone" ? "Mobile Number" : "Email Address"}</span>
               <button
                 type="button"
                 onClick={() => setAuthMethod(authMethod === "phone" ? "email" : "phone")}
-                className="text-emerald-800 hover:underline text-[11px]"
+                className="text-[#8bd6b6] hover:text-[#a6f2d1] hover:underline text-xs font-mono font-normal normal-case cursor-pointer"
               >
                 Use {authMethod === "phone" ? "Email instead" : "Phone instead"}
               </button>
@@ -511,7 +534,7 @@ export function AuthModal({
 
             {authMethod === "phone" ? (
               <div className="relative">
-                <div className="absolute left-3 top-2.5 flex items-center gap-1 text-xs font-bold text-slate-500 border-r border-slate-200 pr-2">
+                <div className="absolute left-3 top-2.5 flex items-center gap-1 text-xs font-bold text-[#89938d] border-r border-[#2a2a2a] pr-2">
                   <span>🇮🇳 +91</span>
                 </div>
                 <input
@@ -521,19 +544,19 @@ export function AuthModal({
                   value={phone}
                   onChange={(e) => setPhone(e.target.value.replace(/\D/g, ""))}
                   placeholder="98765 43210"
-                  className="w-full rounded-xl border border-slate-300 bg-slate-50/50 pl-20 pr-3 py-2.5 text-xs font-semibold text-slate-900 focus:bg-white focus:border-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-700/20"
+                  className="w-full bg-[#1c1b1b] border-2 border-[#2a2a2a] pl-20 pr-3 py-2.5 text-xs font-medium text-[#e5e2e1] placeholder:text-[#89938d] shadow-[inset_2px_2px_0_#0a0a0a] focus:border-[#8bd6b6] focus:outline-none transition-colors"
                 />
               </div>
             ) : (
               <div className="relative">
-                <Mail className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
+                <Mail className="absolute left-3 top-3 h-4 w-4 text-[#89938d]" />
                 <input
                   type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="user@college.edu"
-                  className="w-full rounded-xl border border-slate-300 bg-slate-50/50 pl-10 pr-3 py-2.5 text-xs font-semibold text-slate-900 focus:bg-white focus:border-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-700/20"
+                  className="w-full bg-[#1c1b1b] border-2 border-[#2a2a2a] pl-10 pr-3 py-2.5 text-xs font-medium text-[#e5e2e1] placeholder:text-[#89938d] shadow-[inset_2px_2px_0_#0a0a0a] focus:border-[#8bd6b6] focus:outline-none transition-colors"
                 />
               </div>
             )}
@@ -542,20 +565,20 @@ export function AuthModal({
             {(mode === "signup" || loginMethod === "password") && (
               <div className="space-y-3">
                 <div>
-                  <div className="flex justify-between items-center text-xs font-bold text-slate-700 mb-1">
+                  <div className="flex justify-between items-center text-xs font-bold text-[#e5e2e1] uppercase tracking-wider mb-1">
                     <span>Password</span>
                     {mode === "login" && (
                       <button
                         type="button"
                         onClick={() => setLoginMethod("otp")}
-                        className="text-emerald-800 hover:underline text-[11px]"
+                        className="text-[#8bd6b6] hover:text-[#a6f2d1] hover:underline text-xs font-mono font-normal normal-case cursor-pointer"
                       >
                         Login via Real Email OTP instead
                       </button>
                     )}
                   </div>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
+                    <Lock className="absolute left-3 top-3 h-4 w-4 text-[#89938d]" />
                     <input
                       type="password"
                       required
@@ -565,7 +588,7 @@ export function AuthModal({
                         if (passwordError) setPasswordError(null);
                       }}
                       placeholder="••••••••"
-                      className="w-full rounded-xl border border-slate-300 bg-slate-50/50 pl-10 pr-3 py-2.5 text-xs font-semibold text-slate-900 focus:bg-white focus:border-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-700/20"
+                      className="w-full bg-[#1c1b1b] border-2 border-[#2a2a2a] pl-10 pr-3 py-2.5 text-xs font-medium text-[#e5e2e1] placeholder:text-[#89938d] shadow-[inset_2px_2px_0_#0a0a0a] focus:border-[#8bd6b6] focus:outline-none transition-colors"
                     />
                   </div>
                 </div>
@@ -573,11 +596,11 @@ export function AuthModal({
                 {/* SIGNUP CONFIRM PASSWORD FIELD */}
                 {mode === "signup" && (
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1">
+                    <label className="block text-xs font-bold text-[#e5e2e1] uppercase tracking-wider mb-1 font-mono">
                       Confirm Password
                     </label>
                     <div className="relative">
-                      <Lock className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
+                      <Lock className="absolute left-3 top-3 h-4 w-4 text-[#89938d]" />
                       <input
                         type="password"
                         required
@@ -587,16 +610,16 @@ export function AuthModal({
                           if (passwordError) setPasswordError(null);
                         }}
                         placeholder="••••••••"
-                        className={`w-full rounded-xl border pl-10 pr-3 py-2.5 text-xs font-semibold text-slate-900 focus:bg-white focus:outline-none focus:ring-2 ${
+                        className={`w-full bg-[#1c1b1b] border-2 pl-10 pr-3 py-2.5 text-xs font-medium text-[#e5e2e1] placeholder:text-[#89938d] shadow-[inset_2px_2px_0_#0a0a0a] focus:outline-none transition-colors ${
                           confirmPassword && confirmPassword === password
-                            ? "border-emerald-500 bg-emerald-50/30 focus:border-emerald-600 focus:ring-emerald-600/20"
+                            ? "border-[#047857] focus:border-[#8bd6b6]"
                             : confirmPassword && confirmPassword !== password
-                            ? "border-rose-400 bg-rose-50/30 focus:border-rose-500 focus:ring-rose-500/20"
-                            : "border-slate-300 bg-slate-50/50 focus:border-emerald-700 focus:ring-emerald-700/20"
+                            ? "border-[#93000a] focus:border-[#ffb4ab]"
+                            : "border-[#2a2a2a] focus:border-[#8bd6b6]"
                         }`}
                       />
                       {confirmPassword && confirmPassword === password && (
-                        <Check className="absolute right-3 top-3 h-4 w-4 text-emerald-600" />
+                        <Check className="absolute right-3 top-3 h-4 w-4 text-[#8bd6b6]" />
                       )}
                     </div>
                   </div>
@@ -605,8 +628,8 @@ export function AuthModal({
             )}
 
             {passwordError && (
-              <div className="rounded-xl bg-rose-50 p-2.5 border border-rose-200 text-center">
-                <span className="text-xs font-bold text-rose-800">{passwordError}</span>
+              <div className="p-3 bg-[#93000a]/30 border-2 border-[#ffb4ab]/40 text-[#ffb4ab] text-xs font-mono text-center">
+                <span>{passwordError}</span>
               </div>
             )}
 
@@ -615,7 +638,7 @@ export function AuthModal({
                 <button
                   type="button"
                   onClick={() => setLoginMethod("password")}
-                  className="text-emerald-800 hover:underline text-[11px] font-bold"
+                  className="text-[#8bd6b6] hover:text-[#a6f2d1] hover:underline text-xs font-mono cursor-pointer"
                 >
                   Switch back to Password Login
                 </button>
@@ -625,7 +648,7 @@ export function AuthModal({
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full flex items-center justify-center gap-2 rounded-xl bg-emerald-800 hover:bg-emerald-900 py-3 text-xs font-bold text-white shadow-md active:scale-95 transition-all mt-4 disabled:opacity-50"
+              className="w-full h-11 flex items-center justify-center gap-2 bg-[#065F46] hover:bg-[#047857] py-3 text-xs font-bold text-white uppercase tracking-wider border-2 border-[#047857] shadow-[0_4px_0_0_#003828] active:translate-y-0.5 active:shadow-none transition-all mt-4 disabled:opacity-50 cursor-pointer"
             >
               {isLoading ? (
                 <span>Processing...</span>
@@ -648,38 +671,36 @@ export function AuthModal({
         {/* STEP 2: VERIFY REAL EMAIL OTP (BOTH SIGNUP & OTP LOGIN) */}
         {step === "otp" && (
           <form onSubmit={handleVerifyOtp} className="space-y-5 animate-in fade-in">
-            <div className="rounded-2xl bg-emerald-50 p-3 border border-emerald-200 text-center">
-              <span className="text-xs text-emerald-900 font-semibold block">
+            <div className="p-3.5 bg-[#171717] border-2 border-[#262626] shadow-[inset_2px_2px_0_#0a0a0a] text-center">
+              <span className="text-xs text-[#8bd6b6] font-mono font-semibold block">
                 Verification OTP sent to {authMethod === "phone" ? `+91 ${phone}` : email}
               </span>
-              <span className="text-[10px] text-emerald-700 font-medium block mt-0.5">
+              <span className="text-[11px] text-[#bec9c2] font-mono block mt-1">
                 📧 Note: Please check Primary Inbox and Spam / Junk folder.
               </span>
-              <div className="mt-2 rounded-xl bg-emerald-800 p-2 text-white font-extrabold text-xs tracking-widest text-center shadow">
+              <div className="mt-2.5 p-2 bg-[#065F46]/40 border border-[#047857] text-[#8bd6b6] font-mono font-bold text-xs tracking-widest text-center shadow-[inset_1px_1px_0_#003828]">
                 ⚡ MASTER TEST OTP: 123456 {devOtpCode ? `(or ${devOtpCode})` : ""}
               </div>
               <button
                 type="button"
                 onClick={() => setStep("input")}
-                className="text-[11px] font-bold text-emerald-700 hover:underline mt-1.5 block mx-auto"
+                className="text-[11px] font-mono text-[#8bd6b6] hover:text-[#a6f2d1] hover:underline mt-2 block mx-auto cursor-pointer"
               >
                 Change Number / Email
               </button>
             </div>
 
             {otpError && (
-              <div className="rounded-2xl bg-rose-50 p-3.5 border border-rose-200 text-center animate-in fade-in">
-                <span className="text-xs font-bold text-rose-800 leading-relaxed block">
-                  {otpError}
-                </span>
+              <div className="p-3 bg-[#93000a]/30 border-2 border-[#ffb4ab]/40 text-[#ffb4ab] text-xs font-mono text-center">
+                <span>{otpError}</span>
               </div>
             )}
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 text-center mb-2">
+              <label className="block text-xs font-mono font-bold text-[#e5e2e1] uppercase tracking-wider text-center mb-2.5">
                 Enter 6-Digit Security OTP (Sent to your Gmail Inbox)
               </label>
-              <div className="flex justify-center gap-1.5">
+              <div className="flex justify-center gap-2">
                 {otp.map((digit, idx) => (
                   <input
                     key={idx}
@@ -738,7 +759,7 @@ export function AuthModal({
                         document.getElementById(`otp-${idx + 1}`)?.focus();
                       }
                     }}
-                    className="h-11 w-11 text-center rounded-xl border border-slate-300 bg-white text-base font-black text-slate-900 focus:border-emerald-700 focus:ring-2 focus:ring-emerald-700/20 focus:outline-none"
+                    className="h-11 w-11 text-center bg-[#131313] border-2 border-[#2a2a2a] text-base font-black text-white shadow-[inset_2px_2px_0_#0a0a0a] focus:border-[#8bd6b6] focus:outline-none transition-colors"
                   />
                 ))}
               </div>
@@ -747,7 +768,7 @@ export function AuthModal({
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full flex items-center justify-center gap-2 rounded-xl bg-emerald-800 hover:bg-emerald-900 py-3 text-xs font-bold text-white shadow-md active:scale-95 transition-all disabled:opacity-50"
+              className="w-full h-11 flex items-center justify-center gap-2 bg-[#065F46] hover:bg-[#047857] py-3 text-xs font-bold text-white uppercase tracking-wider border-2 border-[#047857] shadow-[0_4px_0_0_#003828] active:translate-y-0.5 active:shadow-none transition-all disabled:opacity-50 cursor-pointer"
             >
               {isLoading ? (
                 <span>Verifying Security Code...</span>
@@ -768,31 +789,31 @@ export function AuthModal({
         {/* STEP 3 (SIGNUP): ROLE-SPECIFIC IDENTITY PROOF & ONBOARDING STEP */}
         {step === "kyc_proof" && (
           <form onSubmit={handleKycProofSubmit} className="space-y-4 animate-in fade-in">
-            <div className="rounded-2xl bg-amber-50 p-3.5 border border-amber-200">
-              <div className="flex items-center justify-between mb-1">
-                <div className="flex items-center gap-2 text-xs font-bold text-amber-900">
-                  <FileCheck className="h-4 w-4 text-amber-700" />
+            <div className="p-3.5 bg-[#171717] border-2 border-[#262626] shadow-[inset_2px_2px_0_#0a0a0a]">
+              <div className="flex items-center justify-between mb-1.5">
+                <div className="flex items-center gap-2 text-xs font-bold text-[#FBBF24]">
+                  <FileCheck className="h-4 w-4 text-[#FBBF24]" />
                   <span>Mandatory Anti-Fraud Identity Proof</span>
                 </div>
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-200 text-amber-900 uppercase">
+                <span className="px-2 py-0.5 text-[10px] font-mono font-bold bg-[#FBBF24]/20 border border-[#FBBF24]/40 text-[#FBBF24] uppercase">
                   {selectedRole === "delivery" ? "Runner Onboarding" : "Student KYC"}
                 </span>
               </div>
-              <p className="text-[11px] text-amber-800 leading-relaxed">
+              <p className="text-[11px] text-[#bec9c2] leading-relaxed font-mono">
                 To prevent theft, fraud, and unreturned items, all community members must verify their identity before accessing the platform.
               </p>
             </div>
 
             {/* Initial Trust Score Badge Preview */}
-            <div className="rounded-2xl bg-emerald-50 p-3 border border-emerald-200 flex items-center justify-between">
+            <div className="p-3 bg-[#0e0e0e] border border-[#047857] flex items-center justify-between shadow-[inset_1px_1px_0_#003828]">
               <div className="flex items-center gap-2">
-                <ShieldCheck className="h-5 w-5 text-emerald-700" />
+                <ShieldCheck className="h-5 w-5 text-[#8bd6b6]" />
                 <div>
-                  <span className="text-xs font-extrabold text-emerald-950 block">Starting Trust Level: 3.0 ★ (New Peer)</span>
-                  <span className="text-[10px] text-emerald-700 font-semibold block">Increases with ID verification & successful rental exchanges</span>
+                  <span className="text-xs font-bold text-white block">Starting Trust Level: 3.0 ★ (New Peer)</span>
+                  <span className="text-[10px] text-[#8bd6b6] font-mono block">Increases with ID verification &amp; successful rental exchanges</span>
                 </div>
               </div>
-              <Sparkles className="h-4 w-4 text-emerald-600" />
+              <Sparkles className="h-4 w-4 text-[#8bd6b6]" />
             </div>
 
             {/* STUDENT BORROWER / LENDER SPECIFIC FIELDS */}
@@ -800,11 +821,11 @@ export function AuthModal({
               <>
                 <div className="grid grid-cols-2 gap-2">
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1">Identity Proof Type</label>
+                    <label className="block text-xs font-mono font-bold text-[#e5e2e1] uppercase tracking-wider mb-1">Identity Proof Type</label>
                     <select
                       value={docType}
                       onChange={(e) => setDocType(e.target.value as any)}
-                      className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs font-bold text-slate-900 focus:border-emerald-700 focus:outline-none"
+                      className="w-full bg-[#1c1b1b] border-2 border-[#2a2a2a] px-3 py-2 text-xs font-bold text-[#e5e2e1] shadow-[inset_2px_2px_0_#0a0a0a] focus:border-[#8bd6b6] focus:outline-none"
                     >
                       <option value="student_id">College Student ID Card</option>
                       <option value="aadhaar">Aadhaar Card (DigiLocker)</option>
@@ -812,7 +833,7 @@ export function AuthModal({
                     </select>
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1">
+                    <label className="block text-xs font-mono font-bold text-[#e5e2e1] uppercase tracking-wider mb-1">
                       {docType === "student_id" ? "Student PRN / Roll No" : "Govt ID Number"}
                     </label>
                     <input
@@ -821,32 +842,32 @@ export function AuthModal({
                       value={docNumber}
                       onChange={(e) => setDocNumber(e.target.value)}
                       placeholder={docType === "student_id" ? "e.g. 2024-VIT-091" : "e.g. 1234-5678-9012"}
-                      className="w-full rounded-xl border border-slate-300 bg-slate-50/50 px-3 py-2 text-xs font-semibold text-slate-900 focus:bg-white focus:border-emerald-700 focus:outline-none"
+                      className="w-full bg-[#1c1b1b] border-2 border-[#2a2a2a] px-3 py-2 text-xs font-medium text-[#e5e2e1] placeholder:text-[#89938d] shadow-[inset_2px_2px_0_#0a0a0a] focus:border-[#8bd6b6] focus:outline-none"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-2">
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1">Hostel Block / Building</label>
+                    <label className="block text-xs font-mono font-bold text-[#e5e2e1] uppercase tracking-wider mb-1">Hostel Block / Building</label>
                     <input
                       type="text"
                       required
                       value={hostelBlock}
                       onChange={(e) => setHostelBlock(e.target.value)}
                       placeholder="e.g. Hostel 4, Block B, Room 204"
-                      className="w-full rounded-xl border border-slate-300 bg-slate-50/50 px-3 py-2 text-xs font-semibold text-slate-900 focus:bg-white focus:border-emerald-700 focus:outline-none"
+                      className="w-full bg-[#1c1b1b] border-2 border-[#2a2a2a] px-3 py-2 text-xs font-medium text-[#e5e2e1] placeholder:text-[#89938d] shadow-[inset_2px_2px_0_#0a0a0a] focus:border-[#8bd6b6] focus:outline-none"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1">Department / Branch</label>
+                    <label className="block text-xs font-mono font-bold text-[#e5e2e1] uppercase tracking-wider mb-1">Department / Branch</label>
                     <input
                       type="text"
                       required
                       value={department}
                       onChange={(e) => setDepartment(e.target.value)}
                       placeholder="e.g. B.Tech CS 2025"
-                      className="w-full rounded-xl border border-slate-300 bg-slate-50/50 px-3 py-2 text-xs font-semibold text-slate-900 focus:bg-white focus:border-emerald-700 focus:outline-none"
+                      className="w-full bg-[#1c1b1b] border-2 border-[#2a2a2a] px-3 py-2 text-xs font-medium text-[#e5e2e1] placeholder:text-[#89938d] shadow-[inset_2px_2px_0_#0a0a0a] focus:border-[#8bd6b6] focus:outline-none"
                     />
                   </div>
                 </div>
@@ -856,11 +877,11 @@ export function AuthModal({
               <>
                 <div className="grid grid-cols-2 gap-2">
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1">Govt ID Type (Delivery)</label>
+                    <label className="block text-xs font-mono font-bold text-[#e5e2e1] uppercase tracking-wider mb-1">Govt ID Type (Delivery)</label>
                     <select
                       value={docType}
                       onChange={(e) => setDocType(e.target.value as any)}
-                      className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs font-bold text-slate-900 focus:border-amber-700 focus:outline-none"
+                      className="w-full bg-[#1c1b1b] border-2 border-[#2a2a2a] px-3 py-2 text-xs font-bold text-[#e5e2e1] shadow-[inset_2px_2px_0_#0a0a0a] focus:border-[#8bd6b6] focus:outline-none"
                     >
                       <option value="aadhaar">Government Aadhaar Card</option>
                       <option value="dl">Driving License</option>
@@ -868,25 +889,25 @@ export function AuthModal({
                     </select>
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1">Govt ID Number</label>
+                    <label className="block text-xs font-mono font-bold text-[#e5e2e1] uppercase tracking-wider mb-1">Govt ID Number</label>
                     <input
                       type="text"
                       required
                       value={docNumber}
                       onChange={(e) => setDocNumber(e.target.value)}
                       placeholder="e.g. 9845-1234-5678"
-                      className="w-full rounded-xl border border-slate-300 bg-slate-50/50 px-3 py-2 text-xs font-semibold text-slate-900 focus:bg-white focus:border-amber-700 focus:outline-none"
+                      className="w-full bg-[#1c1b1b] border-2 border-[#2a2a2a] px-3 py-2 text-xs font-medium text-[#e5e2e1] placeholder:text-[#89938d] shadow-[inset_2px_2px_0_#0a0a0a] focus:border-[#8bd6b6] focus:outline-none"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-2">
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1">Delivery Vehicle Mode</label>
+                    <label className="block text-xs font-mono font-bold text-[#e5e2e1] uppercase tracking-wider mb-1">Delivery Vehicle Mode</label>
                     <select
                       value={deliveryVehicle}
                       onChange={(e) => setDeliveryVehicle(e.target.value as any)}
-                      className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs font-bold text-slate-900 focus:border-amber-700 focus:outline-none"
+                      className="w-full bg-[#1c1b1b] border-2 border-[#2a2a2a] px-3 py-2 text-xs font-bold text-[#e5e2e1] shadow-[inset_2px_2px_0_#0a0a0a] focus:border-[#8bd6b6] focus:outline-none"
                     >
                       <option value="bicycle">🚲 Campus Bicycle</option>
                       <option value="walking">🚶 Walking Courier</option>
@@ -894,14 +915,14 @@ export function AuthModal({
                     </select>
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1">Emergency Contact Phone</label>
+                    <label className="block text-xs font-mono font-bold text-[#e5e2e1] uppercase tracking-wider mb-1">Emergency Contact Phone</label>
                     <input
                       type="text"
                       required
                       value={emergencyContact}
                       onChange={(e) => setEmergencyContact(e.target.value)}
                       placeholder="e.g. Parent / Guardian Phone"
-                      className="w-full rounded-xl border border-slate-300 bg-slate-50/50 px-3 py-2 text-xs font-semibold text-slate-900 focus:bg-white focus:border-amber-700 focus:outline-none"
+                      className="w-full bg-[#1c1b1b] border-2 border-[#2a2a2a] px-3 py-2 text-xs font-medium text-[#e5e2e1] placeholder:text-[#89938d] shadow-[inset_2px_2px_0_#0a0a0a] focus:border-[#8bd6b6] focus:outline-none"
                     />
                   </div>
                 </div>
@@ -910,7 +931,7 @@ export function AuthModal({
 
             {/* Document Upload Box with Live Thumbnail Preview */}
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">
+              <label className="block text-xs font-mono font-bold text-[#e5e2e1] uppercase tracking-wider mb-1">
                 {selectedRole === "delivery" ? "Upload Govt ID / Badge Photo" : "Upload College ID / Document Scan"}
               </label>
               <input
@@ -930,32 +951,32 @@ export function AuthModal({
               />
               <div
                 onClick={() => document.getElementById("kyc-file-input")?.click()}
-                className={`flex flex-col items-center justify-center rounded-2xl border-2 border-dashed p-3 text-center cursor-pointer transition-all ${
+                className={`flex flex-col items-center justify-center border-2 border-dashed p-3 text-center cursor-pointer transition-all ${
                   docFileUploaded
-                    ? "border-emerald-600 bg-emerald-50/80"
-                    : "border-slate-300 bg-slate-50/50 hover:bg-slate-100 hover:border-emerald-500"
+                    ? "border-[#047857] bg-[#065F46]/20"
+                    : "border-[#2a2a2a] bg-[#171717] hover:bg-[#202020] hover:border-[#8bd6b6]"
                 }`}
               >
                 {docPreviewUrl ? (
                   <div className="flex items-center gap-3 w-full">
-                    <img src={docPreviewUrl} alt="KYC Preview" className="h-12 w-12 rounded-xl object-cover border border-emerald-300 shadow-xs" />
+                    <img src={docPreviewUrl} alt="KYC Preview" className="h-12 w-12 object-cover border border-[#047857]" />
                     <div className="text-left flex-1">
-                      <span className="text-xs font-bold text-emerald-950 block">{docFileUploaded}</span>
-                      <span className="text-[10px] text-emerald-700 font-bold block flex items-center gap-1">
-                        <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" /> Attached &amp; Live S3 Upload Verified
+                      <span className="text-xs font-bold text-white block">{docFileUploaded}</span>
+                      <span className="text-[10px] text-[#8bd6b6] font-mono font-bold block flex items-center gap-1">
+                        <CheckCircle2 className="h-3.5 w-3.5 text-[#8bd6b6]" /> Attached &amp; Live S3 Upload Verified
                       </span>
                     </div>
                   </div>
                 ) : docFileUploaded ? (
-                  <div className="flex items-center gap-2 text-emerald-800">
-                    <CheckCircle2 className="h-5 w-5 text-emerald-600" />
-                    <span className="text-xs font-bold">{docFileUploaded} (Attached &amp; Verified)</span>
+                  <div className="flex items-center gap-2 text-[#8bd6b6]">
+                    <CheckCircle2 className="h-5 w-5 text-[#8bd6b6]" />
+                    <span className="text-xs font-bold font-mono">{docFileUploaded} (Attached &amp; Verified)</span>
                   </div>
                 ) : (
                   <>
-                    <Upload className="h-5 w-5 text-slate-400 mb-1" />
-                    <span className="text-xs font-bold text-slate-700">Click to browse Document / Photo</span>
-                    <span className="text-[10px] text-slate-400 mt-0.5">JPG, PNG, PDF up to 10MB</span>
+                    <Upload className="h-5 w-5 text-[#89938d] mb-1" />
+                    <span className="text-xs font-bold text-[#e5e2e1] font-mono">Click to browse Document / Photo</span>
+                    <span className="text-[10px] text-[#89938d] font-mono mt-0.5">JPG, PNG, PDF up to 10MB</span>
                   </>
                 )}
               </div>
@@ -965,14 +986,14 @@ export function AuthModal({
               <button
                 type="button"
                 onClick={() => setStep("otp")}
-                className="w-1/3 rounded-xl border border-slate-300 py-3 text-xs font-bold text-slate-700 hover:bg-slate-50"
+                className="w-1/3 border-2 border-[#2a2a2a] bg-[#1a1a1a] hover:bg-[#242424] py-3 text-xs font-bold text-[#bec9c2] hover:text-white uppercase tracking-wider cursor-pointer font-mono"
               >
                 Back
               </button>
               <button
                 type="submit"
                 disabled={isLoading || !docNumber.trim()}
-                className="w-2/3 flex items-center justify-center gap-2 rounded-xl bg-emerald-800 hover:bg-emerald-900 py-3 text-xs font-bold text-white shadow-md disabled:opacity-50"
+                className="w-2/3 h-11 flex items-center justify-center gap-2 bg-[#065F46] hover:bg-[#047857] py-3 text-xs font-bold text-white uppercase tracking-wider border-2 border-[#047857] shadow-[0_4px_0_0_#003828] active:translate-y-0.5 active:shadow-none transition-all disabled:opacity-50 cursor-pointer"
               >
                 {isLoading ? (
                   <span>Activating Account...</span>
@@ -988,8 +1009,8 @@ export function AuthModal({
         )}
 
         {/* Security Assurance */}
-        <div className="mt-6 border-t border-slate-100 pt-4 flex items-center justify-center gap-1.5 text-[11px] text-slate-400 font-semibold">
-          <ShieldCheck className="h-3.5 w-3.5 text-emerald-700" />
+        <div className="mt-6 border-t border-[#201f1f] pt-4 flex items-center justify-center gap-1.5 text-[11px] text-[#89938d] font-mono">
+          <ShieldCheck className="h-3.5 w-3.5 text-[#8bd6b6]" />
           <span>256-Bit SSL Secured &bull; Verified ID Proof &amp; Real Email OTP</span>
         </div>
       </div>

@@ -111,7 +111,7 @@ function ResourcesContent() {
 
       // PostGIS Radius
       const dist = haversine(userLat, userLng, res.location.lat, res.location.lng);
-      if (dist > maxDistance) return false;
+      if (maxDistance < 25 && dist > maxDistance) return false;
 
       // Price Range
       if (res.pricePerDay > priceRange) return false;

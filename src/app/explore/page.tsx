@@ -102,7 +102,7 @@ function ExploreContent() {
         res.location.lat,
         res.location.lng
       );
-      if (dist > filters.maxDistance) {
+      if (filters.maxDistance < 25 && dist > filters.maxDistance) {
         return false;
       }
 

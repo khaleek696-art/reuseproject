@@ -188,11 +188,24 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
       
       const apiRes = await fetchResourcesApi();
       if (apiRes && Array.isArray(apiRes) && apiRes.length > 0) {
+        const normalizeCategory = (cat: string): CategoryId => {
+          const c = (cat || "").toLowerCase();
+          if (c.includes("camera") || c.includes("photo") || c.includes("tech") || c.includes("electronic") || c.includes("gadget")) return "tech";
+          if (c.includes("laptop") || c.includes("comput") || c.includes("macbook")) return "laptop";
+          if (c.includes("project") || c.includes("monitor") || c.includes("screen")) return "projector";
+          if (c.includes("tool") || c.includes("drill") || c.includes("hardware")) return "tools";
+          if (c.includes("book") || c.includes("study") || c.includes("read")) return "books";
+          if (c.includes("transport") || c.includes("bike") || c.includes("scoot") || c.includes("cycle")) return "transport";
+          if (c.includes("food") || c.includes("kitchen")) return "food";
+          if (c.includes("space") || c.includes("camp") || c.includes("event") || c.includes("outdoor")) return "spaces";
+          return "tech";
+        };
+
         const formattedRes: Resource[] = apiRes.map((r: any) => ({
           id: r.id,
           ownerId: r.ownerId || "u_owner_global",
           title: r.title,
-          category: (r.category || "tech") as CategoryId,
+          category: normalizeCategory(r.category),
           condition: (r.condition || "like_new") as Condition,
           description: r.description || "Clean working condition.",
           pricePerDay: r.dailyRate || r.pricePerDay || 500,
@@ -201,8 +214,8 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
           availableTo: "09:00 PM",
           instructions: "Handle with care and return on time.",
           location: {
-            lat: r.lat || 18.5204,
-            lng: r.lng || 73.8567,
+            lat: r.lat ? Number(r.lat) : 18.5204,
+            lng: r.lng ? Number(r.lng) : 73.8567,
             campus: r.neighborhood || "Campus District",
             address: r.neighborhood || "Campus District",
           },
@@ -211,8 +224,13 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
           createdAt: "2026-09-25",
         }));
         
-        // Central Cloud API is the single source of truth for all users/devices
-        setResources(formattedRes);
+        // Merge: Live database items take priority by ID, combined with full campus catalog
+        const apiIds = new Set(formattedRes.map((r) => r.id));
+        const mergedCatalog = [
+          ...formattedRes,
+          ...MOCK_RESOURCES.filter((m) => !apiIds.has(m.id)),
+        ];
+        setResources(mergedCatalog);
       }
     }
     syncWithBackend();

@@ -197,9 +197,9 @@ export default function ImpactPage() {
           </h3>
           <div className="space-y-3 text-xs">
             <div>
-              <div className="flex justify-between font-semibold mb-1">
-                <span>📸 Photography &amp; Cameras</span>
-                <span className="font-bold text-slate-900">12.5 kg CO2e</span>
+              <div className="flex justify-between mb-1">
+                <span className="font-bold text-slate-800">📸 Photography &amp; Cameras</span>
+                <span className="font-black text-slate-900">12.5 kg CO2e</span>
               </div>
               <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
                 <div className="h-full bg-emerald-600 rounded-full" style={{ width: "31%" }} />
@@ -207,9 +207,9 @@ export default function ImpactPage() {
             </div>
 
             <div>
-              <div className="flex justify-between font-semibold mb-1">
-                <span>⚡ Power Tools &amp; Hardware</span>
-                <span className="font-bold text-slate-900">9.0 kg CO2e</span>
+              <div className="flex justify-between mb-1">
+                <span className="font-bold text-slate-800">⚡ Power Tools &amp; Hardware</span>
+                <span className="font-black text-slate-900">9.0 kg CO2e</span>
               </div>
               <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
                 <div className="h-full bg-blue-600 rounded-full" style={{ width: "23%" }} />
@@ -217,9 +217,9 @@ export default function ImpactPage() {
             </div>
 
             <div>
-              <div className="flex justify-between font-semibold mb-1">
-                <span>💻 Electronics, Laptops &amp; Projectors</span>
-                <span className="font-bold text-slate-900">18.0 kg CO2e</span>
+              <div className="flex justify-between mb-1">
+                <span className="font-bold text-slate-800">💻 Electronics, Laptops &amp; Projectors</span>
+                <span className="font-black text-slate-900">18.0 kg CO2e</span>
               </div>
               <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
                 <div className="h-full bg-teal-600 rounded-full" style={{ width: "46%" }} />

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -49,6 +49,33 @@ export function Navbar({ onOpenShareModal }: NavbarProps) {
   const [roleDropdownOpen, setRoleDropdownOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const roleDropdownRef = useRef<HTMLDivElement>(null);
+  const userDropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdowns on outside click
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node;
+      if (roleDropdownRef.current && !roleDropdownRef.current.contains(target)) {
+        setRoleDropdownOpen(false);
+      }
+      if (userDropdownRef.current && !userDropdownRef.current.contains(target)) {
+        setUserDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  // Close all menus when navigating
+  useEffect(() => {
+    setRoleDropdownOpen(false);
+    setUserDropdownOpen(false);
+    setMobileMenuOpen(false);
+  }, [pathname]);
 
   const rolesList: { id: UserRole; title: string; desc: string }[] = [
     { id: "borrower", title: "Borrower Mode", desc: "Seek local gear within 5km" },
@@ -108,10 +135,11 @@ export function Navbar({ onOpenShareModal }: NavbarProps) {
 
   return (
     <>
-      <header className="sticky top-0 z-50 w-full bg-[#171717] transition-all">
+      <header className="sticky top-0 z-50 w-full bg-[#171717] transition-all border-b border-[#222222]">
         {/* Main Header Bar */}
-        <div className="h-16 max-w-[1440px] mx-auto px-4 lg:px-6 flex items-center justify-between gap-3">
-          {/* Brand Logo with Minecraft Voxel Block */}
+        <div className="h-16 max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
+          
+          {/* Brand Logo & Backend Status Badge */}
           <div className="flex items-center gap-3 shrink-0">
             <Link href="/" className="flex items-center gap-2.5 group">
               {/* Voxel Grass/Dirt Block Icon */}
@@ -133,15 +161,15 @@ export function Navbar({ onOpenShareModal }: NavbarProps) {
 
             {/* FastAPI Backend Connection Live Badge */}
             {isBackendConnected && (
-              <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 bg-[#201f1f] border border-[#047857] text-[#8bd6b6] font-mono text-[10px] tracking-wider uppercase shadow-[inset_1px_1px_0_#0a0a0a]">
+              <span className="hidden xl:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#201f1f] border border-[#047857] text-[#8bd6b6] font-mono text-[10px] tracking-wider uppercase shadow-[inset_1px_1px_0_#0a0a0a]">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#8bd6b6] animate-pulse"></span>
                 FastAPI Live
               </span>
             )}
           </div>
 
-          {/* Desktop Navigation Links */}
-          <nav className="hidden md:flex items-center h-16">
+          {/* Desktop Navigation Links — Clean, Non-wrapping, High Contrast */}
+          <nav className="hidden lg:flex items-center gap-1 xl:gap-1.5">
             {navLinks.map((link) => {
               const isActive = pathname === link.href;
               const Icon = link.icon;
@@ -149,13 +177,13 @@ export function Navbar({ onOpenShareModal }: NavbarProps) {
                 <Link
                   key={link.name}
                   href={link.href}
-                  className={`h-16 flex items-center gap-2 px-3.5 xl:px-4 font-headline-sm uppercase tracking-wider text-[12px] xl:text-[13px] transition-colors ${
+                  className={`whitespace-nowrap flex items-center gap-2 px-3 xl:px-3.5 py-2 rounded-xl text-xs xl:text-[13px] font-bold tracking-wide transition-all duration-150 ${
                     isActive
-                      ? "bg-[#065f46] text-white font-bold shadow-[inset_0_-3px_0_0_#8bd6b6]"
-                      : "text-[#bec9c2] hover:text-white hover:bg-[#201f1f]"
+                      ? "bg-[#065F46] text-white shadow-xs border border-[#047857]"
+                      : "text-slate-300 hover:text-white hover:bg-[#201f1f]"
                   }`}
                 >
-                  <Icon className={`h-4 w-4 ${isActive ? "text-[#8bd6b6]" : "text-[#89938d]"}`} />
+                  <Icon className={`h-4 w-4 shrink-0 ${isActive ? "text-[#8bd6b6]" : "text-slate-400"}`} />
                   <span>{link.name}</span>
                 </Link>
               );
@@ -163,27 +191,27 @@ export function Navbar({ onOpenShareModal }: NavbarProps) {
           </nav>
 
           {/* Right Tools & Role Switcher */}
-          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-            {/* Persona / Role Switcher in Voxel Tactical Well */}
-            <div className="relative">
+          <div className="flex items-center gap-2.5 sm:gap-3 shrink-0">
+            {/* Persona / Role Switcher */}
+            <div className="relative" ref={roleDropdownRef}>
               <button
                 type="button"
                 onClick={() => setRoleDropdownOpen(!roleDropdownOpen)}
-                className="relative flex items-center bg-[#201f1f] border-2 border-[#047857] px-2.5 py-1.5 gap-2 shadow-[inset_2px_2px_0_#0e0e0e,inset_-2px_-2px_0_#2a2a2a] cursor-pointer hover:border-[#8bd6b6] transition-colors"
+                className="flex items-center bg-[#201f1f] hover:bg-[#262626] border border-[#047857] hover:border-[#8bd6b6] px-3 py-1.5 gap-2 rounded-xl shadow-xs transition-all cursor-pointer"
                 title="Switch User Role"
               >
-                <span className="w-2 h-2 rounded-full bg-[#8bd6b6] shadow-[0_0_6px_#8bd6b6] animate-pulse"></span>
+                <span className="w-2 h-2 rounded-full bg-[#8bd6b6] shadow-[0_0_8px_#8bd6b6] animate-pulse"></span>
                 <span className="font-mono text-[11px] sm:text-xs font-bold uppercase tracking-wider text-[#e5e2e1]">
                   {role === "borrower" && "Borrower"}
                   {role === "owner" && "Owner"}
                   {role === "delivery" && "Courier"}
                   {role === "admin" && "Admin"}
                 </span>
-                <ChevronDown className="h-3.5 w-3.5 text-[#bec9c2]" />
+                <ChevronDown className={`h-3.5 w-3.5 text-[#bec9c2] transition-transform duration-200 ${roleDropdownOpen ? "rotate-180" : ""}`} />
               </button>
 
               {roleDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-64 rounded-none bg-[#1c1b1b] p-2 shadow-[0_8px_0_0_#0e0e0e] border-2 border-[#2a2a2a] z-50 animate-in fade-in">
+                <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-[#1c1b1b] p-2 shadow-2xl border border-[#2a2a2a] z-50 animate-in fade-in">
                   <div className="px-3 py-1.5 text-[10px] font-mono font-bold uppercase tracking-wider text-[#8bd6b6] border-b border-[#262626] mb-1">
                     Ecosystem Persona Switcher
                   </div>
@@ -191,14 +219,14 @@ export function Navbar({ onOpenShareModal }: NavbarProps) {
                     <button
                       key={r.id}
                       onClick={() => handleRoleSelect(r.id)}
-                      className={`w-full text-left p-2.5 text-xs transition-colors flex flex-col cursor-pointer ${
+                      className={`w-full text-left p-2.5 text-xs rounded-xl transition-colors flex flex-col cursor-pointer ${
                         role === r.id
                           ? "bg-[#065f46] text-white font-bold border border-[#047857]"
                           : "hover:bg-[#262626] text-[#bec9c2]"
                       }`}
                     >
                       <div className="flex items-center justify-between">
-                        <span className="font-headline-sm uppercase tracking-wider">{r.title}</span>
+                        <span className="font-bold tracking-wide uppercase">{r.title}</span>
                         {role === r.id && (
                           <span className="text-[10px] font-mono font-black text-[#8bd6b6]">
                             ACTIVE
@@ -226,39 +254,37 @@ export function Navbar({ onOpenShareModal }: NavbarProps) {
                   if (onOpenShareModal) onOpenShareModal();
                   else router.push("/resources?action=list");
                 }}
-                className="flex items-center gap-1.5 bg-[#065F46] hover:bg-[#047857] text-white border-2 border-[#047857] px-3 py-1.5 font-headline-sm uppercase tracking-wider shadow-[0_4px_0_0_#003828] active:translate-y-0.5 active:shadow-[0_2px_0_0_#003828] transition-all cursor-pointer text-xs"
+                className="hidden sm:flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-emerald-800 to-emerald-700 hover:from-emerald-700 hover:to-emerald-600 text-white border border-emerald-500/40 px-3.5 py-1.5 text-xs font-bold shadow-xs active:scale-95 transition-all cursor-pointer"
               >
-                <span className="text-[#FBBF24] font-bold text-base leading-none">+</span>
-                <span className="font-headline-sm text-[12px] tracking-wider leading-none text-white hidden sm:inline">
-                  List Equipment
-                </span>
+                <PlusCircle className="h-4 w-4 text-[#8bd6b6]" />
+                <span className="whitespace-nowrap">List Equipment</span>
               </button>
             )}
 
             {/* Auth Controls / User Profile */}
             {isLoggedIn ? (
-              <div className="relative">
+              <div className="relative" ref={userDropdownRef}>
                 <button
                   type="button"
                   onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                  className="relative p-1 border-2 border-[#60452F] hover:border-[#8bd6b6] bg-[#1a1a1a] shadow-[inset_1px_1px_0_#0F0F0F] transition-colors cursor-pointer flex items-center gap-2"
+                  className="flex items-center gap-2 p-1.5 sm:px-2.5 sm:py-1.5 rounded-xl border border-[#2a2a2a] hover:border-[#047857] bg-[#1e1e1e] hover:bg-[#252525] transition-all cursor-pointer"
                   title={`Signed in as ${currentUser.name}`}
                 >
                   <img
                     src={currentUser.avatar}
                     alt={currentUser.name}
-                    className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover"
+                    className="w-7 h-7 rounded-full object-cover ring-2 ring-emerald-500/30"
                   />
-                  <span className="hidden xl:inline text-xs font-headline-sm uppercase text-[#e5e2e1]">
+                  <span className="hidden xl:inline text-xs font-bold uppercase tracking-wider text-slate-200 max-w-[90px] truncate">
                     {currentUser.name.split(" ")[0]}
                   </span>
-                  <ChevronDown className="h-3 w-3 text-[#bec9c2] hidden sm:block" />
+                  <ChevronDown className={`h-3.5 w-3.5 text-slate-400 hidden sm:block transition-transform duration-200 ${userDropdownOpen ? "rotate-180" : ""}`} />
                 </button>
 
                 {userDropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-56 rounded-none bg-[#1c1b1b] p-2 shadow-[0_8px_0_0_#0e0e0e] border-2 border-[#2a2a2a] z-50 animate-in fade-in">
+                  <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-[#1c1b1b] p-2 shadow-2xl border border-[#2a2a2a] z-50 animate-in fade-in">
                     <div className="px-3 py-2 border-b border-[#262626] mb-1">
-                      <span className="block text-xs font-bold text-white font-headline-sm uppercase">
+                      <span className="block text-xs font-bold text-white uppercase truncate">
                         {currentUser.name}
                       </span>
                       <span className="text-[10px] font-mono text-[#8bd6b6]">
@@ -269,7 +295,7 @@ export function Navbar({ onOpenShareModal }: NavbarProps) {
                     <Link
                       href="/profile"
                       onClick={() => setUserDropdownOpen(false)}
-                      className="flex items-center gap-2 px-3 py-2 text-xs font-headline-sm uppercase tracking-wider text-[#bec9c2] hover:bg-[#262626] hover:text-white transition-colors"
+                      className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold tracking-wide uppercase text-slate-300 hover:bg-[#262626] hover:text-white transition-colors"
                     >
                       <User className="h-3.5 w-3.5 text-[#8bd6b6]" />
                       <span>My Trust Profile</span>
@@ -278,7 +304,7 @@ export function Navbar({ onOpenShareModal }: NavbarProps) {
                     <Link
                       href="/bookings"
                       onClick={() => setUserDropdownOpen(false)}
-                      className="flex items-center gap-2 px-3 py-2 text-xs font-headline-sm uppercase tracking-wider text-[#bec9c2] hover:bg-[#262626] hover:text-white transition-colors"
+                      className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold tracking-wide uppercase text-slate-300 hover:bg-[#262626] hover:text-white transition-colors"
                     >
                       <Package className="h-3.5 w-3.5 text-[#8bd6b6]" />
                       <span>My Bookings</span>
@@ -291,7 +317,7 @@ export function Navbar({ onOpenShareModal }: NavbarProps) {
                         logout();
                         router.push("/");
                       }}
-                      className="w-full flex items-center gap-2 px-3 py-2 text-xs font-headline-sm uppercase tracking-wider text-rose-400 hover:bg-[#2a1a1a] hover:text-rose-300 transition-colors mt-1 border-t border-[#262626] cursor-pointer"
+                      className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold tracking-wide uppercase text-rose-400 hover:bg-[#2a1a1a] hover:text-rose-300 transition-colors mt-1 border-t border-[#262626] cursor-pointer"
                     >
                       <LogOut className="h-3.5 w-3.5 text-rose-400" />
                       <span>Log Out</span>
@@ -304,14 +330,14 @@ export function Navbar({ onOpenShareModal }: NavbarProps) {
                 <button
                   type="button"
                   onClick={() => openAuthModal("login")}
-                  className="bg-[#201f1f] hover:bg-[#2a2a2a] text-[#e5e2e1] font-headline-sm uppercase text-xs px-3 py-1.5 border-2 border-[#353534] shadow-[0_2px_0_0_#0e0e0e] active:translate-y-0.5 active:shadow-none transition-all cursor-pointer"
+                  className="rounded-xl px-3 py-1.5 text-xs font-bold text-slate-300 hover:text-white bg-[#222222] hover:bg-[#2a2a2a] border border-[#333333] transition-all cursor-pointer"
                 >
                   Log In
                 </button>
                 <button
                   type="button"
                   onClick={() => openAuthModal("signup")}
-                  className="bg-[#065f46] hover:bg-[#047857] text-white font-headline-sm uppercase text-xs px-3.5 py-1.5 border-2 border-[#047857] shadow-[0_2px_0_0_#003828] active:translate-y-0.5 active:shadow-none transition-all cursor-pointer"
+                  className="rounded-xl px-3.5 py-1.5 text-xs font-bold text-white bg-emerald-700 hover:bg-emerald-600 shadow-xs transition-all cursor-pointer"
                 >
                   Sign Up
                 </button>
@@ -322,7 +348,8 @@ export function Navbar({ onOpenShareModal }: NavbarProps) {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 text-[#bec9c2] hover:text-white bg-[#201f1f] border border-[#2a2a2a] cursor-pointer"
+              className="lg:hidden p-2 rounded-xl text-slate-300 hover:text-white bg-[#201f1f] border border-[#2a2a2a] hover:border-emerald-500/50 transition-colors cursor-pointer"
+              aria-label="Toggle navigation menu"
             >
               {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
@@ -339,9 +366,9 @@ export function Navbar({ onOpenShareModal }: NavbarProps) {
 
         {/* Mobile Dropdown Drawer */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-b-2 border-[#201f1f] bg-[#171717] px-4 pt-3 pb-6 shadow-2xl animate-in slide-in-from-top-2 space-y-4">
+          <div className="lg:hidden border-b-2 border-[#201f1f] bg-[#171717] px-4 pt-4 pb-6 shadow-2xl animate-in slide-in-from-top-2 space-y-4">
             {/* Role Switcher in Mobile Drawer */}
-            <div className="bg-[#201f1f] p-3 border-2 border-[#2a2a2a]">
+            <div className="bg-[#201f1f] p-3 rounded-2xl border border-[#2a2a2a]">
               <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#8bd6b6] mb-2">
                 Switch Ecosystem Role
               </div>
@@ -353,10 +380,10 @@ export function Navbar({ onOpenShareModal }: NavbarProps) {
                       handleRoleSelect(r.id);
                       setMobileMenuOpen(false);
                     }}
-                    className={`p-2.5 text-left transition-all text-[11px] font-headline-sm uppercase tracking-wider cursor-pointer ${
+                    className={`p-2.5 rounded-xl text-left transition-all text-[11px] font-bold uppercase tracking-wider cursor-pointer ${
                       role === r.id
-                        ? "bg-[#065f46] text-white border border-[#047857] shadow-[0_2px_0_0_#003828]"
-                        : "bg-[#0e0e0e] text-[#bec9c2] border border-[#2a2a2a] hover:bg-[#252525]"
+                        ? "bg-[#065f46] text-white border border-[#047857] shadow-xs"
+                        : "bg-[#0e0e0e] text-slate-300 border border-[#2a2a2a] hover:bg-[#252525]"
                     }`}
                   >
                     <div className="truncate">{r.title}</div>
@@ -378,7 +405,7 @@ export function Navbar({ onOpenShareModal }: NavbarProps) {
                   if (onOpenShareModal) onOpenShareModal();
                   else router.push("/resources?action=list");
                 }}
-                className="w-full flex items-center justify-center gap-2 bg-[#065F46] hover:bg-[#047857] text-white border-2 border-[#047857] py-2.5 text-xs font-headline-sm uppercase tracking-wider shadow-[0_4px_0_0_#003828] active:translate-y-0.5"
+                className="w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-emerald-800 to-emerald-700 hover:from-emerald-700 hover:to-emerald-600 text-white border border-emerald-500/40 py-2.5 text-xs font-bold uppercase tracking-wider shadow-xs active:scale-95 transition-all"
               >
                 <PlusCircle className="h-4 w-4 text-[#8bd6b6]" />
                 <span>+ List Equipment</span>
@@ -395,14 +422,14 @@ export function Navbar({ onOpenShareModal }: NavbarProps) {
                     key={link.name}
                     href={link.href}
                     onClick={() => setMobileMenuOpen(false)}
-                    className={`flex items-center justify-between px-3 py-2.5 text-xs font-headline-sm uppercase tracking-wider transition-colors ${
+                    className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold tracking-wide uppercase transition-colors ${
                       isActive
                         ? "bg-[#065f46] text-white border border-[#047857]"
-                        : "text-[#bec9c2] hover:bg-[#201f1f] hover:text-white"
+                        : "text-slate-300 hover:bg-[#201f1f] hover:text-white"
                     }`}
                   >
                     <div className="flex items-center gap-2.5">
-                      <Icon className="h-4 w-4 text-[#8bd6b6]" />
+                      <Icon className={`h-4 w-4 ${isActive ? "text-[#8bd6b6]" : "text-slate-400"}`} />
                       <span>{link.name}</span>
                     </div>
                   </Link>
@@ -417,10 +444,10 @@ export function Navbar({ onOpenShareModal }: NavbarProps) {
                   <img
                     src={currentUser.avatar}
                     alt={currentUser.name}
-                    className="w-8 h-8 rounded-full object-cover border border-[#047857]"
+                    className="w-8 h-8 rounded-full object-cover ring-2 ring-emerald-500/30"
                   />
                   <div>
-                    <div className="text-xs font-bold text-white font-headline-sm uppercase">{currentUser.name}</div>
+                    <div className="text-xs font-bold text-white uppercase">{currentUser.name}</div>
                     <div className="text-[10px] text-[#8bd6b6] font-mono">{currentUser.neighborhood}</div>
                   </div>
                 </div>
@@ -431,7 +458,7 @@ export function Navbar({ onOpenShareModal }: NavbarProps) {
                     logout();
                     router.push("/");
                   }}
-                  className="w-full flex items-center justify-center gap-2 bg-[#2a1a1a] border border-[#4a2020] py-2 text-xs font-headline-sm uppercase tracking-wider text-rose-400"
+                  className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#2a1a1a] border border-[#4a2020] py-2 text-xs font-bold uppercase tracking-wider text-rose-400 hover:bg-[#351e1e] transition-colors"
                 >
                   <LogOut className="h-4 w-4 text-rose-400" />
                   <span>Log Out</span>
@@ -445,7 +472,7 @@ export function Navbar({ onOpenShareModal }: NavbarProps) {
                     setMobileMenuOpen(false);
                     openAuthModal("login");
                   }}
-                  className="w-full bg-[#201f1f] text-white border-2 border-[#353534] py-2.5 text-xs font-headline-sm uppercase tracking-wider"
+                  className="w-full rounded-xl bg-[#201f1f] hover:bg-[#2a2a2a] text-white border border-[#353534] py-2.5 text-xs font-bold uppercase tracking-wider transition-colors"
                 >
                   Log In
                 </button>
@@ -455,7 +482,7 @@ export function Navbar({ onOpenShareModal }: NavbarProps) {
                     setMobileMenuOpen(false);
                     openAuthModal("signup");
                   }}
-                  className="w-full bg-[#065f46] text-white border-2 border-[#047857] py-2.5 text-xs font-headline-sm uppercase tracking-wider shadow-[0_2px_0_0_#003828]"
+                  className="w-full rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white border border-emerald-500/50 py-2.5 text-xs font-bold uppercase tracking-wider shadow-xs transition-colors"
                 >
                   Sign Up
                 </button>

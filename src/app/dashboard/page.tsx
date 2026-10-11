@@ -271,51 +271,51 @@ function DashboardContent() {
       {activeTab === "impact" && (
         <div className="space-y-8 animate-in fade-in duration-150">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            <div className="rounded-3xl border border-emerald-200 bg-emerald-50/50 p-6 shadow-xs">
-              <div className="flex items-center justify-between text-emerald-800 mb-2">
+            <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-xs">
+              <div className="flex items-center justify-between text-emerald-700 mb-2">
                 <span className="text-xs font-bold uppercase tracking-wider">
                   Personal Savings
                 </span>
-                <span className="rounded-xl bg-white p-2 text-emerald-600 shadow-xs">
+                <span className="rounded-xl bg-emerald-50 p-2 text-emerald-700 shadow-xs border border-emerald-100">
                   <IndianRupee className="h-5 w-5" />
                 </span>
               </div>
               <div className="text-3xl font-black text-slate-900">₹8,500</div>
-              <p className="mt-1 text-xs text-slate-500">
+              <p className="mt-1 text-xs text-slate-600 font-medium">
                 Saved compared to retail purchase or renting commercial equipment.
               </p>
             </div>
 
-            <div className="rounded-3xl border border-blue-200 bg-blue-50/50 p-6 shadow-xs">
-              <div className="flex items-center justify-between text-blue-800 mb-2">
+            <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-xs">
+              <div className="flex items-center justify-between text-blue-700 mb-2">
                 <span className="text-xs font-bold uppercase tracking-wider">
                   Resources Reused
                 </span>
-                <span className="rounded-xl bg-white p-2 text-blue-600 shadow-xs">
+                <span className="rounded-xl bg-blue-50 p-2 text-blue-700 shadow-xs border border-blue-100">
                   <RefreshCw className="h-5 w-5" />
                 </span>
               </div>
               <div className="text-3xl font-black text-slate-900">
                 12 Items
               </div>
-              <p className="mt-1 text-xs text-slate-500">
+              <p className="mt-1 text-xs text-slate-600 font-medium">
                 Kept out of storage and put to productive use in community projects.
               </p>
             </div>
 
-            <div className="rounded-3xl border border-teal-200 bg-teal-50/50 p-6 shadow-xs">
-              <div className="flex items-center justify-between text-teal-800 mb-2">
+            <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-xs">
+              <div className="flex items-center justify-between text-teal-700 mb-2">
                 <span className="text-xs font-bold uppercase tracking-wider">
                   CO₂ Footprint Avoided
                 </span>
-                <span className="rounded-xl bg-white p-2 text-teal-600 shadow-xs">
+                <span className="rounded-xl bg-teal-50 p-2 text-teal-700 shadow-xs border border-teal-100">
                   <Trees className="h-5 w-5" />
                 </span>
               </div>
               <div className="text-3xl font-black text-slate-900">
                 ~22 kg CO₂
               </div>
-              <p className="mt-1 text-xs text-slate-500">
+              <p className="mt-1 text-xs text-slate-600 font-medium">
                 Equivalent to planting 1 full-grown sapling this semester.
               </p>
             </div>

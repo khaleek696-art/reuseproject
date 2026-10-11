@@ -68,24 +68,24 @@ function BookingsContent() {
   return (
     <div className="mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8 py-8">
       {/* Top Header Banner */}
-      <div className="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-5">
+      <div className="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#2a2a2a] pb-5">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
             My Bookings &amp; Rentals
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
+          <p className="text-xs sm:text-sm text-slate-400 mt-0.5">
             Track active borrowings, OTP handoffs, and instant deposit refund status
           </p>
         </div>
 
         {/* Tab Switcher */}
-        <div className="flex bg-slate-100 p-1 rounded-2xl border border-slate-200 w-full sm:w-auto">
+        <div className="flex bg-[#1c1b1b] p-1 rounded-2xl border border-[#2a2a2a] w-full sm:w-auto">
           <button
             onClick={() => setActiveTab("borrower")}
             className={`flex-1 sm:flex-initial rounded-xl px-3 sm:px-4 py-2 text-xs font-bold transition-all ${
               activeTab === "borrower"
                 ? "bg-white text-slate-900 shadow-xs"
-                : "text-slate-600 hover:text-slate-900"
+                : "text-slate-400 hover:text-white"
             }`}
           >
             My Rentals ({bookings.length})
@@ -95,7 +95,7 @@ function BookingsContent() {
             className={`flex-1 sm:flex-initial rounded-xl px-3 sm:px-4 py-2 text-xs font-bold transition-all ${
               activeTab === "owner"
                 ? "bg-white text-slate-900 shadow-xs"
-                : "text-slate-600 hover:text-slate-900"
+                : "text-slate-400 hover:text-white"
             }`}
           >
             Incoming Requests ({bookings.length})

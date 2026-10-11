@@ -5,7 +5,7 @@ from contextlib import asynccontextmanager
 import logging
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, RedirectResponse
 
 from app.core.config import settings
 from app.core.database import init_db_connection
@@ -63,6 +63,14 @@ app.add_middleware(
 
 # Include Master API Router v1
 app.include_router(api_router, prefix=settings.API_V1_STR)
+
+@app.get("/docs", include_in_schema=False)
+async def docs_redirect():
+    return RedirectResponse(url="/api/v1/docs")
+
+@app.get("/redoc", include_in_schema=False)
+async def redoc_redirect():
+    return RedirectResponse(url="/api/v1/redoc")
 
 @app.get("/")
 async def root():

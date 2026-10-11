@@ -90,7 +90,13 @@ export function BookingModal({
   // Verification & Receipt details
   const [handoverOtp, setHandoverOtp] = useState("");
   const [txnId, setTxnId] = useState("");
-  const { createBooking, isLoggedIn, openAuthModal } = useRole();
+  const {
+    createBooking,
+    isLoggedIn,
+    openAuthModal,
+    isDigiLockerVerified,
+    openDigiLockerModal,
+  } = useRole();
 
   // RESET ALL STATE WHEN MODAL OPENS OR RESOURCE CHANGES
   useEffect(() => {
@@ -164,7 +170,10 @@ export function BookingModal({
 
   const rate = resource.pricePerDay;
   const subtotal = rate * days;
-  const deposit = resource.deposit;
+  const originalDeposit = resource.deposit;
+  // 75% security deposit waiver for DigiLocker verified borrowers
+  const depositWaiver = isDigiLockerVerified ? Math.round(originalDeposit * 0.75) : 0;
+  const deposit = originalDeposit - depositWaiver;
   const platformFee = rate > 0 ? 25 : 0;
   const grandTotal = subtotal + deposit + platformFee;
 
@@ -439,6 +448,57 @@ export function BookingModal({
               </select>
             </div>
 
+            {/* DIGILOCKER ANTI-THEFT & DEPOSIT WAIVER GATE */}
+            {!isDigiLockerVerified ? (
+              <div className="rounded-2xl border border-blue-500/30 bg-gradient-to-r from-blue-950/40 via-slate-900 to-emerald-950/30 p-4 mb-5 space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="text-base">🇮🇳</span>
+                    <span className="text-xs font-black text-white">DigiLocker Anti-Theft Protection</span>
+                  </div>
+                  <span className="rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/20 text-[10px] font-bold px-2 py-0.5">
+                    KYC Pending
+                  </span>
+                </div>
+
+                <p className="text-[11px] text-slate-300 leading-relaxed">
+                  Verify your Aadhaar &amp; PAN with DigiLocker to <strong className="text-emerald-400">waive ₹{depositWaiver}</strong> of security deposit and prevent rental fraud!
+                </p>
+
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-t border-slate-700/50 pt-2.5">
+                  <div className="text-[11px] text-slate-300">
+                    Deposit: <span className="line-through text-slate-500">₹{originalDeposit}</span> &rarr; <span className="font-bold text-emerald-400">₹{deposit}</span> (75% Off)
+                  </div>
+                  <button
+                    type="button"
+                    onClick={openDigiLockerModal}
+                    className="rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-3 py-1.5 shadow-xs transition-all flex items-center justify-center gap-1.5 active:scale-95 cursor-pointer"
+                  >
+                    <span>🇮🇳 Verify Identity (Save ₹{depositWaiver})</span>
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="rounded-2xl border border-emerald-500/40 bg-emerald-950/20 p-3.5 mb-5 flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2.5">
+                  <div className="h-7 w-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs font-black">
+                    ✓
+                  </div>
+                  <div>
+                    <span className="text-xs font-bold text-emerald-300 block">
+                      DigiLocker Verified Citizen (Aadhaar &amp; PAN)
+                    </span>
+                    <span className="text-[10px] text-slate-400">
+                      Zero fraud risk verified &bull; ₹{depositWaiver} security deposit waived!
+                    </span>
+                  </div>
+                </div>
+                <span className="rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[10px] font-bold px-2.5 py-0.5 whitespace-nowrap">
+                  75% Waived
+                </span>
+              </div>
+            )}
+
             {/* Price Breakdown Card */}
             <div className="rounded-2xl border border-slate-200/90 bg-slate-50 p-4 mb-6 space-y-2 text-xs">
               <div className="flex justify-between text-slate-600">
@@ -452,7 +512,14 @@ export function BookingModal({
               <div className="flex justify-between text-slate-600">
                 <span>Refundable Security Deposit</span>
                 <span className="font-semibold text-slate-800">
-                  ₹{deposit}
+                  {depositWaiver > 0 ? (
+                    <>
+                      <span className="line-through text-slate-400 mr-1.5">₹{originalDeposit}</span>
+                      <span className="text-emerald-700 font-bold">₹{deposit}</span>
+                    </>
+                  ) : (
+                    `₹${deposit}`
+                  )}
                 </span>
               </div>
               <div className="flex justify-between text-slate-600">

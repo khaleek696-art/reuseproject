@@ -62,7 +62,7 @@ export function AddResourceModal({
   const [allowDelivery, setAllowDelivery] = useState(true);
 
   const [isSuccess, setIsSuccess] = useState(false);
-  const { addResource, role, setRole, isLoggedIn, openAuthModal } = useRole();
+  const { addResource, role, setRole, isLoggedIn, openAuthModal, currentUser } = useRole();
 
   // Reset form when modal opens
   useEffect(() => {
@@ -224,7 +224,7 @@ export function AddResourceModal({
 
     const newRes: Resource = {
       id: `r_${Date.now()}_${Math.floor(1000 + Math.random() * 9000)}`,
-      ownerId: "u_aman",
+      ownerId: currentUser?.id || "u_owner_active",
       title: title.trim() || "New Equipment Asset",
       category,
       condition,

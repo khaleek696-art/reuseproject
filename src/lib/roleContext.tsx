@@ -50,6 +50,14 @@ export interface LiveDispute {
   status: "pending" | "resolved";
 }
 
+export interface DigiLockerData {
+  aadhaarMasked: string;
+  panMasked: string;
+  studentIdMasked: string;
+  verifiedAt: string;
+  certificateId: string;
+}
+
 interface RoleContextType {
   role: UserRole;
   setRole: (role: UserRole) => void;
@@ -89,6 +97,13 @@ interface RoleContextType {
   isDeliveryOnDuty: boolean;
   setIsDeliveryOnDuty: (val: boolean) => void;
   isBackendConnected: boolean;
+  isDigiLockerVerified: boolean;
+  digiLockerData: DigiLockerData | null;
+  verifyDigiLocker: (data?: Partial<DigiLockerData>) => void;
+  resetDigiLocker: () => void;
+  isDigiLockerModalOpen: boolean;
+  openDigiLockerModal: () => void;
+  closeDigiLockerModal: () => void;
 }
 
 const defaultUser: UserProfile = {
@@ -145,6 +160,11 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
   const [isDeliveryOnDuty, setIsDeliveryOnDuty] = useState<boolean>(true);
   const [isBackendConnected, setIsBackendConnected] = useState<boolean>(false);
 
+  // DigiLocker Government ID State (Persisted in localStorage)
+  const [isDigiLockerVerified, setIsDigiLockerVerified] = useState<boolean>(false);
+  const [digiLockerData, setDigiLockerData] = useState<DigiLockerData | null>(null);
+  const [isDigiLockerModalOpen, setIsDigiLockerModalOpen] = useState<boolean>(false);
+
   // Live Application State Store with localStorage Persistence
   const [resources, setResources] = useState<Resource[]>(MOCK_RESOURCES);
 
@@ -159,7 +179,7 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
     trust: 10,
   });
 
-  // Load session from localStorage on client mount (user login session only, NOT marketplace resources)
+  // Load session from localStorage on client mount
   useEffect(() => {
     if (typeof window !== "undefined") {
       try {
@@ -173,6 +193,15 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
           }
         } else {
           setIsLoggedIn(false);
+        }
+
+        const savedDigi = localStorage.getItem("reuse_digilocker_verified");
+        if (savedDigi === "true") {
+          setIsDigiLockerVerified(true);
+          const savedData = localStorage.getItem("reuse_digilocker_data");
+          if (savedData) {
+            setDigiLockerData(JSON.parse(savedData));
+          }
         }
       } catch (e) {
         console.error("Failed to load saved session:", e);
@@ -224,20 +253,46 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
           createdAt: "2026-09-25",
         }));
         
-        // Merge: Live database items take priority by ID, combined with full campus catalog
+        // Helper to load locally saved listings
+        const getLocalListings = (): Resource[] => {
+          try {
+            const saved = localStorage.getItem("reuse_user_listings");
+            return saved ? JSON.parse(saved) : [];
+          } catch {
+            return [];
+          }
+        };
+
+        const localListings = getLocalListings();
+
+        // Merge: Live database items take priority by ID, combined with local listings and campus catalog
         const apiIds = new Set(formattedRes.map((r) => r.id));
         const mergedCatalog = [
           ...formattedRes,
+          ...localListings.filter((l) => !apiIds.has(l.id)),
           ...MOCK_RESOURCES.filter((m) => !apiIds.has(m.id)),
         ];
         setResources(mergedCatalog);
+      } else {
+        // Fallback: If backend is not yet reachable or cold starting, load local listings + catalog
+        try {
+          const saved = localStorage.getItem("reuse_user_listings");
+          const localListings: Resource[] = saved ? JSON.parse(saved) : [];
+          if (localListings.length > 0) {
+            const localIds = new Set(localListings.map((l) => l.id));
+            setResources([
+              ...localListings,
+              ...MOCK_RESOURCES.filter((m) => !localIds.has(m.id)),
+            ]);
+          }
+        } catch {}
       }
     }
     syncWithBackend();
   }, []);
 
   const addResource = async (newRes: Resource) => {
-    // Optimistically show on UI immediately
+    // 1. Optimistically show on UI immediately
     setResources((prev) => {
       if (prev.some((r) => r.id === newRes.id)) {
         return prev;
@@ -245,7 +300,18 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
       return [newRes, ...prev];
     });
 
-    // Save directly to Central Cloud FastAPI Backend & PostgreSQL Database
+    // 2. Persist in localStorage so page refreshes never lose newly uploaded items
+    try {
+      const saved = localStorage.getItem("reuse_user_listings");
+      const list: Resource[] = saved ? JSON.parse(saved) : [];
+      if (!list.some((r) => r.id === newRes.id)) {
+        localStorage.setItem("reuse_user_listings", JSON.stringify([newRes, ...list]));
+      }
+    } catch (e) {
+      console.warn("Could not cache listing to localStorage:", e);
+    }
+
+    // 3. Save directly to Central Cloud FastAPI Backend & PostgreSQL Database
     const API_URL =
       process.env.NEXT_PUBLIC_API_BASE_URL ||
       process.env.NEXT_PUBLIC_API_URL ||
@@ -296,7 +362,24 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
             status: r.isAvailable ? "active" : "borrowed",
             createdAt: "2026-09-25",
           }));
-          setResources(formattedRes);
+
+          const apiIds = new Set(formattedRes.map((r) => r.id));
+          const savedLocal = (() => {
+            try {
+              const s = localStorage.getItem("reuse_user_listings");
+              return s ? JSON.parse(s) : [];
+            } catch {
+              return [];
+            }
+          })();
+
+          // Merge: Live database items + local items + mock resources (nothing gets lost!)
+          const mergedCatalog = [
+            ...formattedRes,
+            ...savedLocal.filter((l: Resource) => !apiIds.has(l.id)),
+            ...MOCK_RESOURCES.filter((m) => !apiIds.has(m.id)),
+          ];
+          setResources(mergedCatalog);
         }
       }
     } catch (e) {
@@ -436,6 +519,45 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
 
   const activeDisputesCount = disputes.filter((d) => d.status === "pending").length;
 
+  const verifyDigiLocker = (customData?: Partial<DigiLockerData>) => {
+    const verifiedRecord: DigiLockerData = {
+      aadhaarMasked: customData?.aadhaarMasked || "4129",
+      panMasked: customData?.panMasked || "4312X",
+      studentIdMasked: customData?.studentIdMasked || "2023CSB1109",
+      verifiedAt: new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
+      certificateId: `DL-UIDAI-2026-${Math.floor(10000 + Math.random() * 90000)}`,
+    };
+    setIsDigiLockerVerified(true);
+    setDigiLockerData(verifiedRecord);
+    setUser((prev) => ({
+      ...prev,
+      verifiedGovId: true,
+      trustScore: 5.0,
+      trustTier: "established",
+    }));
+    if (typeof window !== "undefined") {
+      localStorage.setItem("reuse_digilocker_verified", "true");
+      localStorage.setItem("reuse_digilocker_data", JSON.stringify(verifiedRecord));
+    }
+  };
+
+  const resetDigiLocker = () => {
+    setIsDigiLockerVerified(false);
+    setDigiLockerData(null);
+    setUser((prev) => ({
+      ...prev,
+      verifiedGovId: false,
+      trustScore: 4.8,
+    }));
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("reuse_digilocker_verified");
+      localStorage.removeItem("reuse_digilocker_data");
+    }
+  };
+
+  const openDigiLockerModal = () => setIsDigiLockerModalOpen(true);
+  const closeDigiLockerModal = () => setIsDigiLockerModalOpen(false);
+
   return (
     <RoleContext.Provider
       value={{
@@ -463,6 +585,13 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
         isDeliveryOnDuty,
         setIsDeliveryOnDuty,
         isBackendConnected,
+        isDigiLockerVerified,
+        digiLockerData,
+        verifyDigiLocker,
+        resetDigiLocker,
+        isDigiLockerModalOpen,
+        openDigiLockerModal,
+        closeDigiLockerModal,
       }}
     >
       {children}

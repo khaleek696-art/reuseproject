@@ -13,13 +13,23 @@ import {
   AlertCircle,
   Award,
   User,
+  ArrowRight,
+  Sparkles,
 } from "lucide-react";
 import { useRole } from "@/lib/roleContext";
 import { TrustLensPanel } from "@/components/TrustLensPanel";
 import { submitReviewApi } from "@/lib/api";
 
 export default function ProfilePage() {
-  const { currentUser, isLoggedIn, openAuthModal } = useRole();
+  const {
+    currentUser,
+    isLoggedIn,
+    openAuthModal,
+    isDigiLockerVerified,
+    digiLockerData,
+    openDigiLockerModal,
+    resetDigiLocker,
+  } = useRole();
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [rating, setRating] = useState(5);
   const [conditionRating, setConditionRating] = useState(5);
@@ -136,18 +146,116 @@ export default function ProfilePage() {
               <ShieldCheck className="h-4 w-4 text-emerald-600" />
               <span>Identity Verification Credentials</span>
             </h3>
-            <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md">
-              Level 3 Verified
+            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${
+              isDigiLockerVerified
+                ? "text-emerald-800 bg-emerald-50 border border-emerald-200"
+                : "text-amber-800 bg-amber-50 border border-amber-200"
+            }`}>
+              {isDigiLockerVerified ? "Level 4 (DigiLocker Verified)" : "Level 2 (KYC Pending)"}
             </span>
           </div>
 
-          <div className="space-y-3 text-xs">
+          {/* DYNAMIC DIGILOCKER GOVERNMENT KYC CARD */}
+          {isDigiLockerVerified ? (
+            <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-50/80 via-teal-50/50 to-white border border-emerald-200 space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="text-base">🇮🇳</span>
+                  <div>
+                    <span className="font-black text-xs text-slate-900 block">
+                      DigiLocker Government Verified
+                    </span>
+                    <span className="text-[10px] text-slate-500 font-mono">
+                      Issued: {digiLockerData?.verifiedAt || "Oct 2026"} &bull; Token #{digiLockerData?.certificateId || "DL-98124"}
+                    </span>
+                  </div>
+                </div>
+                <span className="text-[10px] font-black uppercase text-emerald-900 bg-emerald-100 px-2.5 py-0.5 rounded-full border border-emerald-300">
+                  ✓ Active UIDAI &amp; PAN
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]">
+                <div className="p-2.5 rounded-xl bg-white border border-slate-200/90 shadow-2xs">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] text-slate-400 font-bold uppercase">UIDAI Aadhaar</span>
+                    <CheckCircle2 className="h-3 w-3 text-emerald-600" />
+                  </div>
+                  <div className="font-mono font-bold text-slate-800 mt-0.5">
+                    XXXX-XXXX-{digiLockerData?.aadhaarMasked || "4129"}
+                  </div>
+                  <div className="text-[10px] text-slate-500 truncate">{currentUser.name}</div>
+                </div>
+
+                <div className="p-2.5 rounded-xl bg-white border border-slate-200/90 shadow-2xs">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] text-slate-400 font-bold uppercase">Income Tax PAN</span>
+                    <CheckCircle2 className="h-3 w-3 text-emerald-600" />
+                  </div>
+                  <div className="font-mono font-bold text-slate-800 mt-0.5">
+                    XXXXX{digiLockerData?.panMasked || "4312X"}
+                  </div>
+                  <div className="text-[10px] text-slate-500">Legal Tax Identity Verified</div>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between text-[11px] pt-1 border-t border-emerald-100">
+                <span className="text-emerald-800 font-bold flex items-center gap-1">
+                  <Sparkles className="h-3 w-3 text-emerald-600" />
+                  <span>75% Deposit Waiver Active on All Rentals</span>
+                </span>
+                <button
+                  type="button"
+                  onClick={resetDigiLocker}
+                  className="text-[10px] text-slate-400 hover:text-rose-600 font-semibold underline cursor-pointer"
+                  title="Reset for testing"
+                >
+                  Reset Demo
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-50/70 via-slate-50 to-emerald-50/50 border border-blue-200/80 space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="text-base">🇮🇳</span>
+                  <div>
+                    <span className="font-black text-xs text-slate-900 block">
+                      Connect with DigiLocker
+                    </span>
+                    <span className="text-[10px] text-slate-500">
+                      National Digital Identity &amp; KYC Gateway
+                    </span>
+                  </div>
+                </div>
+                <span className="text-[10px] font-bold uppercase text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full border border-amber-300">
+                  KYC Pending ⚠️
+                </span>
+              </div>
+
+              <p className="text-[11px] text-slate-600 leading-relaxed">
+                Link your DigiLocker to verify official Aadhaar, PAN &amp; College ID. Eliminates theft risk, boosts PeerTrust to 5.0★, and unlocks a <strong className="text-emerald-700">75% security deposit waiver</strong> on all equipment!
+              </p>
+
+              <button
+                type="button"
+                onClick={openDigiLockerModal}
+                className="w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-700 to-emerald-700 hover:from-blue-600 hover:to-emerald-600 py-2.5 text-xs font-bold text-white shadow-xs transition-all active:scale-95 cursor-pointer"
+              >
+                <span>🇮🇳 Launch DigiLocker Verification</span>
+                <ArrowRight className="h-3.5 w-3.5" />
+              </button>
+            </div>
+          )}
+
+          {/* Secondary Institutional & Phone Verifications */}
+          <div className="space-y-2.5 text-xs pt-1">
             <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200/80">
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                <span className="font-bold text-slate-800">Government ID Verified</span>
+                <span className="font-bold text-slate-800">Campus Student Enrollment</span>
               </div>
-              <span className="text-slate-400 text-[11px]">Passport / Aadhar Verified</span>
+              <span className="text-slate-500 font-mono text-[11px]">{currentUser.neighborhood || "Campus Hub"}</span>
             </div>
 
             <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200/80">
@@ -155,20 +263,12 @@ export default function ProfilePage() {
                 <CheckCircle2 className="h-4 w-4 text-emerald-600" />
                 <span className="font-bold text-slate-800">Phone &amp; SMS 2FA Verified</span>
               </div>
-              <span className="text-slate-400 text-[11px]">+91 &bull;&bull;&bull;&bull;&bull; 9182</span>
-            </div>
-
-            <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200/80">
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                <span className="font-bold text-slate-800">Institutional Email Verified</span>
-              </div>
-              <span className="text-slate-400 text-[11px]">aman@campus.edu</span>
+              <span className="text-slate-500 font-mono text-[11px]">+91 &bull;&bull;&bull;&bull;&bull; 8712</span>
             </div>
           </div>
 
-          <p className="text-[11px] text-slate-400 leading-relaxed pt-2">
-            * Identity verification confirms individual legal identification but does not measure peer behavior. Behavioral trust is tracked separately below.
+          <p className="text-[11px] text-slate-400 leading-relaxed pt-1">
+            * Legal identity verification protects gear owners and campus community. Raw biometric data is never stored on RE:USE servers.
           </p>
         </div>
 

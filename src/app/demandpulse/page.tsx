@@ -330,7 +330,7 @@ export default function DemandPulsePage() {
         {/* ======================================================== */}
         {/* 3. TIME-SERIES HOURLY DEMAND CHART (TIMESCALEDB HYPERTABLE) */}
         {/* ======================================================== */}
-        <div className="rounded-3xl border border-[#2a2a2a] bg-[#1c1b1b] p-5 sm:p-7 shadow-xl space-y-6">
+        <div className="rounded-3xl border border-[#2a2a2a] bg-[#1c1b1b] p-6 sm:p-8 shadow-xl space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <h2 className="text-lg sm:text-xl font-black text-white flex items-center gap-2 tracking-tight">
@@ -342,78 +342,79 @@ export default function DemandPulsePage() {
               </p>
             </div>
             
-            {/* Chart Legend */}
-            <div className="flex items-center gap-5 text-xs font-semibold">
-              <div className="flex items-center gap-2">
-                <span className="h-3 w-3 rounded-sm bg-[#10b981] shadow-[0_0_8px_rgba(16,185,129,0.5)]"></span>
-                <span className="text-[#e5e2e1]">Borrower Searches</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="h-3 w-3 rounded-sm bg-[#38bdf8] shadow-[0_0_8px_rgba(56,189,248,0.5)]"></span>
-                <span className="text-[#e5e2e1]">Rental Requests</span>
+            {/* Chart Legend & Live Inspector */}
+            <div className="flex flex-wrap items-center gap-4 text-xs">
+              {hoveredPoint ? (
+                <div className="flex items-center gap-2 rounded-xl bg-[#141414] border border-[#2a2a2a] px-3 py-1.5 font-mono text-[11px] animate-in fade-in">
+                  <span className="font-bold text-white">{hoveredPoint.hour}</span>
+                  <span className="text-[#8bd6b6] font-semibold">{hoveredPoint.searches} searches</span>
+                  <span className="text-slate-600">&bull;</span>
+                  <span className="text-[#38bdf8] font-semibold">{hoveredPoint.requests} bookings</span>
+                </div>
+              ) : null}
+
+              <div className="flex items-center gap-4 text-xs font-semibold">
+                <div className="flex items-center gap-2">
+                  <span className="h-2.5 w-2.5 rounded-full bg-[#10b981]"></span>
+                  <span className="text-[#e5e2e1]">Borrower Searches</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="h-2.5 w-2.5 rounded-full bg-[#0284c7]"></span>
+                  <span className="text-[#e5e2e1]">Rental Requests</span>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Bar Graph Visualizer */}
-          <div className="pt-2 pb-2">
-            <div className="overflow-x-auto pb-3 sm:pb-0 scrollbar-thin">
-              <div className="min-w-[720px] sm:min-w-0 grid grid-cols-24 gap-1 sm:gap-2 items-end h-52 sm:h-64 px-1 border-b border-[#2a2a2a]">
-                {hourlySeries.map((point, idx) => {
-                  const searchHeight = Math.round((point.searches / maxHourlySearches) * 100);
-                  const reqHeight = Math.round((point.requests / maxHourlySearches) * 100);
-                  const isHovered = hoveredPoint?.hour === point.hour;
+          {/* Clean 24-Hour Dual-Bar Graph (No Overflow Clipping) */}
+          <div className="pt-4 pb-2">
+            <div className="grid grid-cols-24 gap-1 sm:gap-2 items-end h-56 sm:h-64 px-1 border-b border-[#2a2a2a]">
+              {hourlySeries.map((point, idx) => {
+                const searchHeight = Math.round((point.searches / maxHourlySearches) * 100);
+                const reqHeight = Math.round((point.requests / maxHourlySearches) * 100);
+                const isHovered = hoveredPoint?.hour === point.hour;
 
-                  return (
-                    <div
-                      key={idx}
-                      onMouseEnter={() => setHoveredPoint(point)}
-                      onMouseLeave={() => setHoveredPoint(null)}
-                      className="flex flex-col items-center h-full justify-end group relative cursor-pointer"
-                    >
-                      {/* Floating Micro Tooltip */}
-                      {isHovered && (
-                        <div className="absolute -top-16 z-30 bg-[#0e0e0e] border border-[#2a2a2a] text-[11px] text-[#e5e2e1] p-2.5 rounded-xl pointer-events-none shadow-2xl whitespace-nowrap animate-in fade-in zoom-in-95">
-                          <div className="font-mono font-bold text-white mb-0.5">{point.hour}</div>
-                          <div className="text-[#8bd6b6] font-semibold flex items-center gap-1">
-                            <span className="h-1.5 w-1.5 rounded-full bg-[#10b981]"></span>
-                            <span>{point.searches} Searches</span>
-                          </div>
-                          <div className="text-[#38bdf8] font-semibold flex items-center gap-1">
-                            <span className="h-1.5 w-1.5 rounded-full bg-[#38bdf8]"></span>
-                            <span>{point.requests} Bookings</span>
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Dual Bar Column */}
-                      <div className="w-full flex items-end justify-center gap-0.5 sm:gap-1.5 h-full">
-                        {/* 1. Borrower Searches (Mint Green) */}
-                        <div
-                          style={{ height: `${Math.max(6, searchHeight)}%` }}
-                          className={`w-1/2 rounded-t-sm bg-gradient-to-t from-[#065f46] to-[#10b981] transition-all duration-300 ${
-                            isHovered ? "brightness-125 shadow-[0_0_12px_rgba(16,185,129,0.6)]" : "opacity-90 hover:opacity-100"
-                          }`}
-                        />
-                        {/* 2. Rental Requests (Cyan) */}
-                        <div
-                          style={{ height: `${Math.max(4, reqHeight)}%` }}
-                          className={`w-1/2 rounded-t-sm bg-gradient-to-t from-[#0284c7] to-[#38bdf8] transition-all duration-300 ${
-                            isHovered ? "brightness-125 shadow-[0_0_12px_rgba(56,189,248,0.6)]" : "opacity-85 hover:opacity-100"
-                          }`}
-                        />
-                      </div>
-
-                      {/* Hour Tick Label */}
-                      <span className={`text-[10px] mt-2 truncate w-full text-center font-mono ${
-                        isHovered ? "text-[#8bd6b6] font-bold" : "text-[#9ca3af]"
-                      }`}>
-                        {point.hour.split(":")[0]}h
-                      </span>
+                return (
+                  <div
+                    key={idx}
+                    onMouseEnter={() => setHoveredPoint(point)}
+                    onMouseLeave={() => setHoveredPoint(null)}
+                    className="flex flex-col items-center h-full justify-end group cursor-pointer transition-transform hover:-translate-y-0.5"
+                    title={`${point.hour}: ${point.searches} Searches, ${point.requests} Bookings`}
+                  >
+                    {/* Dual Bars Standing Side-by-Side */}
+                    <div className="w-full flex items-end justify-center gap-0.5 sm:gap-1 h-full">
+                      {/* 1. Borrower Searches (Emerald Green) */}
+                      <div
+                        style={{ height: `${Math.max(4, searchHeight)}%` }}
+                        className={`w-1/2 rounded-t-sm transition-all duration-200 ${
+                          isHovered
+                            ? "bg-[#10b981] brightness-125"
+                            : "bg-gradient-to-t from-[#065f46] to-[#10b981]"
+                        }`}
+                      />
+                      {/* 2. Rental Requests (Cyan / Blue) */}
+                      <div
+                        style={{ height: `${Math.max(2, reqHeight)}%` }}
+                        className={`w-1/2 rounded-t-sm transition-all duration-200 ${
+                          isHovered
+                            ? "bg-[#38bdf8] brightness-125"
+                            : "bg-gradient-to-t from-[#0369a1] to-[#0284c7]"
+                        }`}
+                      />
                     </div>
-                  );
-                })}
-              </div>
+
+                    {/* Clean Hour Label Along Bottom */}
+                    <span
+                      className={`text-[9px] sm:text-[10px] mt-2 truncate w-full text-center font-mono transition-colors ${
+                        isHovered ? "text-[#8bd6b6] font-bold" : "text-[#9ca3af]"
+                      }`}
+                    >
+                      {point.hour.split(":")[0]}h
+                    </span>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>

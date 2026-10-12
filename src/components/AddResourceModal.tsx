@@ -556,12 +556,12 @@ export function AddResourceModal({
                           {uploadedPhotos.map((photoUrl, idx) => (
                             <div
                               key={idx}
-                              className="relative group rounded-xl overflow-hidden border border-slate-200 aspect-square shadow-2xs"
+                              className="relative group rounded-xl overflow-hidden border border-slate-200 aspect-square shadow-2xs bg-slate-900 flex items-center justify-center"
                             >
                               <img
                                 src={photoUrl}
                                 alt={`Selected photo ${idx + 1}`}
-                                className="w-full h-full object-cover"
+                                className="max-h-full max-w-full object-contain p-1"
                               />
                               <span className="absolute bottom-1 left-1 bg-slate-950/80 text-[9px] font-bold text-emerald-400 px-1.5 py-0.5 rounded backdrop-blur-xs flex items-center gap-1">
                                 <Cloud className="h-2.5 w-2.5" />

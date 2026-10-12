@@ -78,12 +78,13 @@ export function MatchCard({ match, rank, onRequestBorrow }: MatchCardProps) {
 
       {/* Main Grid: Photo + Specs + Actions */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-        {/* Photo with aspect ratio */}
-        <div className="md:col-span-3 aspect-[4/3] rounded-2xl overflow-hidden bg-slate-100 border border-slate-200/80">
+        {/* Photo with aspect ratio — Complete Uncropped Studio View */}
+        <div className="relative md:col-span-3 aspect-square md:aspect-[4/3] rounded-2xl overflow-hidden bg-[#141414] border border-[#2a2a2a] flex items-center justify-center p-2.5">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_#242424_0%,_#0f0f0f_100%)] pointer-events-none" />
           <img
             src={resource.photos[0]}
             alt={resource.title}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className="relative z-10 max-h-full max-w-full object-contain transition-transform duration-300 group-hover:scale-105 drop-shadow-md"
           />
         </div>
 

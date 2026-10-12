@@ -16,6 +16,8 @@ import {
   Lock,
   Layers,
   Heart,
+  ZoomIn,
+  X,
 } from "lucide-react";
 import { MOCK_RESOURCES, MOCK_USERS, CATEGORIES } from "@/data/mockData";
 import { User } from "@/lib/types";
@@ -61,6 +63,7 @@ export default function ResourceDetailPage({ params }: PageProps) {
   const [fulfillmentMode, setFulfillmentMode] = useState<"pickup" | "courier">("courier");
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
+  const [isLightBoxOpen, setIsLightBoxOpen] = useState(false);
 
   // High-value check (> ₹10,000 asset value, or cameras / laptops / projectors)
   const isHighValue =
@@ -119,33 +122,55 @@ export default function ResourceDetailPage({ params }: PageProps) {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Left Column: Media & Specifications (7 Cols) */}
         <div className="lg:col-span-7 space-y-6">
-          {/* Main Photo Gallery */}
-          <div className="overflow-hidden rounded-3xl border border-slate-200 bg-slate-100 shadow-xs">
-            <div className="relative aspect-[16/10] w-full">
+          {/* Main Photo Gallery — Uncropped Studio Presentation */}
+          <div className="overflow-hidden rounded-3xl border border-[#2a2a2a] bg-[#121212] shadow-xs">
+            <div
+              onClick={() => setIsLightBoxOpen(true)}
+              className="relative min-h-[360px] sm:min-h-[440px] aspect-[4/3] sm:aspect-[16/10] w-full flex items-center justify-center overflow-hidden p-4 cursor-pointer group"
+              title="Click to view original uncropped photo"
+            >
+              {/* Studio Stage Radial Backdrop */}
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_#242424_0%,_#0f0f0f_100%)] pointer-events-none" />
+
+              {/* Main Product Image — Complete Uncropped & Razor Sharp */}
               <img
                 src={resource.photos[activePhotoIdx] || resource.photos[0] || "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&auto=format&fit=crop&q=80"}
                 onError={(e) => {
                   (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&auto=format&fit=crop&q=80";
                 }}
                 alt={resource.title}
-                className="h-full w-full object-cover"
+                className="relative z-10 max-h-[400px] max-w-full object-contain drop-shadow-2xl transition-transform duration-300 group-hover:scale-[1.02]"
               />
-              <span className="absolute top-3 left-3 rounded-xl bg-slate-950/80 px-3 py-1 text-xs font-bold text-white backdrop-blur-md">
+
+              {/* Condition Badge */}
+              <span className="absolute top-3 left-3 rounded-xl bg-slate-950/85 px-3 py-1 text-xs font-bold text-[#8bd6b6] backdrop-blur-md border border-[#2a2a2a] z-20">
                 Condition: {resource.condition.replace("_", " ").toUpperCase()}
               </span>
+
+              {/* Inspect Full Photo Button */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsLightBoxOpen(true);
+                }}
+                className="absolute top-3 right-3 flex items-center gap-1.5 rounded-xl bg-slate-950/85 px-3 py-1.5 text-xs font-bold text-white backdrop-blur-md border border-[#2a2a2a] hover:bg-[#065f46] transition-colors z-20 cursor-pointer shadow-sm"
+              >
+                <ZoomIn className="h-3.5 w-3.5 text-[#8bd6b6]" />
+                <span className="hidden sm:inline">Inspect HD</span>
+              </button>
             </div>
 
             {resource.photos.length > 1 && (
-              <div className="flex gap-2 p-3 bg-white border-t border-slate-100">
+              <div className="flex gap-2 p-3 bg-[#161616] border-t border-[#262626]">
                 {resource.photos.map((p, idx) => (
                   <button
                     key={idx}
                     onClick={() => setActivePhotoIdx(idx)}
-                    className={`relative h-16 w-20 rounded-xl overflow-hidden border-2 transition-all ${
-                      activePhotoIdx === idx ? "border-emerald-600 ring-2 ring-emerald-600/20" : "opacity-60"
+                    className={`relative h-16 w-20 rounded-xl overflow-hidden border-2 transition-all bg-[#101010] flex items-center justify-center p-1 ${
+                      activePhotoIdx === idx ? "border-[#065f46] ring-2 ring-[#065f46]/30" : "opacity-60 border-[#2a2a2a]"
                     }`}
                   >
-                    <img src={p} alt="" className="h-full w-full object-cover" />
+                    <img src={p} alt="" className="max-h-full max-w-full object-contain" />
                   </button>
                 ))}
               </div>
@@ -369,6 +394,38 @@ export default function ResourceDetailPage({ params }: PageProps) {
         isOpen={isBookingOpen}
         onClose={() => setIsBookingOpen(false)}
       />
+
+      {/* Full-Screen High-Resolution Lightbox Modal */}
+      {isLightBoxOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md p-4 animate-in fade-in"
+          onClick={() => setIsLightBoxOpen(false)}
+        >
+          <div
+            className="relative max-w-5xl max-h-[92vh] w-full flex flex-col items-center justify-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setIsLightBoxOpen(false)}
+              className="absolute -top-12 right-0 flex items-center gap-1.5 rounded-full bg-[#1c1b1b] border border-[#333] px-3.5 py-1.5 text-xs font-bold text-white hover:bg-rose-600 transition-colors cursor-pointer"
+            >
+              <X className="h-4 w-4" />
+              <span>Close View</span>
+            </button>
+            <div className="rounded-3xl border-2 border-[#2a2a2a] bg-[#101010] p-4 shadow-2xl flex items-center justify-center max-h-[84vh] overflow-hidden">
+              <img
+                src={resource.photos[activePhotoIdx] || resource.photos[0]}
+                alt={resource.title}
+                className="max-h-[80vh] max-w-full object-contain rounded-2xl drop-shadow-2xl"
+              />
+            </div>
+            <div className="mt-3 text-center">
+              <h3 className="text-base font-bold text-white font-mono">{resource.title}</h3>
+              <p className="text-xs text-[#8bd6b6] font-mono">Photo {activePhotoIdx + 1} of {resource.photos.length} &bull; 100% Uncropped Original</p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

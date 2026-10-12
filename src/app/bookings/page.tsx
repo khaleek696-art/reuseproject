@@ -146,11 +146,13 @@ function BookingsContent() {
                   <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-4 mb-6">
                     <div className="flex items-center gap-4">
                       {booking.resourceImage && (
-                        <img
-                          src={booking.resourceImage}
-                          alt={booking.resourceTitle}
-                          className="h-14 w-14 rounded-2xl object-cover border border-slate-200"
-                        />
+                        <div className="h-14 w-14 rounded-2xl bg-slate-900 border border-slate-200 flex items-center justify-center p-1 shrink-0 overflow-hidden">
+                          <img
+                            src={booking.resourceImage}
+                            alt={booking.resourceTitle}
+                            className="max-h-full max-w-full object-contain"
+                          />
+                        </div>
                       )}
                       <div>
                         <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
@@ -333,11 +335,13 @@ function BookingsContent() {
                   <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                     <div className="flex items-center gap-3">
                       {booking.resourceImage && (
-                        <img
-                          src={booking.resourceImage}
-                          alt={booking.resourceTitle}
-                          className="h-10 w-10 rounded-xl object-cover border border-slate-200"
-                        />
+                        <div className="h-10 w-10 rounded-xl bg-slate-900 border border-slate-200 flex items-center justify-center p-0.5 shrink-0 overflow-hidden">
+                          <img
+                            src={booking.resourceImage}
+                            alt={booking.resourceTitle}
+                            className="max-h-full max-w-full object-contain"
+                          />
+                        </div>
                       )}
                       <div>
                         <h3 className="font-black text-slate-900 text-base">

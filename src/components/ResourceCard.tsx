@@ -9,6 +9,8 @@ import {
   Clock,
   ArrowUpRight,
   Heart,
+  ZoomIn,
+  X,
 } from "lucide-react";
 import { Resource, User } from "@/lib/types";
 import { formatDistance, formatPrice, haversine } from "@/lib/utils";
@@ -37,6 +39,7 @@ export function ResourceCard({
 }: ResourceCardProps) {
   const { currentUser } = useRole();
   const [isLiked, setIsLiked] = useState(false);
+  const [isZoomOpen, setIsZoomOpen] = useState(false);
   const [imgSrc, setImgSrc] = useState(resource.photos?.[0] || FALLBACK_PHOTO);
 
   React.useEffect(() => {
@@ -74,22 +77,31 @@ export function ResourceCard({
   const isFree = resource.pricePerDay === 0;
 
   return (
-    <div className="card-hover-lift group relative flex flex-col rounded-2xl border border-[#2a2a2a] bg-[#201f1f] p-3 shadow-[0_4px_0_0_#0e0e0e] hover:shadow-[0_6px_0_0_#003828] hover:border-[#353534] transition-all">
+    <>
+      <div className="card-hover-lift group relative flex flex-col rounded-2xl border border-[#2a2a2a] bg-[#201f1f] p-3 shadow-[0_4px_0_0_#0e0e0e] hover:shadow-[0_6px_0_0_#003828] hover:border-[#353534] transition-all">
       {/* Top Accent Stripe */}
       <div className="h-1 w-full bg-[#65A832] rounded-t-sm -mt-1 mb-2.5 opacity-90"></div>
 
-      {/* Visual Media Container */}
-      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl bg-[#0e0e0e] shadow-[inset_2px_2px_0_#0e0e0e,inset_-2px_-2px_0_#2a2a2a]">
+      {/* Visual Media Container — 100% Uncropped Studio Stage with Lightbox */}
+      <div
+        onClick={() => setIsZoomOpen(true)}
+        className="relative aspect-square w-full overflow-hidden rounded-xl bg-[#141414] shadow-[inset_2px_2px_0_#0e0e0e,inset_-2px_-2px_0_#2a2a2a] border border-[#262626] flex items-center justify-center p-3 group/img cursor-pointer"
+        title="Click to view full uncropped image"
+      >
+        {/* Studio Stage Radial Backdrop */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_#242424_0%,_#0f0f0f_100%)] pointer-events-none" />
+
+        {/* Main Product Image — Complete Uncropped & Razor Sharp */}
         <img
           src={imgSrc}
           onError={() => setImgSrc(FALLBACK_PHOTO)}
           alt={resource.title}
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          className="relative z-10 max-h-full max-w-full object-contain transition-transform duration-300 group-hover/img:scale-105 drop-shadow-md"
           loading="lazy"
         />
 
         {/* Top Floating Glass Badges */}
-        <div className="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between pointer-events-none">
+        <div className="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between pointer-events-none z-20">
           {/* Condition tag */}
           <span
             className={`pointer-events-auto inline-flex items-center rounded-lg px-2 py-0.5 text-[10px] font-bold font-mono uppercase tracking-wider backdrop-blur-md bg-[#0e0e0e]/90 border ${conditionMeta.badgeClass}`}
@@ -97,52 +109,65 @@ export function ResourceCard({
             {conditionMeta.label}
           </span>
 
-          {/* Quick Favorite Button */}
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              setIsLiked(!isLiked);
-            }}
-            className="pointer-events-auto flex h-7 w-7 items-center justify-center rounded-lg bg-[#0e0e0e]/80 backdrop-blur-md border border-[#2a2a2a] text-[#bec9c2] shadow-sm hover:scale-110 active:scale-95 transition-all"
-            aria-label="Save item"
-          >
-            <Heart
-              className={`h-3.5 w-3.5 ${
-                isLiked ? "fill-rose-500 text-rose-500" : "text-[#bec9c2]"
-              }`}
-            />
-          </button>
-        </div>
+          {/* Quick Actions (Zoom + Heart) */}
+          <div className="pointer-events-auto flex items-center gap-1.5">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsZoomOpen(true);
+              }}
+              className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#0e0e0e]/85 backdrop-blur-md border border-[#2a2a2a] text-[#bec9c2] shadow-sm hover:scale-110 hover:text-white active:scale-95 transition-all cursor-pointer"
+              title="Inspect Full Photo"
+            >
+              <ZoomIn className="h-3.5 w-3.5" />
+            </button>
 
-        {/* Bottom Distance & Handover Hours Tag */}
-        <div className="absolute bottom-2 left-2 right-2 flex items-center justify-between text-[11px] font-mono text-white pointer-events-none">
-          <span className="inline-flex items-center gap-1 rounded-md bg-[#0e0e0e]/90 px-2 py-0.5 backdrop-blur-md border border-[#2a2a2a] text-[10px]">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#8bd6b6] animate-pulse" />
-            <MapPin className="h-3 w-3 text-[#8bd6b6]" />
-            <span>{formatDistance(distance)}</span>
-          </span>
-
-          {resource.availableFrom && (
-            <span className="inline-flex items-center gap-1 rounded-md bg-[#0e0e0e]/90 px-2 py-0.5 backdrop-blur-md border border-[#2a2a2a] text-[10px] text-[#fbbf24]">
-              <Clock className="h-2.5 w-2.5 text-[#fbbf24]" />
-              <span>{resource.availableFrom}-{resource.availableTo}</span>
-            </span>
-          )}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                setIsLiked(!isLiked);
+              }}
+              className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#0e0e0e]/85 backdrop-blur-md border border-[#2a2a2a] text-[#bec9c2] shadow-sm hover:scale-110 active:scale-95 transition-all cursor-pointer"
+              aria-label="Save item"
+            >
+              <Heart
+                className={`h-3.5 w-3.5 ${
+                  isLiked ? "fill-rose-500 text-rose-500" : "text-[#bec9c2]"
+                }`}
+              />
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Card Body Details */}
       <div className="flex flex-1 flex-col pt-3 px-1 pb-1">
-        {/* Category & Title */}
-        <div className="flex items-center justify-between gap-2 mb-1">
-          <span className="text-[10px] font-mono font-bold text-[#8bd6b6] uppercase tracking-wider">
-            {resource.category}
-          </span>
-          {isFree && (
-            <span className="rounded bg-[#065f46] px-1.5 py-0.5 text-[9px] font-extrabold text-[#8bd6b6] uppercase tracking-wider">
-              100% Free
+        {/* Metadata Row: Category + Distance + Handover Hours (Unobstructed) */}
+        <div className="flex items-center justify-between gap-2 mb-1.5">
+          <div className="flex items-center gap-1.5">
+            <span className="text-[10px] font-mono font-bold text-[#8bd6b6] uppercase tracking-wider">
+              {resource.category}
             </span>
-          )}
+            {isFree && (
+              <span className="rounded bg-[#065f46] px-1.5 py-0.5 text-[9px] font-extrabold text-[#8bd6b6] uppercase tracking-wider">
+                100% Free
+              </span>
+            )}
+          </div>
+
+          <div className="flex items-center gap-2 text-[10px] font-mono text-slate-400">
+            <span className="inline-flex items-center gap-1 text-[#8bd6b6]">
+              <MapPin className="h-3 w-3" />
+              <span>{formatDistance(distance)}</span>
+            </span>
+            {resource.availableFrom && (
+              <span className="inline-flex items-center gap-1 text-[#fbbf24]">
+                <Clock className="h-2.5 w-2.5" />
+                <span>{resource.availableFrom}-{resource.availableTo}</span>
+              </span>
+            )}
+          </div>
         </div>
 
         {/* Title */}
@@ -163,7 +188,7 @@ export function ResourceCard({
           <div className="bg-[#1c1b1b] p-2 rounded-lg border border-[#2a2a2a] shadow-[inset_1px_1px_0_#0e0e0e]">
             <div className="text-[10px] font-mono uppercase text-[#89938d]">Daily Rate</div>
             <div className="text-xs font-mono font-bold text-[#fbbf24]">
-              {isFree ? "Free" : formatPrice(resource.pricePerDay)}/day
+              {isFree ? "Free" : formatPrice(resource.pricePerDay)}
             </div>
           </div>
           <div className="bg-[#1c1b1b] p-2 rounded-lg border border-[#2a2a2a] shadow-[inset_1px_1px_0_#0e0e0e]">
@@ -219,5 +244,38 @@ export function ResourceCard({
         </div>
       </div>
     </div>
+
+      {/* Full-Screen High-Resolution Lightbox Modal */}
+      {isZoomOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md p-4 animate-in fade-in"
+          onClick={() => setIsZoomOpen(false)}
+        >
+          <div
+            className="relative max-w-4xl max-h-[90vh] w-full flex flex-col items-center justify-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setIsZoomOpen(false)}
+              className="absolute -top-12 right-0 flex items-center gap-1.5 rounded-full bg-[#1c1b1b] border border-[#333] px-3 py-1.5 text-xs font-bold text-white hover:bg-rose-600 transition-colors cursor-pointer"
+            >
+              <X className="h-4 w-4" />
+              <span>Close View</span>
+            </button>
+            <div className="rounded-2xl border-2 border-[#2a2a2a] bg-[#101010] p-3 shadow-2xl flex items-center justify-center max-h-[82vh] overflow-hidden">
+              <img
+                src={imgSrc}
+                alt={resource.title}
+                className="max-h-[78vh] max-w-full object-contain rounded-xl drop-shadow-2xl"
+              />
+            </div>
+            <div className="mt-3 text-center">
+              <h3 className="text-sm font-bold text-white font-mono">{resource.title}</h3>
+              <p className="text-[11px] text-[#8bd6b6] font-mono">100% Original High-Resolution Uncropped Gear Photo</p>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

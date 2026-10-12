@@ -367,11 +367,13 @@ export function BookingModal({
 
             {/* Item preview bar */}
             <div className="flex items-center gap-3.5 rounded-2xl bg-slate-50 p-3.5 border border-slate-200/80 mb-5">
-              <img
-                src={resource.photos[0]}
-                alt={resource.title}
-                className="h-16 w-16 rounded-xl object-cover border border-slate-200"
-              />
+              <div className="h-16 w-16 rounded-xl overflow-hidden bg-slate-900 border border-slate-200 flex items-center justify-center shrink-0">
+                <img
+                  src={resource.photos[0]}
+                  alt={resource.title}
+                  className="max-h-full max-w-full object-contain"
+                />
+              </div>
               <div className="flex-1 min-w-0">
                 <div className="text-xs font-bold text-slate-900 truncate">
                   {resource.title}

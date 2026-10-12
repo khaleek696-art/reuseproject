@@ -415,14 +415,16 @@ function DashboardContent() {
                   key={res.id}
                   className="flex items-center gap-4 rounded-3xl border border-slate-200 bg-white p-4 shadow-xs hover:border-slate-300 transition-all"
                 >
-                  <img
-                    src={res.photos[0] || "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&auto=format&fit=crop&q=80"}
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&auto=format&fit=crop&q=80";
-                    }}
-                    alt={res.title}
-                    className="h-20 w-24 rounded-2xl object-cover"
-                  />
+                  <div className="h-20 w-24 rounded-2xl bg-slate-900 border border-slate-200 flex items-center justify-center p-1.5 overflow-hidden shrink-0">
+                    <img
+                      src={res.photos[0] || "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&auto=format&fit=crop&q=80"}
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&auto=format&fit=crop&q=80";
+                      }}
+                      alt={res.title}
+                      className="max-h-full max-w-full object-contain"
+                    />
+                  </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <span className="rounded-md bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-800">

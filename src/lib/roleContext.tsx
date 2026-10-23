@@ -38,6 +38,10 @@ export interface LiveBooking {
   totalEscrow: number;
   stageIndex: number; // 0 to 4
   statusText: string;
+  handoverOtp?: string;
+  returnOtp?: string;
+  startDate?: string;
+  endDate?: string;
 }
 
 export interface LiveDispute {
@@ -75,6 +79,7 @@ interface RoleContextType {
   createBooking: (res: Resource, days?: number) => void;
   advanceBookingStage: (bookingId: string) => void;
   updateBookingStage: (bookingId: string, stageIndex: number) => void;
+  resetBookingsDemo: () => void;
   disputes: LiveDispute[];
   resolveDispute: (disputeId: string) => void;
   activeDisputesCount: number;
@@ -123,6 +128,7 @@ const defaultUser: UserProfile = {
 };
 
 const initialBookings: LiveBooking[] = [
+  // 1. Borrower Booking (User is Borrower Khaleeq Ahmad renting from Priya Patel)
   {
     id: "BK-98421",
     resourceTitle: "Canon EOS 5D Mark IV Kit with 24-70mm Lens",
@@ -132,8 +138,29 @@ const initialBookings: LiveBooking[] = [
     pricePerDay: 850,
     deposit: 1500,
     totalEscrow: 3200,
-    stageIndex: 2, // STAGE 03 (ACTIVE IN TRANSIT)
-    statusText: "In Courier Transit",
+    stageIndex: 1, // Stage 02: ACCEPTED (Dates locked, ready for physical pickup with OTP)
+    statusText: "Booking Accepted & Locked",
+    handoverOtp: "582914",
+    returnOtp: "849201",
+    startDate: "Today",
+    endDate: "Tomorrow",
+  },
+  // 2. Owner Booking (User is Owner Khaleeq Ahmad; Aman Sharma requesting gear)
+  {
+    id: "BK-77219",
+    resourceTitle: "DJI Mini 3 Pro Drone 4K Kit",
+    resourceImage: "https://images.unsplash.com/photo-1527977966376-1c8408f9f108?w=500&auto=format&fit=crop&q=80",
+    ownerName: "Khaleeq Ahmad",
+    borrowerName: "Aman Sharma",
+    pricePerDay: 650,
+    deposit: 1200,
+    totalEscrow: 2500,
+    stageIndex: 0, // Stage 01: REQUESTED (Awaiting Owner Approval)
+    statusText: "Awaiting Owner Approval",
+    handoverOtp: "391482",
+    returnOtp: "726194",
+    startDate: "Tomorrow",
+    endDate: "In 3 Days",
   },
 ];
 
@@ -201,6 +228,18 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
           const savedData = localStorage.getItem("reuse_digilocker_data");
           if (savedData) {
             setDigiLockerData(JSON.parse(savedData));
+          }
+        }
+
+        const savedBookings = localStorage.getItem("reuse_bookings");
+        if (savedBookings) {
+          try {
+            const parsedBookings = JSON.parse(savedBookings);
+            if (Array.isArray(parsedBookings) && parsedBookings.length > 0) {
+              setBookings(parsedBookings);
+            }
+          } catch (err) {
+            console.warn("Could not parse saved bookings:", err);
           }
         }
       } catch (e) {
@@ -387,6 +426,17 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const saveBookingsList = (updated: LiveBooking[]) => {
+    setBookings(updated);
+    try {
+      if (typeof window !== "undefined") {
+        localStorage.setItem("reuse_bookings", JSON.stringify(updated));
+      }
+    } catch (e) {
+      console.warn("Failed to persist bookings:", e);
+    }
+  };
+
   const createBooking = async (res: Resource, days = 2) => {
     const subtotal = res.pricePerDay * days;
     const totalEscrow = subtotal + res.deposit;
@@ -395,16 +445,20 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
       id: `BK-${Math.floor(10000 + Math.random() * 90000)}`,
       resourceTitle: res.title,
       resourceImage: res.photos[0] || "",
-      ownerName: "Verified Owner",
-      borrowerName: user.name,
+      ownerName: (res as any).ownerName || "Priya Patel",
+      borrowerName: user.name || "Khaleeq Ahmad",
       pricePerDay: res.pricePerDay,
       deposit: res.deposit,
       totalEscrow: totalEscrow,
       stageIndex: 0,
       statusText: "Booking Requested",
+      handoverOtp: `${Math.floor(100000 + Math.random() * 900000)}`,
+      returnOtp: `${Math.floor(100000 + Math.random() * 900000)}`,
+      startDate: "Today",
+      endDate: `In ${days} Days`,
     };
 
-    setBookings((prev) => [newBooking, ...prev]);
+    saveBookingsList([newBooking, ...bookings]);
 
     if (isBackendConnected) {
       try {
@@ -425,26 +479,25 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
   };
 
   const advanceBookingStage = async (bookingId: string) => {
-    setBookings((prev) =>
-      prev.map((b) => {
-        if (b.id === bookingId) {
-          const nextStage = Math.min(b.stageIndex + 1, 4);
-          const stageTexts = [
-            "Requested",
-            "Accepted & Locked",
-            "In Transit (Pickup Verified)",
-            "Returned (Verification Pending)",
-            "Completed & Deposit Released",
-          ];
-          return {
-            ...b,
-            stageIndex: nextStage,
-            statusText: stageTexts[nextStage],
-          };
-        }
-        return b;
-      })
-    );
+    const stageTexts = [
+      "Requested",
+      "Accepted & Locked",
+      "In Transit (Pickup Verified)",
+      "Returned (Verification Pending)",
+      "Completed & Deposit Released",
+    ];
+    const updated = bookings.map((b) => {
+      if (b.id === bookingId) {
+        const nextStage = Math.min(b.stageIndex + 1, 4);
+        return {
+          ...b,
+          stageIndex: nextStage,
+          statusText: stageTexts[nextStage],
+        };
+      }
+      return b;
+    });
+    saveBookingsList(updated);
 
     if (isBackendConnected) {
       await advanceStageApi(bookingId, "next");
@@ -459,17 +512,28 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
       "Returned (Verification Pending)",
       "Completed & Deposit Released",
     ];
-    setBookings((prev) =>
-      prev.map((b) =>
-        b.id === bookingId
-          ? {
-              ...b,
-              stageIndex: Math.max(0, Math.min(4, stageIndex)),
-              statusText: stageTexts[Math.max(0, Math.min(4, stageIndex))],
-            }
-          : b
-      )
+    const clamped = Math.max(0, Math.min(4, stageIndex));
+    const updated = bookings.map((b) =>
+      b.id === bookingId
+        ? {
+            ...b,
+            stageIndex: clamped,
+            statusText: stageTexts[clamped],
+          }
+        : b
     );
+    saveBookingsList(updated);
+  };
+
+  const resetBookingsDemo = () => {
+    setBookings(initialBookings);
+    try {
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("reuse_bookings");
+      }
+    } catch (e) {
+      console.warn("Failed to reset demo bookings:", e);
+    }
   };
 
   const resolveDispute = (disputeId: string) => {
@@ -577,6 +641,7 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
         createBooking,
         advanceBookingStage,
         updateBookingStage,
+        resetBookingsDemo,
         disputes,
         resolveDispute,
         activeDisputesCount,

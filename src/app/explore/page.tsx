@@ -171,7 +171,7 @@ function ExploreContent() {
       <div className="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl sm:text-3xl font-black text-white font-['Silkscreen'] tracking-wider">
+            <h1 className="text-2xl sm:text-3xl font-bold text-white font-pixel tracking-wider">
               CAMPUS RESOURCE GRID
             </h1>
             <span className="rounded-md bg-[#065f46] px-2.5 py-0.5 text-xs font-mono font-bold text-[#8bd6b6] border border-[#047857]">

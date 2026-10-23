@@ -41,7 +41,7 @@ export function CategoryGrid({
           <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#8bd6b6]">
             Campus Inventory Mesh
           </span>
-          <h2 className="text-xl sm:text-2xl font-black text-white font-['Silkscreen'] tracking-wider mt-1">
+          <h2 className="text-xl sm:text-2xl font-bold text-white font-pixel tracking-wider mt-1">
             BROWSE INVENTORY SLOTS
           </h2>
         </div>

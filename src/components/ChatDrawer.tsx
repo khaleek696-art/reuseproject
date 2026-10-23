@@ -259,62 +259,62 @@ export function ChatDrawer({
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end bg-slate-900/40 backdrop-blur-xs animate-in fade-in">
-      <div className="relative flex h-full w-full max-w-md flex-col bg-white shadow-2xl border-l border-slate-200">
+    <div className="fixed inset-0 z-50 flex justify-end bg-black/80 backdrop-blur-xs animate-in fade-in">
+      <div className="relative flex h-full w-full max-w-md flex-col bg-[#1c1b1b] shadow-[0_8px_0_0_#0f0f0f] border-l-2 border-[#2a2a2a]">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-200 p-4 bg-slate-50/80">
+        <div className="flex items-center justify-between border-b-2 border-[#2a2a2a] p-4 bg-[#141414]">
           <div className="flex items-center gap-3">
             <div className="relative">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-800 text-white font-bold">
+              <div className="flex h-10 w-10 items-center justify-center rounded-none bg-[#065f46] border-2 border-[#047857] text-[#8bd6b6] font-['Silkscreen']">
                 {recipientName.charAt(0)}
               </div>
-              <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-emerald-500 ring-2 ring-white" />
+              <span className="absolute bottom-0 right-0 h-2.5 w-2.5 bg-[#8bd6b6] ring-1 ring-black" />
             </div>
             <div>
-              <h3 className="font-bold text-slate-900 text-sm leading-tight flex items-center gap-1.5">
+              <h3 className="font-['Silkscreen'] uppercase tracking-wider text-white text-xs leading-tight flex items-center gap-1.5">
                 <span>{recipientName}</span>
                 <span title="Verified Member">
-                  <ShieldCheck className="h-3.5 w-3.5 text-emerald-700" />
+                  <ShieldCheck className="h-3.5 w-3.5 text-[#8bd6b6]" />
                 </span>
               </h3>
-              <p className="text-[11px] text-slate-500 line-clamp-1">
-                {recipientRole} &bull; <span className="text-emerald-800 font-semibold">{resourceTitle}</span>
+              <p className="text-[10px] text-[#89938d] font-mono line-clamp-1 mt-0.5">
+                {recipientRole} &bull; <span className="text-[#8bd6b6] font-semibold">{resourceTitle}</span>
               </p>
             </div>
           </div>
 
           <button
             onClick={onClose}
-            className="rounded-full p-2 text-slate-400 hover:bg-slate-200 hover:text-slate-700 transition-colors"
+            className="rounded-none p-2 bg-[#1c1b1b] border border-[#2a2a2a] text-[#bec9c2] hover:text-white hover:border-[#8bd6b6] transition-colors cursor-pointer"
           >
-            <X className="h-5 w-5" />
+            <X className="h-4 w-4" />
           </button>
         </div>
 
         {/* Security Banner */}
-        <div className="bg-emerald-50/90 border-b border-emerald-200 px-4 py-2 text-[11px] font-semibold text-emerald-900 flex items-center justify-between">
+        <div className="bg-[#065f46]/20 border-b-2 border-[#2a2a2a] px-4 py-2 text-[10px] font-['Silkscreen'] uppercase tracking-wider text-[#8bd6b6] flex items-center justify-between">
           <div className="flex items-center gap-1.5">
-            <Sparkles className="h-3.5 w-3.5 text-emerald-700" />
+            <Sparkles className="h-3.5 w-3.5 text-[#8bd6b6]" />
             <span>Encrypted Anti-Fraud P2P Chat</span>
           </div>
 
-          <div className="flex items-center gap-1 bg-white px-2 py-0.5 rounded-full border border-emerald-300 text-[10px] font-bold text-emerald-800">
+          <div className="flex items-center gap-1 bg-[#141414] px-2 py-0.5 rounded-none border border-[#2a2a2a] text-[9px] font-['Silkscreen'] text-[#8bd6b6]">
             {isWsConnected ? (
               <>
-                <Wifi className="h-3 w-3 text-emerald-600 animate-pulse" />
-                <span>🟢 Live WebSockets</span>
+                <Wifi className="h-3 w-3 text-[#8bd6b6] animate-pulse" />
+                <span>Live WS</span>
               </>
             ) : (
               <>
-                <WifiOff className="h-3 w-3 text-amber-600" />
-                <span>🟡 Sync Mode</span>
+                <WifiOff className="h-3 w-3 text-amber-400" />
+                <span>Sync</span>
               </>
             )}
           </div>
         </div>
 
         {/* Messages List */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50/30">
+        <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-[#0e0e0e]">
           {messages.map((m) => {
             const isMe = m.sender_id === currentUserId;
             const isLocation = m.message_type === "location";
@@ -325,17 +325,17 @@ export function ChatDrawer({
                 className={`flex flex-col ${isMe ? "items-end" : "items-start"}`}
               >
                 <div
-                  className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-xs shadow-2xs leading-relaxed ${
+                  className={`max-w-[85%] rounded-none px-3.5 py-2 text-xs leading-relaxed font-mono ${
                     isMe
-                      ? "bg-emerald-800 text-white rounded-br-xs font-medium"
-                      : "bg-white text-slate-800 border border-slate-200 rounded-bl-xs font-normal"
+                      ? "bg-[#065f46] text-white border border-[#047857] shadow-[0_2px_0_0_#003828]"
+                      : "bg-[#1c1b1b] text-[#bec9c2] border border-[#2a2a2a] shadow-[0_2px_0_0_#0f0f0f]"
                   }`}
                 >
                   {isLocation ? (
                     <div className="flex items-start gap-2 py-0.5">
-                      <MapPin className={`h-4 w-4 shrink-0 mt-0.5 ${isMe ? "text-emerald-300" : "text-emerald-700"}`} />
+                      <MapPin className={`h-4 w-4 shrink-0 mt-0.5 ${isMe ? "text-[#8bd6b6]" : "text-[#8bd6b6]"}`} />
                       <div>
-                        <span className="font-bold block text-[11px] uppercase tracking-wider">
+                        <span className="font-['Silkscreen'] block text-[10px] uppercase tracking-wider text-[#8bd6b6]">
                           Shared Location
                         </span>
                         <span>{m.content}</span>
@@ -346,25 +346,25 @@ export function ChatDrawer({
                   )}
                 </div>
 
-                <span className="text-[10px] font-semibold text-slate-400 mt-1 px-1 flex items-center gap-1">
+                <span className="text-[10px] font-mono text-[#89938d] mt-1 px-1 flex items-center gap-1">
                   {m.timestamp}
-                  {isMe && <CheckCheck className="h-3 w-3 text-emerald-600" />}
+                  {isMe && <CheckCheck className="h-3 w-3 text-[#8bd6b6]" />}
                 </span>
               </div>
             );
           })}
 
           {isTyping && (
-            <div className="flex items-center gap-2 text-xs text-slate-600 font-semibold bg-white p-2.5 rounded-xl border border-slate-200 shadow-2xs w-fit animate-pulse">
-              <span className="h-2 w-2 rounded-full bg-emerald-600 animate-ping" />
-              <span>{recipientName.split(" ")[0]} is typing a reply...</span>
+            <div className="flex items-center gap-2 text-xs text-[#8bd6b6] font-mono bg-[#1c1b1b] p-2.5 rounded-none border border-[#2a2a2a] w-fit animate-pulse">
+              <span className="h-2 w-2 rounded-none bg-[#8bd6b6] animate-ping" />
+              <span>{recipientName.split(" ")[0]} is typing...</span>
             </div>
           )}
           <div ref={messagesEndRef} />
         </div>
 
         {/* Quick Action Bar (Location Share & Prompts) */}
-        <div className="border-t border-slate-100 p-2 bg-white flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+        <div className="border-t-2 border-[#2a2a2a] p-2 bg-[#141414] flex items-center gap-1.5 overflow-x-auto no-scrollbar">
           <button
             type="button"
             onClick={() =>
@@ -373,9 +373,9 @@ export function ChatDrawer({
                 "location"
               )
             }
-            className="flex items-center gap-1 rounded-full border border-emerald-300 bg-emerald-50 px-3 py-1 text-[11px] font-bold text-emerald-900 hover:bg-emerald-100 transition-all shrink-0"
+            className="flex items-center gap-1 rounded-none border border-[#8bd6b6] bg-[#065f46]/30 px-3 py-1.5 text-[10px] font-['Silkscreen'] uppercase tracking-wider text-[#8bd6b6] hover:bg-[#065f46] hover:text-white transition-all shrink-0 cursor-pointer"
           >
-            <MapPin className="h-3 w-3 text-emerald-700" />
+            <MapPin className="h-3 w-3 text-[#8bd6b6]" />
             <span>Share Campus Location</span>
           </button>
 
@@ -383,7 +383,7 @@ export function ChatDrawer({
             <button
               key={idx}
               onClick={() => handleSendMessage(prompt)}
-              className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-semibold text-slate-700 hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-900 transition-all shrink-0"
+              className="rounded-none border border-[#2a2a2a] bg-[#1c1b1b] px-3 py-1.5 text-[10px] font-mono text-[#bec9c2] hover:border-[#8bd6b6] hover:text-white transition-all shrink-0 cursor-pointer"
             >
               {prompt}
             </button>
@@ -396,19 +396,19 @@ export function ChatDrawer({
             e.preventDefault();
             handleSendMessage();
           }}
-          className="border-t border-slate-200 p-3 bg-white flex items-center gap-2"
+          className="border-t-2 border-[#2a2a2a] p-3 bg-[#141414] flex items-center gap-2"
         >
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Type your message..."
-            className="flex-1 rounded-xl border border-slate-300 bg-slate-50 px-3.5 py-2.5 text-xs font-semibold text-slate-900 focus:bg-white focus:border-emerald-700 focus:outline-none"
+            className="flex-1 rounded-none border-2 border-[#2a2a2a] bg-[#0e0e0e] px-3.5 py-2.5 text-xs font-mono text-white focus:border-[#8bd6b6] focus:outline-none"
           />
           <button
             type="submit"
             disabled={!input.trim()}
-            className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-800 text-white hover:bg-emerald-900 shadow-sm disabled:opacity-40 transition-all shrink-0"
+            className="flex h-10 w-10 items-center justify-center rounded-none bg-[#065f46] border-2 border-[#047857] text-white hover:bg-[#047857] shadow-[0_2px_0_0_#003828] disabled:opacity-40 transition-all shrink-0 cursor-pointer"
           >
             <Send className="h-4 w-4" />
           </button>

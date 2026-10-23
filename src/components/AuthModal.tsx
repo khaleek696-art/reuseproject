@@ -351,7 +351,7 @@ export function AuthModal({
               <div className="absolute top-2 left-6 w-1 h-1 bg-[#805a3e]"></div>
             </div>
           </div>
-          <h2 className="text-xl sm:text-2xl font-black text-white font-['Silkscreen'] tracking-wider">
+          <h2 className="text-xl sm:text-2xl font-bold text-white font-pixel tracking-wider">
             {mode === "login" ? "LOG IN TO RE:USE" : "CREATE NEW ACCOUNT"}
           </h2>
           <p className="text-xs text-[#bec9c2] mt-1 font-mono">

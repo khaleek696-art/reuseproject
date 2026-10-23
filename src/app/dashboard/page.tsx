@@ -122,25 +122,25 @@ function DashboardContent() {
   if (!isLoggedIn) {
     return (
       <div className="mx-auto max-w-2xl px-4 py-20 text-center">
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl bg-slate-100 text-slate-700 border border-slate-200 mb-6">
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#1c1b1b] text-[#8bd6b6] border-2 border-[#2a2a2a] shadow-[0_4px_0_0_#0f0f0f] mb-6">
           <UserIcon className="h-8 w-8" />
         </div>
-        <h2 className="text-2xl font-black text-slate-900 tracking-tight mb-2">
+        <h2 className="text-xl sm:text-2xl font-bold text-white font-['Silkscreen'] tracking-wide mb-2 uppercase">
           Authentication Required
         </h2>
-        <p className="text-sm text-slate-600 mb-6">
+        <p className="text-xs sm:text-sm text-[#bec9c2] mb-6">
           Aapne sign out / log out kar liya hai. Apne dashboard, listings aur borrowings access karne ke liye log in karein.
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
           <button
             onClick={() => openAuthModal("login")}
-            className="w-full sm:w-auto rounded-xl bg-emerald-800 px-6 py-3 text-xs font-bold text-white shadow-md hover:bg-emerald-900 transition-all"
+            className="w-full sm:w-auto rounded-xl bg-[#065f46] hover:bg-[#047857] px-6 py-3 text-xs font-bold text-white uppercase tracking-wider border-2 border-[#047857] shadow-[0_4px_0_0_#003828] active:translate-y-1 active:shadow-none transition-all cursor-pointer"
           >
             Log In to Your Account
           </button>
           <Link
             href="/resources"
-            className="w-full sm:w-auto rounded-xl border border-slate-200 bg-white px-6 py-3 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-all"
+            className="w-full sm:w-auto rounded-xl border-2 border-[#353534] bg-[#201f1f] hover:bg-[#2a2a2a] px-6 py-3 text-xs font-bold text-[#e5e2e1] uppercase tracking-wider shadow-[0_4px_0_0_#0e0e0e] active:translate-y-1 active:shadow-none transition-all"
           >
             Browse Public Catalog
           </Link>
@@ -152,25 +152,25 @@ function DashboardContent() {
   if (role !== "owner") {
     return (
       <div className="mx-auto max-w-2xl px-4 py-20 text-center">
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl bg-emerald-50 text-emerald-700 border border-emerald-200 mb-6">
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#065f46]/30 text-[#8bd6b6] border-2 border-[#065f46] shadow-[0_4px_0_0_#003828] mb-6">
           <PlusCircle className="h-8 w-8" />
         </div>
-        <h2 className="text-2xl font-black text-slate-900 tracking-tight mb-2">
+        <h2 className="text-xl sm:text-2xl font-bold text-white font-['Silkscreen'] tracking-wide mb-2 uppercase">
           Resource Owner Dashboard
         </h2>
-        <p className="text-sm text-slate-600 mb-6">
+        <p className="text-xs sm:text-sm text-[#bec9c2] mb-6">
           This dashboard allows Resource Owners to manage gear listings, track active borrowings, monitor earnings, and view eco-impact stats.
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
           <button
             onClick={() => setRole("owner")}
-            className="w-full sm:w-auto rounded-xl bg-emerald-800 px-6 py-3 text-xs font-bold text-white shadow-md hover:bg-emerald-900 transition-all"
+            className="w-full sm:w-auto rounded-xl bg-[#065f46] hover:bg-[#047857] px-6 py-3 text-xs font-bold text-white uppercase tracking-wider border-2 border-[#047857] shadow-[0_4px_0_0_#003828] active:translate-y-1 active:shadow-none transition-all cursor-pointer"
           >
             Switch to Resource Owner Mode
           </button>
           <Link
             href="/resources"
-            className="w-full sm:w-auto rounded-xl border border-slate-200 bg-white px-6 py-3 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-all"
+            className="w-full sm:w-auto rounded-xl border-2 border-[#353534] bg-[#201f1f] hover:bg-[#2a2a2a] px-6 py-3 text-xs font-bold text-[#e5e2e1] uppercase tracking-wider shadow-[0_4px_0_0_#0e0e0e] active:translate-y-1 active:shadow-none transition-all"
           >
             Browse Equipment Catalog
           </Link>
@@ -187,17 +187,17 @@ function DashboardContent() {
   return (
     <div className="mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8 py-8">
       {/* Profile Header */}
-      <div className="rounded-3xl border border-slate-200 bg-white p-6 sm:p-8 shadow-xs mb-8">
+      <div className="rounded-2xl border-2 border-[#2a2a2a] bg-[#1c1b1b] p-6 sm:p-8 shadow-[0_6px_0_0_#0f0f0f] mb-8">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
           <div className="flex items-center gap-4 sm:gap-6">
             <div className="relative">
               <img
                 src={currentUser.avatar}
                 alt={currentUser.name}
-                className="h-20 w-20 rounded-3xl object-cover ring-4 ring-emerald-500/20"
+                className="h-20 w-20 rounded-2xl object-cover ring-4 ring-[#065f46]/40 border-2 border-[#2a2a2a]"
               />
               <span
-                className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-emerald-600 text-white shadow-sm"
+                className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-[#065f46] text-[#8bd6b6] border border-[#047857] shadow-sm"
                 title="Verified Campus Peer"
               >
                 <ShieldCheck className="h-4 w-4" />
@@ -206,29 +206,29 @@ function DashboardContent() {
 
             <div>
               <div className="flex flex-wrap items-center gap-2">
-                <h1 className="text-2xl font-black text-slate-900">
+                <h1 className="text-xl sm:text-2xl font-bold text-white font-['Silkscreen'] tracking-wide">
                   {currentUser.name}
                 </h1>
                 <span
-                  className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-bold border ${trustBreakdown.badge.bgClass} ${trustBreakdown.badge.colorClass} ${trustBreakdown.badge.borderClass}`}
+                  className="inline-flex items-center gap-1 rounded-lg px-2.5 py-0.5 text-xs font-mono font-bold bg-[#065f46]/40 text-[#8bd6b6] border border-[#065f46]"
                 >
                   <ShieldCheck className="h-3.5 w-3.5" />
                   {trustBreakdown.badge.label}
                 </span>
               </div>
-              <p className="text-xs sm:text-sm text-slate-500 font-medium mt-0.5">
+              <p className="text-xs sm:text-sm text-[#bec9c2] font-medium mt-0.5">
                 {currentUser.college} • Member since Feb 2024
               </p>
-              <div className="mt-2 flex flex-wrap items-center gap-4 text-xs font-semibold text-slate-600">
-                <span className="flex items-center gap-1 text-amber-700 bg-amber-50 px-2 py-0.5 rounded-lg border border-amber-200/80">
+              <div className="mt-2 flex flex-wrap items-center gap-4 text-xs font-semibold text-[#89938d]">
+                <span className="flex items-center gap-1 text-[#fbbf24] bg-[#2a2004] px-2 py-0.5 rounded-lg border border-[#4a3505]">
                   <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-500" />
                   <span>{trustBreakdown.score} PeerTrust</span>
                 </span>
-                <span>{currentUser.totalShares} Shared</span>
+                <span className="text-[#e5e2e1]">{currentUser.totalShares} Shared</span>
                 <span>•</span>
-                <span>{currentUser.totalBorrows} Borrowed</span>
+                <span className="text-[#e5e2e1]">{currentUser.totalBorrows} Borrowed</span>
                 <span>•</span>
-                <span className="text-emerald-700 font-bold">0 Disputes</span>
+                <span className="text-[#8bd6b6] font-bold">0 Disputes</span>
               </div>
             </div>
           </div>
@@ -236,7 +236,7 @@ function DashboardContent() {
           <div className="flex items-center gap-2">
             <button
               onClick={() => setIsShareModalOpen(true)}
-              className="flex items-center gap-1.5 rounded-2xl bg-emerald-600 px-4 py-2.5 text-xs sm:text-sm font-bold text-white shadow-sm hover:bg-emerald-700 active:scale-95 transition-all"
+              className="flex items-center gap-1.5 rounded-xl bg-[#065f46] hover:bg-[#047857] px-4 py-2.5 text-xs sm:text-sm font-bold text-white uppercase tracking-wider border-2 border-[#047857] shadow-[0_4px_0_0_#003828] active:translate-y-1 active:shadow-none transition-all cursor-pointer"
             >
               <PlusCircle className="h-4 w-4" />
               <span>Share New Item</span>
@@ -245,7 +245,7 @@ function DashboardContent() {
         </div>
 
         {/* Tab Navigation */}
-        <div className="mt-8 border-t border-slate-100 pt-4 flex items-center gap-2 overflow-x-auto no-scrollbar">
+        <div className="mt-8 border-t border-[#2a2a2a] pt-4 flex items-center gap-2 overflow-x-auto no-scrollbar">
           {[
             { id: "impact", label: "🌟 Eco Impact & Savings" },
             { id: "listings", label: `📦 My Shared Listings (${myListings.length})` },
@@ -255,10 +255,10 @@ function DashboardContent() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as typeof activeTab)}
-              className={`rounded-2xl px-4 py-2.5 text-xs font-bold transition-all shrink-0 ${
+              className={`rounded-xl px-4 py-2.5 text-xs font-bold transition-all shrink-0 cursor-pointer uppercase tracking-wider font-['Silkscreen'] ${
                 activeTab === tab.id
-                  ? "bg-slate-900 text-white shadow-xs"
-                  : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                  ? "bg-[#065f46] text-white border border-[#047857] shadow-[0_2px_0_0_#003828]"
+                  : "bg-[#201f1f] text-[#89938d] hover:text-[#e5e2e1] border border-[#2a2a2a]"
               }`}
             >
               {tab.label}
@@ -271,99 +271,99 @@ function DashboardContent() {
       {activeTab === "impact" && (
         <div className="space-y-8 animate-in fade-in duration-150">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-xs">
-              <div className="flex items-center justify-between text-emerald-700 mb-2">
-                <span className="text-xs font-bold uppercase tracking-wider">
+            <div className="rounded-2xl border-2 border-[#2a2a2a] bg-[#1c1b1b] p-6 shadow-[0_4px_0_0_#0f0f0f]">
+              <div className="flex items-center justify-between text-[#8bd6b6] mb-2">
+                <span className="text-xs font-bold uppercase tracking-wider font-mono">
                   Personal Savings
                 </span>
-                <span className="rounded-xl bg-emerald-50 p-2 text-emerald-700 shadow-xs border border-emerald-100">
+                <span className="rounded-xl bg-[#0e0e0e] p-2 text-[#8bd6b6] shadow-xs border border-[#2a2a2a]">
                   <IndianRupee className="h-5 w-5" />
                 </span>
               </div>
-              <div className="text-3xl font-black text-slate-900">₹8,500</div>
-              <p className="mt-1 text-xs text-slate-600 font-medium">
+              <div className="text-3xl font-bold text-white font-pixel tracking-wide">₹8,500</div>
+              <p className="mt-1 text-xs text-[#bec9c2] font-medium">
                 Saved compared to retail purchase or renting commercial equipment.
               </p>
             </div>
 
-            <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-xs">
-              <div className="flex items-center justify-between text-blue-700 mb-2">
-                <span className="text-xs font-bold uppercase tracking-wider">
+            <div className="rounded-2xl border-2 border-[#2a2a2a] bg-[#1c1b1b] p-6 shadow-[0_4px_0_0_#0f0f0f]">
+              <div className="flex items-center justify-between text-[#7bd8b1] mb-2">
+                <span className="text-xs font-bold uppercase tracking-wider font-mono">
                   Resources Reused
                 </span>
-                <span className="rounded-xl bg-blue-50 p-2 text-blue-700 shadow-xs border border-blue-100">
+                <span className="rounded-xl bg-[#0e0e0e] p-2 text-[#7bd8b1] shadow-xs border border-[#2a2a2a]">
                   <RefreshCw className="h-5 w-5" />
                 </span>
               </div>
-              <div className="text-3xl font-black text-slate-900">
+              <div className="text-3xl font-bold text-white font-pixel tracking-wide">
                 12 Items
               </div>
-              <p className="mt-1 text-xs text-slate-600 font-medium">
+              <p className="mt-1 text-xs text-[#bec9c2] font-medium">
                 Kept out of storage and put to productive use in community projects.
               </p>
             </div>
 
-            <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-xs">
-              <div className="flex items-center justify-between text-teal-700 mb-2">
-                <span className="text-xs font-bold uppercase tracking-wider">
+            <div className="rounded-2xl border-2 border-[#2a2a2a] bg-[#1c1b1b] p-6 shadow-[0_4px_0_0_#0f0f0f]">
+              <div className="flex items-center justify-between text-[#8bd6b6] mb-2">
+                <span className="text-xs font-bold uppercase tracking-wider font-mono">
                   CO₂ Footprint Avoided
                 </span>
-                <span className="rounded-xl bg-teal-50 p-2 text-teal-700 shadow-xs border border-teal-100">
+                <span className="rounded-xl bg-[#0e0e0e] p-2 text-[#8bd6b6] shadow-xs border border-[#2a2a2a]">
                   <Trees className="h-5 w-5" />
                 </span>
               </div>
-              <div className="text-3xl font-black text-slate-900">
+              <div className="text-3xl font-bold text-white font-pixel tracking-wide">
                 ~22 kg CO₂
               </div>
-              <p className="mt-1 text-xs text-slate-600 font-medium">
+              <p className="mt-1 text-xs text-[#bec9c2] font-medium">
                 Equivalent to planting 1 full-grown sapling this semester.
               </p>
             </div>
           </div>
 
           {/* Impact Badges Earned */}
-          <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-xs">
-            <h3 className="text-base font-bold text-slate-900 mb-4">
-              Sustainability Achievements & Badges
+          <div className="rounded-2xl border-2 border-[#2a2a2a] bg-[#1c1b1b] p-6 shadow-[0_4px_0_0_#0f0f0f]">
+            <h3 className="text-base font-bold text-white font-['Silkscreen'] tracking-wide uppercase mb-4">
+              Sustainability Achievements &amp; Badges
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="flex items-center gap-3.5 rounded-2xl bg-amber-50/60 p-4 border border-amber-200/80">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-500 text-white font-black text-xl shadow-xs">
+              <div className="flex items-center gap-3.5 rounded-xl bg-[#141414] p-4 border border-[#2a2a2a] shadow-[inset_1px_1px_0_#202020]">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#2a2004] text-[#fbbf24] border border-[#4a3505] font-black text-xl shadow-xs">
                   🏆
                 </div>
                 <div>
-                  <h4 className="font-bold text-sm text-slate-900">
+                  <h4 className="font-bold text-sm text-white font-['Silkscreen'] tracking-wide">
                     Resource Hero
                   </h4>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-[#bec9c2]">
                     Completed 20+ peer exchanges with 100% positive feedback.
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-3.5 rounded-2xl bg-emerald-50/60 p-4 border border-emerald-200/80">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-600 text-white font-black text-xl shadow-xs">
+              <div className="flex items-center gap-3.5 rounded-xl bg-[#141414] p-4 border border-[#2a2a2a] shadow-[inset_1px_1px_0_#202020]">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#065f46] text-[#8bd6b6] border border-[#047857] font-black text-xl shadow-xs">
                   🛡️
                 </div>
                 <div>
-                  <h4 className="font-bold text-sm text-slate-900">
+                  <h4 className="font-bold text-sm text-white font-['Silkscreen'] tracking-wide">
                     Trusted Sharer
                   </h4>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-[#bec9c2]">
                     Zero disputes recorded across 43 campus transactions.
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-3.5 rounded-2xl bg-teal-50/60 p-4 border border-teal-200/80">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-teal-600 text-white font-black text-xl shadow-xs">
+              <div className="flex items-center gap-3.5 rounded-xl bg-[#141414] p-4 border border-[#2a2a2a] shadow-[inset_1px_1px_0_#202020]">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#065f46] text-[#7bd8b1] border border-[#047857] font-black text-xl shadow-xs">
                   🌍
                 </div>
                 <div>
-                  <h4 className="font-bold text-sm text-slate-900">
+                  <h4 className="font-bold text-sm text-white font-['Silkscreen'] tracking-wide">
                     Eco Warrior
                   </h4>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-[#bec9c2]">
                     Avoided &gt; 20 kg of manufacturing carbon footprint.
                   </p>
                 </div>
@@ -377,34 +377,34 @@ function DashboardContent() {
       {activeTab === "listings" && (
         <div className="space-y-4 animate-in fade-in duration-150">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-bold text-slate-900">
+            <h3 className="text-sm sm:text-base font-bold text-white font-['Silkscreen'] tracking-wider uppercase">
               Active Resource Listings ({myListings.length})
             </h3>
             <button
               onClick={() => setIsShareModalOpen(true)}
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 hover:text-emerald-800"
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-[#8bd6b6] hover:text-white uppercase tracking-wider font-mono cursor-pointer"
             >
-              <PlusCircle className="h-4 w-4" />
+              <PlusCircle className="h-4 w-4 text-[#8bd6b6]" />
               <span>Add Another Item</span>
             </button>
           </div>
 
           {myListings.length === 0 ? (
-            <div className="rounded-3xl border border-dashed border-slate-300 bg-white p-12 text-center">
-              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700 border border-emerald-200 mb-4">
+            <div className="rounded-2xl border-2 border-dashed border-[#2a2a2a] bg-[#1c1b1b] p-12 text-center shadow-[0_4px_0_0_#0f0f0f]">
+              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#0e0e0e] text-[#8bd6b6] border border-[#2a2a2a] mb-4">
                 <PlusCircle className="h-7 w-7" />
               </div>
-              <h4 className="text-base font-bold text-slate-900 mb-1">
+              <h4 className="text-base font-bold text-white font-['Silkscreen'] tracking-wide mb-1">
                 No Equipment Listed Yet
               </h4>
-              <p className="text-xs text-slate-500 mb-5 max-w-md mx-auto">
+              <p className="text-xs text-[#bec9c2] mb-5 max-w-md mx-auto">
                 Aapne abhi tak koi equipment list nahi kiya hai. Apne idle gear ko list karke earning start karein!
               </p>
               <button
                 onClick={() => setIsShareModalOpen(true)}
-                className="inline-flex items-center gap-2 rounded-xl bg-emerald-800 px-5 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-emerald-900 transition-all"
+                className="inline-flex items-center gap-2 rounded-xl bg-[#065f46] hover:bg-[#047857] px-5 py-2.5 text-xs font-bold text-white uppercase tracking-wider border-2 border-[#047857] shadow-[0_4px_0_0_#003828] active:translate-y-1 active:shadow-none transition-all cursor-pointer"
               >
-                <PlusCircle className="h-4 w-4 text-emerald-300" />
+                <PlusCircle className="h-4 w-4 text-[#8bd6b6]" />
                 <span>+ List Your First Equipment</span>
               </button>
             </div>
@@ -413,9 +413,9 @@ function DashboardContent() {
               {myListings.map((res) => (
                 <div
                   key={res.id}
-                  className="flex items-center gap-4 rounded-3xl border border-slate-200 bg-white p-4 shadow-xs hover:border-slate-300 transition-all"
+                  className="flex items-center gap-4 rounded-2xl border-2 border-[#2a2a2a] bg-[#1c1b1b] p-4 shadow-[0_4px_0_0_#0f0f0f] hover:border-[#353534] transition-all"
                 >
-                  <div className="h-20 w-24 rounded-2xl bg-slate-900 border border-slate-200 flex items-center justify-center p-1.5 overflow-hidden shrink-0">
+                  <div className="h-20 w-24 rounded-xl bg-[#0e0e0e] border border-[#2a2a2a] flex items-center justify-center p-1.5 overflow-hidden shrink-0 shadow-[inset_1px_1px_0_#202020]">
                     <img
                       src={res.photos[0] || "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&auto=format&fit=crop&q=80"}
                       onError={(e) => {
@@ -427,24 +427,24 @@ function DashboardContent() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="rounded-md bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-800">
+                      <span className="rounded-md bg-[#065f46]/40 px-2 py-0.5 text-[10px] font-mono font-bold text-[#8bd6b6] border border-[#065f46]">
                         Active
                       </span>
-                      <span className="text-xs font-bold text-slate-900">
+                      <span className="text-xs font-bold text-[#8bd6b6] font-mono">
                         {formatPrice(res.pricePerDay)}
                       </span>
                     </div>
-                    <h4 className="font-bold text-sm text-slate-900 truncate mt-1">
+                    <h4 className="font-bold text-sm text-white truncate mt-1">
                       {res.title}
                     </h4>
-                    <p className="text-xs text-slate-400">
+                    <p className="text-xs text-[#89938d]">
                       Deposit: ₹{res.deposit} • Handover: {res.availableFrom}-
                       {res.availableTo}
                     </p>
                   </div>
                   <Link
                     href={`/resource/${res.id}`}
-                    className="rounded-xl bg-slate-100 p-2 text-slate-600 hover:bg-slate-200"
+                    className="rounded-xl bg-[#201f1f] border border-[#353534] p-2 text-[#e5e2e1] hover:bg-[#2a2a2a]"
                     title="View Public Page"
                   >
                     <ArrowUpRight className="h-4 w-4" />
@@ -459,26 +459,26 @@ function DashboardContent() {
       {/* TAB 3: MY BORROWINGS */}
       {activeTab === "borrowings" && (
         <div className="space-y-4 animate-in fade-in duration-150">
-          <h3 className="text-lg font-bold text-slate-900">
-            Handover Status & Current Loans ({borrowings.length})
+          <h3 className="text-sm sm:text-base font-bold text-white font-['Silkscreen'] tracking-wider uppercase">
+            Handover Status &amp; Current Loans ({borrowings.length})
           </h3>
 
           {borrowings.length === 0 ? (
-            <div className="rounded-3xl border border-dashed border-slate-300 bg-white p-12 text-center">
-              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50 text-blue-700 border border-blue-200 mb-4">
+            <div className="rounded-2xl border-2 border-dashed border-[#2a2a2a] bg-[#1c1b1b] p-12 text-center shadow-[0_4px_0_0_#0f0f0f]">
+              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#0e0e0e] text-[#8bd6b6] border border-[#2a2a2a] mb-4">
                 <Package className="h-7 w-7" />
               </div>
-              <h4 className="text-base font-bold text-slate-900 mb-1">
+              <h4 className="text-base font-bold text-white font-['Silkscreen'] tracking-wide mb-1">
                 No Active Borrowings
               </h4>
-              <p className="text-xs text-slate-500 mb-5 max-w-md mx-auto">
-                Aapne abhi tak koi equipment borrow nahi kiya hai. Catalog me camera, laptops & tools borrow karne ke liye browse karein!
+              <p className="text-xs text-[#bec9c2] mb-5 max-w-md mx-auto">
+                Aapne abhi tak koi equipment borrow nahi kiya hai. Catalog me camera, laptops &amp; tools borrow karne ke liye browse karein!
               </p>
               <Link
                 href="/resources"
-                className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-5 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-slate-800 transition-all"
+                className="inline-flex items-center gap-2 rounded-xl border-2 border-[#353534] bg-[#201f1f] hover:bg-[#2a2a2a] px-5 py-2.5 text-xs font-bold text-[#e5e2e1] uppercase tracking-wider shadow-[0_4px_0_0_#0e0e0e] active:translate-y-1 active:shadow-none transition-all"
               >
-                <Compass className="h-4 w-4 text-slate-300" />
+                <Compass className="h-4 w-4 text-[#8bd6b6]" />
                 <span>Explore Equipment Catalog</span>
               </Link>
             </div>
@@ -487,40 +487,40 @@ function DashboardContent() {
               {borrowings.map((b) => (
                 <div
                   key={b.id}
-                  className="flex flex-col sm:flex-row sm:items-center justify-between rounded-3xl border border-slate-200 bg-white p-5 shadow-xs gap-4"
+                  className="flex flex-col sm:flex-row sm:items-center justify-between rounded-2xl border-2 border-[#2a2a2a] bg-[#1c1b1b] p-5 shadow-[0_4px_0_0_#0f0f0f] gap-4"
                 >
                   <div>
                     <div className="flex items-center gap-2">
                       <span
-                        className={`rounded-md px-2 py-0.5 text-[10px] font-bold ${
+                        className={`rounded-md px-2 py-0.5 text-[10px] font-mono font-bold border ${
                           b.status.includes("Active")
-                            ? "bg-amber-100 text-amber-800"
-                            : "bg-emerald-100 text-emerald-800"
+                            ? "bg-[#2a2004] text-[#fbbf24] border-[#4a3505]"
+                            : "bg-[#065f46]/40 text-[#8bd6b6] border-[#065f46]"
                         }`}
                       >
                         {b.status}
                       </span>
-                      <span className="text-xs text-slate-500 font-medium">
+                      <span className="text-xs text-[#bec9c2] font-medium">
                         Owner: {b.owner}
                       </span>
                     </div>
-                    <h4 className="font-black text-base text-slate-900 mt-1">
+                    <h4 className="font-bold text-base text-white mt-1">
                       {b.item}
                     </h4>
-                    <p className="text-xs text-slate-500 mt-0.5">
+                    <p className="text-xs text-[#89938d] mt-0.5 font-mono">
                       {b.dates} • Total: ₹{b.totalPaid}
                     </p>
-                    <p className="text-[11px] text-slate-400 mt-1">
+                    <p className="text-[11px] text-[#89938d] mt-1">
                       📍 {b.pickupSpot}
                     </p>
                   </div>
 
                   <div className="flex items-center gap-3">
-                    <div className="rounded-2xl bg-slate-50 border border-slate-200 p-3 text-center">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                    <div className="rounded-xl bg-[#0e0e0e] border border-[#2a2a2a] p-3 text-center shadow-[inset_1px_1px_0_#202020]">
+                      <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#89938d]">
                         Handover OTP
                       </span>
-                      <div className="font-mono text-lg font-black text-emerald-700">
+                      <div className="font-mono text-lg font-black text-[#8bd6b6]">
                         {b.otp}
                       </div>
                     </div>
@@ -536,48 +536,48 @@ function DashboardContent() {
       {activeTab === "reviews" && (
         <div className="space-y-6 animate-in fade-in duration-150">
           {/* Module C Mathematical Explainer Box */}
-          <div className="rounded-3xl border border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50/40 p-6 shadow-xs">
+          <div className="rounded-2xl border-2 border-[#2a2a2a] bg-[#1c1b1b] p-6 shadow-[0_4px_0_0_#0f0f0f]">
             <div className="flex items-center gap-2 mb-2">
-              <Sparkles className="h-5 w-5 text-amber-600" />
-              <h3 className="font-black text-base text-slate-900">
+              <Sparkles className="h-5 w-5 text-[#8bd6b6]" />
+              <h3 className="font-bold text-base text-white font-['Silkscreen'] tracking-wide uppercase">
                 MODULE C: PeerTrust Credibility Algorithm in Action
               </h3>
             </div>
-            <p className="text-xs text-slate-600 leading-relaxed mb-4">
+            <p className="text-xs text-[#bec9c2] leading-relaxed mb-4">
               {trustBreakdown.explanation} Reviews from high-credibility peers
               count for more; suspicious accounts or low-trust raters are dampened.
             </p>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center text-xs">
-              <div className="rounded-2xl bg-white p-3 border border-amber-200/80 shadow-2xs">
-                <div className="text-[11px] text-slate-500 font-semibold">
+              <div className="rounded-xl bg-[#141414] p-3 border border-[#2a2a2a] shadow-[inset_1px_1px_0_#202020]">
+                <div className="text-[11px] text-[#89938d] font-semibold font-mono">
                   1. Raw Weighted Avg
                 </div>
-                <div className="font-black text-slate-900 text-lg">
+                <div className="font-black text-white text-lg font-mono">
                   {trustBreakdown.weightedAvg} / 5.0
                 </div>
               </div>
-              <div className="rounded-2xl bg-white p-3 border border-amber-200/80 shadow-2xs">
-                <div className="text-[11px] text-slate-500 font-semibold">
+              <div className="rounded-xl bg-[#141414] p-3 border border-[#2a2a2a] shadow-[inset_1px_1px_0_#202020]">
+                <div className="text-[11px] text-[#89938d] font-semibold font-mono">
                   2. Volume Factor
                 </div>
-                <div className="font-black text-slate-900 text-lg">
+                <div className="font-black text-white text-lg font-mono">
                   {trustBreakdown.volumeFactor} (100%)
                 </div>
               </div>
-              <div className="rounded-2xl bg-white p-3 border border-amber-200/80 shadow-2xs">
-                <div className="text-[11px] text-slate-500 font-semibold">
+              <div className="rounded-xl bg-[#141414] p-3 border border-[#2a2a2a] shadow-[inset_1px_1px_0_#202020]">
+                <div className="text-[11px] text-[#89938d] font-semibold font-mono">
                   3. Total Txns
                 </div>
-                <div className="font-black text-slate-900 text-lg">
+                <div className="font-black text-white text-lg font-mono">
                   {trustBreakdown.totalTransactions} Exchanges
                 </div>
               </div>
-              <div className="rounded-2xl bg-white p-3 border border-amber-200/80 shadow-2xs">
-                <div className="text-[11px] text-slate-500 font-semibold">
+              <div className="rounded-xl bg-[#141414] p-3 border border-[#2a2a2a] shadow-[inset_1px_1px_0_#202020]">
+                <div className="text-[11px] text-[#89938d] font-semibold font-mono">
                   4. Final Trust Score
                 </div>
-                <div className="font-black text-emerald-700 text-lg">
+                <div className="font-black text-[#8bd6b6] text-lg font-mono">
                   ⭐ {trustBreakdown.score}
                 </div>
               </div>
@@ -586,7 +586,7 @@ function DashboardContent() {
 
           {/* Incoming Reviews List */}
           <div className="space-y-3">
-            <h4 className="text-sm font-bold text-slate-900">
+            <h4 className="text-sm font-bold text-white font-['Silkscreen'] tracking-wide uppercase">
               Verified Peer Reviews Received ({reviewsList.filter(r => r.revieweeId === "u_khaleeq").length})
             </h4>
 
@@ -597,7 +597,7 @@ function DashboardContent() {
                 return (
                   <div
                     key={rev.id}
-                    className="rounded-2xl border border-slate-200 bg-white p-4 shadow-xs"
+                    className="rounded-2xl border-2 border-[#2a2a2a] bg-[#1c1b1b] p-4 shadow-[0_4px_0_0_#0f0f0f]"
                   >
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2.5">
@@ -607,29 +607,29 @@ function DashboardContent() {
                             "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150"
                           }
                           alt={reviewer?.name || "Peer"}
-                          className="h-8 w-8 rounded-full object-cover"
+                          className="h-8 w-8 rounded-full object-cover border border-[#2a2a2a]"
                         />
                         <div>
-                          <div className="text-xs font-bold text-slate-900">
+                          <div className="text-xs font-bold text-white">
                             {reviewer?.name || "Campus Peer"}
                           </div>
-                          <div className="text-[10px] text-slate-400">
+                          <div className="text-[10px] text-[#89938d]">
                             {reviewer?.college} • Rater Trust: {reviewer?.trustScore || "4.0"} ⭐
                           </div>
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-1 rounded-md bg-amber-50 px-2 py-0.5 text-xs font-bold text-amber-800">
+                      <div className="flex items-center gap-1 rounded-md bg-[#2a2004] px-2 py-0.5 text-xs font-bold text-[#fbbf24] border border-[#4a3505]">
                         <Star className="h-3 w-3 fill-amber-400 text-amber-500" />
                         <span>{rev.rating}.0</span>
                       </div>
                     </div>
 
-                    <p className="text-xs text-slate-600 pl-10">
+                    <p className="text-xs text-[#bec9c2] pl-10">
                       &quot;{rev.comment}&quot;
                     </p>
-                    <div className="text-[10px] text-slate-400 pl-10 mt-1">
-                      For item: <span className="font-semibold">{rev.itemTitle}</span> • {formatDate(rev.date)}
+                    <div className="text-[10px] text-[#89938d] pl-10 mt-1 font-mono">
+                      For item: <span className="font-semibold text-white">{rev.itemTitle}</span> • {formatDate(rev.date)}
                     </div>
                   </div>
                 );

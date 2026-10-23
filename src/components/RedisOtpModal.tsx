@@ -49,36 +49,36 @@ export function RedisOtpModal({
   const otpCode = digits.join("");
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-in fade-in">
-      <div className="relative w-full max-w-lg rounded-3xl bg-white p-6 sm:p-8 shadow-2xl border border-slate-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in">
+      <div className="relative w-full max-w-lg rounded-none bg-[#1c1b1b] p-6 sm:p-8 shadow-[0_8px_0_0_#0f0f0f] border-2 border-[#2a2a2a]">
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 rounded-full p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+          className="absolute top-4 right-4 rounded-none p-2 bg-[#141414] border border-[#2a2a2a] text-[#bec9c2] hover:text-white hover:border-[#8bd6b6] transition-colors cursor-pointer"
         >
-          <X className="h-5 w-5" />
+          <X className="h-4 w-4" />
         </button>
 
         {!isConfirmed ? (
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-100 text-emerald-800">
+              <span className="flex h-7 w-7 items-center justify-center rounded-none bg-[#065f46] border border-[#047857] text-[#8bd6b6]">
                 <KeyRound className="h-4 w-4" />
               </span>
-              <span className="text-xs font-bold uppercase tracking-wider text-emerald-800">
+              <span className="text-[10px] font-['Silkscreen'] uppercase tracking-wider text-[#8bd6b6]">
                 Redis Single-Use OTP (TTL 15m)
               </span>
             </div>
 
-            <h3 className="text-xl font-black text-slate-900 tracking-tight">
+            <h3 className="text-base font-['Silkscreen'] uppercase tracking-wider text-white">
               Verify Physical Custody Handoff
             </h3>
-            <p className="text-xs text-slate-500 mt-1">
-              Enter the single-use 6-digit code provided by the Equipment Owner upon pickup for <span className="font-semibold text-slate-800">{itemTitle}</span>.
+            <p className="text-xs text-[#bec9c2] font-mono mt-1">
+              Enter the single-use 6-digit code provided by the Equipment Owner upon pickup for <span className="font-semibold text-white">{itemTitle}</span>.
             </p>
 
             {/* 6 Individual Numeric Boxes */}
             <div className="my-6">
-              <label className="block text-center text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">
+              <label className="block text-center text-[10px] font-['Silkscreen'] uppercase tracking-wider text-[#bec9c2] mb-3">
                 6-Digit Authorization Code
               </label>
               <div className="flex items-center justify-center gap-2 sm:gap-3">
@@ -138,54 +138,54 @@ export function RedisOtpModal({
                         document.getElementById(`redis-otp-${i + 1}`)?.focus();
                       }
                     }}
-                    className="h-12 w-11 sm:h-14 sm:w-12 text-center text-xl sm:text-2xl font-mono font-black rounded-xl border border-slate-300 bg-slate-50 text-slate-900 focus:border-emerald-600 focus:bg-white focus:outline-none shadow-xs"
+                    className="h-12 w-11 sm:h-14 sm:w-12 text-center text-xl sm:text-2xl font-['Silkscreen'] rounded-none border-2 border-[#2a2a2a] bg-[#0e0e0e] text-[#8bd6b6] focus:border-[#8bd6b6] focus:outline-none"
                   />
                 ))}
               </div>
             </div>
 
             {/* Custody Checklist */}
-            <div className="rounded-2xl bg-slate-50 p-4 border border-slate-200/80 mb-6">
-              <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
-                <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
+            <div className="rounded-none bg-[#141414] p-4 border-2 border-[#2a2a2a] mb-6 font-mono">
+              <h4 className="text-[10px] font-['Silkscreen'] text-[#8bd6b6] uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
+                <ShieldCheck className="h-3.5 w-3.5 text-[#8bd6b6]" />
                 <span>Physical Custody Inspection Checklist</span>
               </h4>
               <div className="space-y-2 text-xs">
-                <label className="flex items-center gap-2 text-slate-700 cursor-pointer">
+                <label className="flex items-center gap-2 text-[#bec9c2] cursor-pointer">
                   <input
                     type="checkbox"
                     checked={checkedItems.condition}
                     onChange={(e) =>
                       setCheckedItems({ ...checkedItems, condition: e.target.checked })
                     }
-                    className="rounded text-emerald-600 focus:ring-emerald-500 h-4 w-4"
+                    className="rounded-none border-[#2a2a2a] accent-[#065f46] h-4 w-4"
                   />
                   <span>Lens, body &amp; optical sensor free of visible damage</span>
                 </label>
 
-                <label className="flex items-center gap-2 text-slate-700 cursor-pointer">
+                <label className="flex items-center gap-2 text-[#bec9c2] cursor-pointer">
                   <input
                     type="checkbox"
                     checked={checkedItems.accessories}
                     onChange={(e) =>
                       setCheckedItems({ ...checkedItems, accessories: e.target.checked })
                     }
-                    className="rounded text-emerald-600 focus:ring-emerald-500 h-4 w-4"
+                    className="rounded-none border-[#2a2a2a] accent-[#065f46] h-4 w-4"
                   />
                   <span>Original battery, protective strap &amp; charger present</span>
                 </label>
 
-                <label className="flex items-center gap-2 text-slate-700 cursor-pointer">
+                <label className="flex items-center gap-2 text-[#bec9c2] cursor-pointer">
                   <input
                     type="checkbox"
                     checked={checkedItems.serial}
                     onChange={(e) =>
                       setCheckedItems({ ...checkedItems, serial: e.target.checked })
                     }
-                    className="rounded text-emerald-600 focus:ring-emerald-500 h-4 w-4"
+                    className="rounded-none border-[#2a2a2a] accent-[#065f46] h-4 w-4"
                   />
                   <span>
-                    Serial number matches encrypted registry (<strong className="font-mono">{encryptedSerial}</strong>)
+                    Serial number matches encrypted registry (<strong className="text-[#8bd6b6]">{encryptedSerial}</strong>)
                   </span>
                 </label>
               </div>
@@ -195,33 +195,33 @@ export function RedisOtpModal({
             <button
               onClick={handleVerify}
               disabled={isVerifying || !allChecked || otpCode.length < 6}
-              className="w-full flex items-center justify-center gap-2 rounded-2xl bg-emerald-600 hover:bg-emerald-700 py-3.5 text-sm font-bold text-white shadow-md active:scale-95 transition-all disabled:opacity-50"
+              className="w-full flex items-center justify-center gap-2 rounded-none bg-[#065f46] border-2 border-[#047857] shadow-[0_4px_0_0_#003828] hover:bg-[#047857] py-3.5 text-xs font-['Silkscreen'] uppercase tracking-wider text-white active:translate-y-1 active:shadow-none transition-all disabled:opacity-50 cursor-pointer"
             >
               {isVerifying ? (
-                <span>Validating Redis Hash...</span>
+                <span>Validating Hash...</span>
               ) : (
                 <>
-                  <Lock className="h-4 w-4" />
-                  <span>Verify OTP &amp; Confirm Custody Transfer</span>
+                  <Lock className="h-4 w-4 text-[#8bd6b6]" />
+                  <span>Verify OTP &amp; Confirm Custody</span>
                 </>
               )}
             </button>
           </div>
         ) : (
           <div className="text-center py-6">
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700 mb-4 animate-bounce">
-              <CheckCircle2 className="h-9 w-9" />
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-none bg-[#065f46]/30 text-[#8bd6b6] border-2 border-[#8bd6b6] shadow-[0_4px_0_0_#003828] mb-4">
+              <CheckCircle2 className="h-8 w-8 text-[#8bd6b6]" />
             </div>
-            <h3 className="text-xl font-black text-slate-900">
+            <h3 className="text-base font-['Silkscreen'] uppercase tracking-wider text-white">
               Custody Transfer Authorized!
             </h3>
-            <p className="mt-1 text-xs text-slate-500 max-w-sm mx-auto">
+            <p className="mt-1 text-xs text-[#bec9c2] font-mono max-w-sm mx-auto">
               Redis OTP validated. Chain of custody timestamp recorded. Escrow safety protocols activated for this rental period.
             </p>
 
             <button
               onClick={onClose}
-              className="mt-6 w-full rounded-xl bg-slate-900 py-3 text-xs font-bold text-white hover:bg-slate-800 transition-colors"
+              className="mt-6 w-full rounded-none bg-[#141414] border-2 border-[#2a2a2a] py-3 text-xs font-['Silkscreen'] uppercase tracking-wider text-[#bec9c2] hover:text-white hover:border-[#8bd6b6] transition-all cursor-pointer"
             >
               Close Console
             </button>

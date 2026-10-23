@@ -151,7 +151,7 @@ function ResourcesContent() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 border-b border-[#201f1f] pb-5">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl sm:text-3xl font-black text-white font-['Silkscreen'] tracking-wider">
+            <h1 className="text-2xl sm:text-3xl font-bold text-white font-pixel tracking-wider">
               EXPLORE LOCAL GEAR
             </h1>
             <span className="rounded-md bg-[#065f46] px-2.5 py-0.5 text-xs font-mono font-bold text-[#8bd6b6] border border-[#047857]">
@@ -388,7 +388,7 @@ function ResourcesContent() {
                       {/* Chat trigger button */}
                       <button
                         onClick={() => openChatForRes(res)}
-                        className="absolute top-3 right-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-slate-700 shadow-md hover:bg-emerald-800 hover:text-white transition-all"
+                        className="absolute top-3 right-3 z-10 flex h-8 w-8 items-center justify-center rounded-none bg-[#141414]/90 text-[#bec9c2] border border-[#2a2a2a] shadow-[0_2px_0_0_#0f0f0f] hover:bg-[#065f46] hover:text-white hover:border-[#8bd6b6] transition-all cursor-pointer"
                         title="Chat with Owner"
                       >
                         <MessageSquare className="h-4 w-4" />

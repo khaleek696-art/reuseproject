@@ -20,18 +20,18 @@ export function LifecycleStepper() {
   ];
 
   return (
-    <div className="w-full rounded-2xl border border-slate-200 bg-white p-6 shadow-xs">
+    <div className="w-full rounded-none border-2 border-[#2a2a2a] bg-[#1c1b1b] p-6 shadow-[0_6px_0_0_#0f0f0f]">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
         <div>
-          <div className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-0.5 text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">
+          <div className="inline-flex items-center gap-1.5 rounded-none bg-[#065f46]/30 px-2.5 py-0.5 text-[10px] font-['Silkscreen'] uppercase tracking-wider text-[#8bd6b6] border border-[#8bd6b6]/30 mb-1">
             Circular Operating Model
           </div>
-          <h3 className="text-lg font-black text-slate-900 tracking-tight">
+          <h3 className="text-base font-['Silkscreen'] uppercase tracking-wider text-white">
             10-Stage Resource Lifecycle Chain
           </h3>
         </div>
-        <div className="text-xs text-slate-500 font-medium">
-          Click any phase to inspect the protocol
+        <div className="text-xs text-[#89938d] font-mono">
+          Click any phase to inspect protocol
         </div>
       </div>
 
@@ -44,21 +44,21 @@ export function LifecycleStepper() {
             <React.Fragment key={st.num}>
               <button
                 onClick={() => setActiveStep(i)}
-                className={`group flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-bold transition-all shrink-0 border ${
+                className={`group flex items-center gap-1.5 rounded-none px-3 py-2 text-xs font-['Silkscreen'] uppercase tracking-wider transition-all shrink-0 cursor-pointer ${
                   isSelected
-                    ? "bg-slate-900 text-white border-slate-900 shadow-xs"
+                    ? "bg-[#065f46] text-white border-2 border-[#047857] shadow-[0_2px_0_0_#003828]"
                     : isPast
-                    ? "bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-emerald-100"
-                    : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100"
+                    ? "bg-[#141414] text-[#8bd6b6] border border-[#047857]"
+                    : "bg-[#141414] text-[#89938d] border border-[#2a2a2a] hover:text-white"
                 }`}
               >
                 <span
-                  className={`flex h-4 w-4 items-center justify-center rounded-full text-[10px] font-black ${
+                  className={`flex h-4 w-4 items-center justify-center rounded-none text-[9px] font-mono font-black ${
                     isSelected
-                      ? "bg-emerald-400 text-slate-950"
+                      ? "bg-[#8bd6b6] text-black"
                       : isPast
-                      ? "bg-emerald-600 text-white"
-                      : "bg-slate-300 text-slate-700"
+                      ? "bg-[#065f46] text-white"
+                      : "bg-[#2a2a2a] text-[#89938d]"
                   }`}
                 >
                   {st.num}
@@ -67,7 +67,7 @@ export function LifecycleStepper() {
               </button>
 
               {i < stages.length - 1 && (
-                <ChevronRight className="h-3.5 w-3.5 text-slate-300 shrink-0" />
+                <ChevronRight className="h-3.5 w-3.5 text-[#3a3a3a] shrink-0" />
               )}
             </React.Fragment>
           );
@@ -75,20 +75,20 @@ export function LifecycleStepper() {
       </div>
 
       {/* Active Phase Details Card */}
-      <div className="mt-4 rounded-xl bg-slate-50 p-4 border border-slate-200/80 flex items-start gap-3">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-600 text-white font-black text-xs shrink-0">
+      <div className="mt-4 rounded-none bg-[#141414] p-4 border-2 border-[#2a2a2a] flex items-start gap-3">
+        <div className="flex h-8 w-8 items-center justify-center rounded-none bg-[#065f46] border border-[#047857] text-[#8bd6b6] font-['Silkscreen'] text-xs shrink-0">
           {stages[activeStep].num}
         </div>
         <div className="flex-1">
           <div className="flex items-center gap-2">
-            <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
+            <h4 className="text-xs font-['Silkscreen'] text-white uppercase tracking-wider">
               Phase {stages[activeStep].num}: {stages[activeStep].name} Protocol
             </h4>
-            <span className="rounded bg-emerald-100 px-1.5 py-0.2 text-[9px] font-bold text-emerald-800">
-              Active in Architecture
+            <span className="rounded-none bg-[#065f46]/30 px-1.5 py-0.5 text-[9px] font-['Silkscreen'] uppercase text-[#8bd6b6] border border-[#8bd6b6]/30">
+              Active Architecture
             </span>
           </div>
-          <p className="text-xs text-slate-600 mt-1 leading-relaxed">
+          <p className="text-xs text-[#bec9c2] font-mono mt-1.5 leading-relaxed">
             {stages[activeStep].desc}
           </p>
         </div>

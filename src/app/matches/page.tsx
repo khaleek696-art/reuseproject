@@ -293,7 +293,7 @@ function MatchesContent() {
               </div>
               <div>
                 <div className="flex flex-wrap items-center gap-2.5">
-                  <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight font-heading">
+                  <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white tracking-wider font-pixel uppercase">
                     AI Semantic Matches &amp; Specs
                   </h1>
                   <span className="inline-flex items-center gap-1.5 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#065f46]/30 text-[#8bd6b6] border border-[#065f46]/60">
@@ -456,7 +456,7 @@ function MatchesContent() {
                   <Bot className="h-5 w-5" />
                 </div>
                 <div>
-                  <h3 className="font-black text-lg text-white font-heading">
+                  <h3 className="font-bold text-lg text-white font-heading">
                     {hasDirectMatches ? "Why AI Selected This Top Match" : "Recommended Campus Alternative"}
                   </h3>
                   <span className="text-xs text-[#9ca3af]">
@@ -543,7 +543,7 @@ function MatchesContent() {
         {isComparing && (
           <div className="rounded-3xl border-2 border-[#2a2a2a] bg-[#1c1b1b] p-6 sm:p-7 shadow-xl space-y-5 animate-in fade-in duration-200">
             <div className="flex items-center justify-between">
-              <h3 className="font-black text-white text-lg flex items-center gap-2 font-heading">
+              <h3 className="font-['Silkscreen'] text-base text-white tracking-wider uppercase flex items-center gap-2">
                 <Scale className="h-5 w-5 text-[#8bd6b6]" />
                 <span>Side-by-Side Gear Specs Comparison</span>
               </h3>
@@ -659,7 +659,7 @@ function MatchesContent() {
               {/* Product Info & Specifications (7 Cols) */}
               <div className="lg:col-span-7 flex flex-col justify-between space-y-4">
                 <div>
-                  <h2 className="text-2xl sm:text-3xl font-black text-white font-heading tracking-tight leading-tight">
+                  <h2 className="text-2xl sm:text-3xl font-bold text-white font-pixel tracking-wider leading-tight">
                     {topMatch.resource.title}
                   </h2>
                   <p className="text-xs sm:text-sm text-[#9ca3af] mt-2 leading-relaxed">
@@ -737,7 +737,7 @@ function MatchesContent() {
           <div className="space-y-5 pt-4">
             <div className="flex items-center justify-between border-b border-[#262626] pb-3">
               <div>
-                <h3 className="text-xl font-black text-white font-heading">
+                <h3 className="text-lg sm:text-xl font-bold text-white font-pixel tracking-wider uppercase">
                   {hasDirectMatches ? "Other Relevant Campus Matches" : "More Available Campus Equipment"}
                 </h3>
                 <p className="text-xs text-[#9ca3af] mt-0.5">

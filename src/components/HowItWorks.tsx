@@ -48,13 +48,13 @@ export function HowItWorks() {
   return (
     <div className="w-full">
       <div className="text-center max-w-2xl mx-auto mb-10">
-        <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-800 uppercase tracking-wider">
+        <span className="rounded-none bg-[#065f46]/30 px-3 py-1 text-[10px] font-['Silkscreen'] uppercase tracking-wider text-[#8bd6b6] border border-[#8bd6b6]/30">
           How Circular Sharing Works
         </span>
-        <h2 className="mt-3 text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+        <h2 className="mt-3 text-xl sm:text-2xl font-bold text-white font-pixel tracking-wider uppercase">
           Sharing Made as Easy as Ordering Food
         </h2>
-        <p className="mt-2 text-xs sm:text-sm text-slate-500">
+        <p className="mt-2 text-xs sm:text-sm text-[#bec9c2] font-mono">
           Zero friction, 100% peer accountability. Designed specifically for university students and neighborhood communities.
         </p>
       </div>
@@ -65,24 +65,24 @@ export function HowItWorks() {
           return (
             <div
               key={idx}
-              className="relative flex flex-col rounded-3xl border border-slate-200/90 bg-white p-6 shadow-xs hover:shadow-md transition-all duration-200"
+              className="relative flex flex-col rounded-none border-2 border-[#2a2a2a] bg-[#1c1b1b] p-6 shadow-[0_4px_0_0_#0f0f0f] hover:border-[#8bd6b6] transition-all duration-200"
             >
               {/* Step number badge */}
               <div className="flex items-center justify-between mb-4">
-                <span className="text-3xl font-black text-slate-200 tracking-tighter">
+                <span className="text-3xl font-pixel font-bold text-[#353534] tracking-wider">
                   {step.num}
                 </span>
                 <div
-                  className={`flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-tr ${step.accent} text-white shadow-sm`}
+                  className="flex h-12 w-12 items-center justify-center rounded-none bg-[#141414] border-2 border-[#2a2a2a] text-[#8bd6b6] shadow-[0_2px_0_0_#0f0f0f]"
                 >
                   <Icon className="h-6 w-6" />
                 </div>
               </div>
 
-              <h3 className="text-base font-bold text-slate-900 mb-2">
+              <h3 className="text-xs sm:text-sm font-['Silkscreen'] uppercase tracking-wider text-white mb-2">
                 {step.title}
               </h3>
-              <p className="text-xs text-slate-500 leading-relaxed">
+              <p className="text-xs text-[#bec9c2] font-mono leading-relaxed">
                 {step.description}
               </p>
             </div>

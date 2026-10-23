@@ -9,13 +9,12 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Column 1: Brand & Mission */}
           <div className="md:col-span-1 space-y-3">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 text-white shadow-sm">
-                <Recycle className="h-5 w-5" />
-              </div>
-              <span className="font-black text-xl tracking-tight text-white font-headline-sm">
-                RE<span className="text-[#8bd6b6]">:</span>USE
-              </span>
+            <Link href="/" className="inline-block group">
+              <img
+                src="/logo.png"
+                alt="RE:USE"
+                className="h-10 w-auto object-contain drop-shadow-md"
+              />
             </Link>
             <p className="text-xs text-slate-400 leading-relaxed">
               Don&apos;t buy more. Share what already exists. Hyper-local, peer-verified resource sharing powered by AI smart matching and trust scoring.

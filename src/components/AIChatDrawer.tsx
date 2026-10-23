@@ -188,18 +188,18 @@ export function AIChatDrawer() {
       {isOpen && (
         <div
           style={{ position: "fixed", inset: 0, zIndex: 9999999 }}
-          className="flex items-end sm:items-center justify-end sm:p-6 bg-slate-950/60 backdrop-blur-xs animate-in fade-in"
+          className="flex items-end sm:items-center justify-end sm:p-6 bg-black/80 backdrop-blur-xs animate-in fade-in"
         >
-          <div className="relative w-full sm:w-[420px] h-[82vh] sm:h-[580px] rounded-t-3xl sm:rounded-3xl bg-white shadow-2xl border border-slate-200 flex flex-col overflow-hidden">
+          <div className="relative w-full sm:w-[420px] h-[82vh] sm:h-[580px] rounded-none bg-[#1c1b1b] shadow-[0_8px_0_0_#0f0f0f] border-2 border-[#2a2a2a] flex flex-col overflow-hidden">
             {/* Header */}
-            <div className="bg-slate-950 text-white p-4 flex items-center justify-between border-b border-slate-800">
+            <div className="bg-[#141414] text-white p-4 flex items-center justify-between border-b-2 border-[#2a2a2a]">
               <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-2xl bg-emerald-700 text-white flex items-center justify-center font-bold">
+                <div className="h-10 w-10 rounded-none bg-[#065f46] border-2 border-[#047857] text-[#8bd6b6] flex items-center justify-center font-bold">
                   <Bot className="h-6 w-6" />
                 </div>
                 <div>
-                  <h3 className="font-black text-sm text-white">RE:USE Chatbot</h3>
-                  <p className="text-[10px] text-emerald-400 font-medium mt-0.5">
+                  <h3 className="font-['Silkscreen'] uppercase tracking-wider text-xs text-white">RE:USE AI Assistant</h3>
+                  <p className="text-[10px] text-[#8bd6b6] font-mono mt-0.5">
                     Groq Llama-3.3 AI &bull; Always Online
                   </p>
                 </div>
@@ -207,58 +207,58 @@ export function AIChatDrawer() {
 
               <button
                 onClick={() => setIsOpen(false)}
-                className="rounded-full p-2 text-slate-400 hover:bg-slate-800 hover:text-white transition-colors"
+                className="rounded-none p-2 bg-[#1c1b1b] border border-[#2a2a2a] text-[#bec9c2] hover:text-white hover:border-[#8bd6b6] transition-colors cursor-pointer"
               >
-                <X className="h-5 w-5" />
+                <X className="h-4 w-4" />
               </button>
             </div>
 
             {/* Quick Suggestion Chips */}
-            <div className="bg-slate-50 p-2.5 border-b border-slate-200 flex gap-2 overflow-x-auto no-scrollbar text-xs">
+            <div className="bg-[#141414] p-2.5 border-b-2 border-[#2a2a2a] flex gap-2 overflow-x-auto no-scrollbar text-xs">
               <button
                 onClick={() => handleSendMessage("Find a DSLR camera under ₹1000 near MIT campus")}
-                className="shrink-0 bg-white hover:bg-emerald-50 text-slate-700 hover:text-emerald-900 border border-slate-200 px-2.5 py-1 rounded-xl text-[11px] font-semibold transition-colors"
+                className="shrink-0 bg-[#1c1b1b] hover:bg-[#065f46] text-[#bec9c2] hover:text-white border border-[#2a2a2a] px-2.5 py-1 rounded-none text-[10px] font-mono transition-colors cursor-pointer"
               >
                 📷 DSLR Camera
               </button>
               <button
                 onClick={() => handleSendMessage("I need a laptop for 2 days near Symbiosis")}
-                className="shrink-0 bg-white hover:bg-emerald-50 text-slate-700 hover:text-emerald-900 border border-slate-200 px-2.5 py-1 rounded-xl text-[11px] font-semibold transition-colors"
+                className="shrink-0 bg-[#1c1b1b] hover:bg-[#065f46] text-[#bec9c2] hover:text-white border border-[#2a2a2a] px-2.5 py-1 rounded-none text-[10px] font-mono transition-colors cursor-pointer"
               >
                 💻 MacBook Laptop
               </button>
               <button
                 onClick={() => handleSendMessage("How does security deposit refund work?")}
-                className="shrink-0 bg-white hover:bg-emerald-50 text-slate-700 hover:text-emerald-900 border border-slate-200 px-2.5 py-1 rounded-xl text-[11px] font-semibold transition-colors"
+                className="shrink-0 bg-[#1c1b1b] hover:bg-[#065f46] text-[#bec9c2] hover:text-white border border-[#2a2a2a] px-2.5 py-1 rounded-none text-[10px] font-mono transition-colors cursor-pointer"
               >
                 🔒 Deposit Refund Info
               </button>
             </div>
 
             {/* Messages Container */}
-            <div className="flex-1 p-4 overflow-y-auto space-y-3.5 bg-slate-50/50">
+            <div className="flex-1 p-4 overflow-y-auto space-y-3.5 bg-[#0e0e0e]">
               {messages.map((m) => (
                 <div
                   key={m.id}
                   className={`flex gap-2.5 ${m.sender === "user" ? "justify-end" : "justify-start"}`}
                 >
                   {m.sender === "ai" && (
-                    <div className="h-7 w-7 rounded-xl bg-emerald-800 text-white flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
+                    <div className="h-7 w-7 rounded-none bg-[#065f46] text-[#8bd6b6] border border-[#047857] flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
                       <Bot className="h-4 w-4" />
                     </div>
                   )}
 
                   <div
-                    className={`max-w-[85%] rounded-2xl p-3.5 text-xs leading-relaxed ${
+                    className={`max-w-[85%] rounded-none p-3 text-xs leading-relaxed font-mono ${
                       m.sender === "user"
-                        ? "bg-emerald-800 text-white font-medium rounded-tr-xs"
-                        : "bg-white text-slate-900 border border-slate-200/90 shadow-2xs rounded-tl-xs whitespace-pre-wrap"
+                        ? "bg-[#065f46] text-white border border-[#047857] shadow-[0_2px_0_0_#003828]"
+                        : "bg-[#1c1b1b] text-[#bec9c2] border border-[#2a2a2a] shadow-[0_2px_0_0_#0f0f0f] whitespace-pre-wrap"
                     }`}
                   >
                     <div>{m.text}</div>
                     <span
                       className={`block text-[9px] mt-1.5 font-mono ${
-                        m.sender === "user" ? "text-emerald-200 text-right" : "text-slate-400"
+                        m.sender === "user" ? "text-emerald-200 text-right" : "text-[#89938d]"
                       }`}
                     >
                       {m.timestamp}
@@ -266,7 +266,7 @@ export function AIChatDrawer() {
                   </div>
 
                   {m.sender === "user" && (
-                    <div className="h-7 w-7 rounded-xl bg-slate-900 text-white flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
+                    <div className="h-7 w-7 rounded-none bg-[#141414] text-white border border-[#2a2a2a] flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
                       <User className="h-4 w-4" />
                     </div>
                   )}
@@ -274,8 +274,8 @@ export function AIChatDrawer() {
               ))}
 
               {isLoading && (
-                <div className="flex items-center gap-2 text-xs text-slate-500 bg-white p-3 rounded-2xl border border-slate-200 w-fit">
-                  <Sparkles className="h-4 w-4 text-emerald-600 animate-spin" />
+                <div className="flex items-center gap-2 text-xs text-[#8bd6b6] font-mono bg-[#1c1b1b] p-3 rounded-none border border-[#2a2a2a] w-fit">
+                  <Sparkles className="h-4 w-4 text-[#8bd6b6] animate-spin" />
                   <span>Groq Llama 3.3 generating reply...</span>
                 </div>
               )}
@@ -283,7 +283,7 @@ export function AIChatDrawer() {
             </div>
 
             {/* Input Bar */}
-            <div className="p-3 bg-white border-t border-slate-200">
+            <div className="p-3 bg-[#141414] border-t-2 border-[#2a2a2a]">
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
@@ -296,12 +296,12 @@ export function AIChatDrawer() {
                   value={inputMsg}
                   onChange={(e) => setInputMsg(e.target.value)}
                   placeholder="Type a message..."
-                  className="flex-1 rounded-2xl border border-slate-300 bg-slate-50 px-3.5 py-2.5 text-xs text-slate-900 font-medium focus:border-emerald-600 focus:bg-white focus:outline-none"
+                  className="flex-1 rounded-none border-2 border-[#2a2a2a] bg-[#0e0e0e] px-3.5 py-2.5 text-xs text-white font-mono focus:border-[#8bd6b6] focus:outline-none"
                 />
                 <button
                   type="submit"
                   disabled={!inputMsg.trim() || isLoading}
-                  className="rounded-2xl bg-emerald-800 hover:bg-emerald-900 p-2.5 text-white shadow-xs disabled:opacity-40 active:scale-95 transition-all"
+                  className="rounded-none bg-[#065f46] border-2 border-[#047857] text-white hover:bg-[#047857] p-2.5 shadow-[0_2px_0_0_#003828] disabled:opacity-40 active:translate-y-0.5 transition-all cursor-pointer"
                 >
                   <Send className="h-4 w-4" />
                 </button>

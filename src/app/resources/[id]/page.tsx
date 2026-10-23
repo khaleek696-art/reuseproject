@@ -94,8 +94,10 @@ export default function ResourceDetailPage({ params }: PageProps) {
 
         <button
           onClick={() => setIsSaved(!isSaved)}
-          className={`flex items-center gap-1 rounded-xl border px-3 py-1.5 font-bold transition-all ${
-            isSaved ? "bg-rose-50 text-rose-600 border-rose-200" : "bg-white text-slate-600 border-slate-200"
+          className={`flex items-center gap-1 rounded-xl border-2 px-3 py-1.5 font-bold transition-all uppercase tracking-wider font-mono cursor-pointer ${
+            isSaved
+              ? "bg-[#2a1414] text-[#f87171] border-[#5a2020]"
+              : "bg-[#1c1b1b] text-[#e5e2e1] border-[#2a2a2a] hover:bg-[#252525]"
           }`}
         >
           <Heart className={`h-3.5 w-3.5 ${isSaved ? "fill-rose-500" : ""}`} />
@@ -105,13 +107,13 @@ export default function ResourceDetailPage({ params }: PageProps) {
 
       {/* HIGH-VALUE RISK WARNING BANNER (SCREEN 6) */}
       {isHighValue && (
-        <div className="mb-6 flex items-start gap-3 rounded-2xl bg-amber-50 border border-amber-200 p-4 text-xs text-amber-900 shadow-2xs">
-          <AlertTriangle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
+        <div className="mb-6 flex items-start gap-3 rounded-2xl bg-[#2a2004] border-2 border-[#4a3505] p-4 text-xs text-[#fbbf24] shadow-[0_4px_0_0_#0f0f0f]">
+          <AlertTriangle className="h-5 w-5 text-[#fbbf24] shrink-0 mt-0.5" />
           <div className="space-y-0.5">
-            <div className="font-black text-amber-950 uppercase tracking-wide">
+            <div className="font-bold text-white uppercase tracking-wider font-['Silkscreen']">
               High-Value Equipment Risk Protocol Active
             </div>
-            <p className="leading-relaxed">
+            <p className="leading-relaxed text-[#bec9c2]">
               Additional government ID verification, encrypted serial number check, and mutual 6-digit Redis OTP handoff are strictly required for this rental. Zero unauthorized substitutions.
             </p>
           </div>
@@ -123,7 +125,7 @@ export default function ResourceDetailPage({ params }: PageProps) {
         {/* Left Column: Media & Specifications (7 Cols) */}
         <div className="lg:col-span-7 space-y-6">
           {/* Main Photo Gallery — Uncropped Studio Presentation */}
-          <div className="overflow-hidden rounded-3xl border border-[#2a2a2a] bg-[#121212] shadow-xs">
+          <div className="overflow-hidden rounded-2xl border-2 border-[#2a2a2a] bg-[#121212] shadow-[0_6px_0_0_#0f0f0f]">
             <div
               onClick={() => setIsLightBoxOpen(true)}
               className="relative min-h-[360px] sm:min-h-[440px] aspect-[4/3] sm:aspect-[16/10] w-full flex items-center justify-center overflow-hidden p-4 cursor-pointer group"
@@ -143,7 +145,7 @@ export default function ResourceDetailPage({ params }: PageProps) {
               />
 
               {/* Condition Badge */}
-              <span className="absolute top-3 left-3 rounded-xl bg-slate-950/85 px-3 py-1 text-xs font-bold text-[#8bd6b6] backdrop-blur-md border border-[#2a2a2a] z-20">
+              <span className="absolute top-3 left-3 rounded-xl bg-black/85 px-3 py-1 text-xs font-mono font-bold text-[#8bd6b6] backdrop-blur-md border border-[#2a2a2a] z-20">
                 Condition: {resource.condition.replace("_", " ").toUpperCase()}
               </span>
 
@@ -153,7 +155,7 @@ export default function ResourceDetailPage({ params }: PageProps) {
                   e.stopPropagation();
                   setIsLightBoxOpen(true);
                 }}
-                className="absolute top-3 right-3 flex items-center gap-1.5 rounded-xl bg-slate-950/85 px-3 py-1.5 text-xs font-bold text-white backdrop-blur-md border border-[#2a2a2a] hover:bg-[#065f46] transition-colors z-20 cursor-pointer shadow-sm"
+                className="absolute top-3 right-3 flex items-center gap-1.5 rounded-xl bg-black/85 px-3 py-1.5 text-xs font-bold text-white backdrop-blur-md border border-[#2a2a2a] hover:bg-[#065f46] transition-colors z-20 cursor-pointer shadow-sm"
               >
                 <ZoomIn className="h-3.5 w-3.5 text-[#8bd6b6]" />
                 <span className="hidden sm:inline">Inspect HD</span>
@@ -178,39 +180,39 @@ export default function ResourceDetailPage({ params }: PageProps) {
           </div>
 
           {/* Details & Specs Card */}
-          <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-xs space-y-4">
+          <div className="rounded-2xl border-2 border-[#2a2a2a] bg-[#1c1b1b] p-6 shadow-[0_6px_0_0_#0f0f0f] space-y-4">
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <span className="rounded-md bg-emerald-50 px-2 py-0.5 text-xs font-bold text-emerald-800 border border-emerald-200">
+                <span className="rounded-md bg-[#065f46]/40 px-2 py-0.5 text-xs font-mono font-bold text-[#8bd6b6] border border-[#065f46]">
                   {categoryMeta?.name || resource.category}
                 </span>
-                <span className="text-xs text-slate-500 flex items-center gap-1">
-                  <MapPin className="h-3 w-3 text-emerald-700" />
+                <span className="text-xs text-[#89938d] flex items-center gap-1 font-mono">
+                  <MapPin className="h-3 w-3 text-[#8bd6b6]" />
                   {resource.location.campus} &bull; Approx. 2.26 km away
                 </span>
               </div>
-              <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+              <h1 className="text-xl sm:text-2xl font-bold text-white font-pixel tracking-wider uppercase">
                 {resource.title}
               </h1>
             </div>
 
-            <p className="text-sm text-slate-600 leading-relaxed font-normal">
+            <p className="text-sm text-[#bec9c2] leading-relaxed font-normal">
               {resource.description}
             </p>
 
             {/* Specifications */}
             {resource.features && (
               <div className="pt-2">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-[#bec9c2] mb-2 font-mono">
                   Verified Technical Specifications
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
                   {resource.features.map((f, i) => (
                     <div
                       key={i}
-                      className="flex items-center gap-2 rounded-xl bg-slate-50 p-2.5 border border-slate-200 font-medium text-slate-800"
+                      className="flex items-center gap-2 rounded-xl bg-[#141414] p-2.5 border border-[#2a2a2a] font-medium text-[#e5e2e1] shadow-[inset_1px_1px_0_#202020]"
                     >
-                      <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+                      <CheckCircle2 className="h-4 w-4 text-[#8bd6b6] shrink-0" />
                       <span>{f}</span>
                     </div>
                   ))}
@@ -219,9 +221,9 @@ export default function ResourceDetailPage({ params }: PageProps) {
             )}
 
             {/* Usage Guidelines */}
-            <div className="rounded-2xl bg-slate-50 p-4 border border-slate-200 text-xs">
-              <div className="font-bold text-slate-900 mb-1">Equipment Care Protocol:</div>
-              <p className="text-slate-600 leading-relaxed">
+            <div className="rounded-xl bg-[#141414] p-4 border border-[#2a2a2a] text-xs shadow-[inset_1px_1px_0_#202020]">
+              <div className="font-bold text-white mb-1 font-mono uppercase tracking-wider">Equipment Care Protocol:</div>
+              <p className="text-[#bec9c2] leading-relaxed">
                 {resource.instructions} Return with battery charged. Mutual Redis OTP generated upon return handoff.
               </p>
             </div>
@@ -230,22 +232,22 @@ export default function ResourceDetailPage({ params }: PageProps) {
 
         {/* Right Column: Booking Widget (Responsive Sticky on Desktop) */}
         <div className="lg:col-span-5 space-y-6">
-          <div className="lg:sticky lg:top-20 relative top-0 rounded-3xl border-2 border-slate-900 bg-white p-4 sm:p-6 shadow-xl space-y-5">
+          <div className="lg:sticky lg:top-20 relative top-0 rounded-2xl border-2 border-[#2a2a2a] bg-[#1c1b1b] p-4 sm:p-6 shadow-[0_8px_0_0_#0f0f0f] space-y-5">
             {/* Header: Price & Security Deposit */}
-            <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+            <div className="flex items-center justify-between border-b border-[#2a2a2a] pb-4">
               <div>
-                <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#89938d]">
                   Daily Rental Rate
                 </div>
-                <div className="text-2xl font-black text-slate-900">
+                <div className="text-2xl font-bold text-white font-pixel tracking-wide">
                   {formatPrice(resource.pricePerDay)}
                 </div>
               </div>
               <div className="text-right">
-                <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#89938d]">
                   Refundable Deposit
                 </div>
-                <div className="text-sm font-bold text-emerald-800">
+                <div className="text-sm font-bold text-[#8bd6b6] font-mono">
                   ₹{resource.deposit} (Held in Escrow)
                 </div>
               </div>
@@ -253,57 +255,57 @@ export default function ResourceDetailPage({ params }: PageProps) {
 
             {/* Fulfillment Mode: Delivery vs Pickup */}
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+              <label className="block text-xs font-bold uppercase tracking-wider text-[#89938d] mb-2 font-mono">
                 Handoff Fulfillment Mode
               </label>
               <div className="grid grid-cols-2 gap-2 text-xs font-bold">
                 <button
                   type="button"
                   onClick={() => setFulfillmentMode("courier")}
-                  className={`flex items-center justify-center gap-1.5 p-3 rounded-xl border transition-all ${
+                  className={`flex items-center justify-center gap-1.5 p-3 rounded-xl border-2 transition-all cursor-pointer uppercase tracking-wider font-mono ${
                     fulfillmentMode === "courier"
-                      ? "border-emerald-600 bg-emerald-50 text-emerald-900"
-                      : "border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100"
+                      ? "border-[#8bd6b6] bg-[#065f46]/40 text-white shadow-[0_2px_0_0_#003828]"
+                      : "border-[#2a2a2a] bg-[#141414] text-[#89938d] hover:text-[#e5e2e1]"
                   }`}
                 >
                   <Truck className="h-4 w-4" />
-                  <span>Cargo Courier (+₹40)</span>
+                  <span>Courier (+₹40)</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setFulfillmentMode("pickup")}
-                  className={`flex items-center justify-center gap-1.5 p-3 rounded-xl border transition-all ${
+                  className={`flex items-center justify-center gap-1.5 p-3 rounded-xl border-2 transition-all cursor-pointer uppercase tracking-wider font-mono ${
                     fulfillmentMode === "pickup"
-                      ? "border-emerald-600 bg-emerald-50 text-emerald-900"
-                      : "border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100"
+                      ? "border-[#8bd6b6] bg-[#065f46]/40 text-white shadow-[0_2px_0_0_#003828]"
+                      : "border-[#2a2a2a] bg-[#141414] text-[#89938d] hover:text-[#e5e2e1]"
                   }`}
                 >
                   <MapPin className="h-4 w-4" />
-                  <span>Direct Peer Pickup (₹0)</span>
+                  <span>Peer Pickup (₹0)</span>
                 </button>
               </div>
             </div>
 
             {/* Duration Selector */}
             <div>
-              <div className="flex justify-between text-xs font-bold text-slate-700 mb-1.5">
+              <div className="flex justify-between text-xs font-bold text-[#bec9c2] mb-1.5 font-mono">
                 <span>Rental Duration</span>
                 <span>{days} {days === 1 ? "day" : "days"}</span>
               </div>
-              <div className="flex items-center gap-3 rounded-xl border border-slate-200 p-2 bg-slate-50">
+              <div className="flex items-center gap-3 rounded-xl border border-[#2a2a2a] p-2 bg-[#141414] shadow-[inset_1px_1px_0_#202020]">
                 <button
                   onClick={() => setDays(Math.max(1, days - 1))}
-                  className="flex h-8 w-8 items-center justify-center rounded-lg bg-white border border-slate-200 font-bold"
+                  className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#201f1f] border border-[#353534] font-bold text-white hover:bg-[#2a2a2a] cursor-pointer"
                 >
                   -
                 </button>
-                <div className="flex-1 text-center font-black text-sm">
+                <div className="flex-1 text-center font-black text-sm text-white font-mono">
                   {days} Days
                 </div>
                 <button
                   onClick={() => setDays(Math.min(14, days + 1))}
-                  className="flex h-8 w-8 items-center justify-center rounded-lg bg-white border border-slate-200 font-bold"
+                  className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#201f1f] border border-[#353534] font-bold text-white hover:bg-[#2a2a2a] cursor-pointer"
                 >
                   +
                 </button>
@@ -311,33 +313,33 @@ export default function ResourceDetailPage({ params }: PageProps) {
             </div>
 
             {/* Escrow Breakdown Box */}
-            <div className="rounded-2xl bg-slate-50 p-4 space-y-2 text-xs border border-slate-200">
-              <div className="flex justify-between text-slate-600">
+            <div className="rounded-xl bg-[#141414] p-4 space-y-2 text-xs border border-[#2a2a2a] shadow-[inset_1px_1px_0_#202020]">
+              <div className="flex justify-between text-[#89938d]">
                 <span>Rental Fee (₹{rate} &times; {days}d)</span>
-                <span className="font-semibold text-slate-800">₹{subtotal}</span>
+                <span className="font-semibold text-white font-mono">₹{subtotal}</span>
               </div>
-              <div className="flex justify-between text-slate-600">
+              <div className="flex justify-between text-[#89938d]">
                 <span>Refundable Deposit (Escrow lock)</span>
-                <span className="font-semibold text-slate-800">₹{deposit}</span>
+                <span className="font-semibold text-white font-mono">₹{deposit}</span>
               </div>
               {fulfillmentMode === "courier" && (
-                <div className="flex justify-between text-slate-600">
+                <div className="flex justify-between text-[#89938d]">
                   <span>Hyperlocal Cargo Bike Courier</span>
-                  <span className="font-semibold text-slate-800">₹40</span>
+                  <span className="font-semibold text-white font-mono">₹40</span>
                 </div>
               )}
-              <div className="border-t border-slate-200 pt-2 flex justify-between font-black text-slate-900 text-sm">
-                <span>Total Escrow Hold</span>
-                <span className="text-emerald-800">₹{totalEscrow}</span>
+              <div className="border-t border-[#2a2a2a] pt-2 flex justify-between font-black text-sm">
+                <span className="text-white font-['Silkscreen']">Total Escrow Hold</span>
+                <span className="text-[#8bd6b6] font-mono">₹{totalEscrow}</span>
               </div>
-              <div className="text-[10px] text-slate-400">
+              <div className="text-[10px] text-[#89938d]">
                 * Deposit automatically unlocks upon verified return OTP handoff.
               </div>
             </div>
 
             {/* OWNER CARD (SCREEN 6) */}
-            <div className="rounded-2xl bg-slate-50 p-3.5 border border-slate-200">
-              <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">
+            <div className="rounded-xl bg-[#141414] p-3.5 border border-[#2a2a2a] shadow-[inset_1px_1px_0_#202020]">
+              <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#89938d] mb-2">
                 Equipment Owner
               </div>
               <div className="flex items-center justify-between">
@@ -345,19 +347,19 @@ export default function ResourceDetailPage({ params }: PageProps) {
                   <img
                     src={owner.avatar}
                     alt={owner.name}
-                    className="h-10 w-10 rounded-full object-cover ring-2 ring-emerald-500/20"
+                    className="h-10 w-10 rounded-xl object-cover ring-2 ring-[#065f46]/40 border border-[#2a2a2a]"
                   />
                   <div>
-                    <div className="font-bold text-xs text-slate-900">{owner.name}</div>
-                    <div className="text-[10px] text-emerald-800 font-bold">
+                    <div className="font-bold text-xs text-white">{owner.name}</div>
+                    <div className="text-[10px] text-[#8bd6b6] font-bold font-mono">
                       Established Trust ★ {owner.trustScore} (12 reviews)
                     </div>
                   </div>
                 </div>
 
-                <div className="flex gap-1 text-[10px] font-bold text-emerald-800">
-                  <span className="rounded bg-white px-1.5 py-0.5 border border-slate-200">✓ ID</span>
-                  <span className="rounded bg-white px-1.5 py-0.5 border border-slate-200">✓ Phone</span>
+                <div className="flex gap-1 text-[10px] font-bold text-[#8bd6b6] font-mono">
+                  <span className="rounded bg-[#0e0e0e] px-1.5 py-0.5 border border-[#2a2a2a]">✓ ID</span>
+                  <span className="rounded bg-[#0e0e0e] px-1.5 py-0.5 border border-[#2a2a2a]">✓ Phone</span>
                 </div>
               </div>
             </div>
@@ -366,7 +368,7 @@ export default function ResourceDetailPage({ params }: PageProps) {
             {isMine ? (
               <Link
                 href="/dashboard?tab=listings"
-                className="w-full block text-center rounded-2xl bg-emerald-50 border border-emerald-300 py-3.5 text-sm font-bold text-emerald-900 shadow-sm hover:bg-emerald-100 transition-all"
+                className="w-full block text-center rounded-xl bg-[#065f46]/30 border-2 border-[#065f46] py-3.5 text-xs sm:text-sm font-bold text-[#8bd6b6] uppercase tracking-wider font-['Silkscreen'] hover:bg-[#065f46]/50 transition-all"
               >
                 You Own This Equipment (Manage Listing)
               </Link>
@@ -379,7 +381,7 @@ export default function ResourceDetailPage({ params }: PageProps) {
                   }
                   setIsBookingOpen(true);
                 }}
-                className="w-full rounded-2xl bg-emerald-800 hover:bg-emerald-900 py-3.5 text-sm font-bold text-white shadow-md active:scale-95 transition-all"
+                className="w-full rounded-xl bg-[#065f46] hover:bg-[#047857] py-3.5 text-xs sm:text-sm font-bold text-white uppercase tracking-wider font-['Silkscreen'] border-2 border-[#047857] shadow-[0_4px_0_0_#003828] active:translate-y-1 active:shadow-none transition-all cursor-pointer"
               >
                 Request Booking
               </button>

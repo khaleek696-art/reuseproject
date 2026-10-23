@@ -37,23 +37,23 @@ export function ImpactBar() {
 
   return (
     <div className="w-full">
-      <div className="rounded-3xl border border-slate-900/[0.08] bg-white p-6 sm:p-8 shadow-xs">
+      <div className="rounded-none border-2 border-[#2a2a2a] bg-[#1c1b1b] p-6 sm:p-8 shadow-[0_6px_0_0_#0f0f0f]">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <div>
-            <div className="inline-flex items-center gap-2 text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200/80 mb-2">
-              <span className="flex h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            <div className="inline-flex items-center gap-2 text-[10px] font-['Silkscreen'] uppercase tracking-wider text-[#8bd6b6] bg-[#065f46]/30 px-3 py-1 rounded-none border border-[#8bd6b6]/30 mb-2">
+              <span className="flex h-1.5 w-1.5 rounded-none bg-[#8bd6b6] animate-pulse" />
               <span>Real-Time Community Ledger</span>
             </div>
-            <h3 className="text-xl sm:text-2xl font-black text-slate-950 tracking-tight">
+            <h3 className="text-lg sm:text-xl font-bold font-pixel uppercase tracking-wider text-white">
               Measurable Climate &amp; Pocket Impact
             </h3>
           </div>
 
           <Link
             href="/dashboard?tab=impact"
-            className="flex items-center gap-1 text-xs font-bold text-slate-900 hover:text-emerald-700 self-start sm:self-auto"
+            className="flex items-center gap-1.5 text-xs font-['Silkscreen'] uppercase tracking-wider text-[#8bd6b6] hover:text-white transition-colors self-start sm:self-auto"
           >
-            <span>View Personal Impact &amp; Badges</span>
+            <span>Personal Impact</span>
             <ArrowUpRight className="h-3.5 w-3.5" />
           </Link>
         </div>
@@ -64,23 +64,23 @@ export function ImpactBar() {
             return (
               <div
                 key={idx}
-                className="card-hover-lift rounded-2xl bg-slate-50/70 p-5 border border-slate-200/70 shadow-2xs hover:bg-white hover:border-slate-300 transition-all"
+                className="rounded-none bg-[#141414] p-5 border-2 border-[#2a2a2a] shadow-[0_4px_0_0_#0f0f0f] hover:border-[#8bd6b6] transition-all"
               >
                 <div className="flex items-center justify-between mb-3">
-                  <span className={`inline-flex rounded-xl p-2 border ${stat.accent}`}>
+                  <span className="inline-flex rounded-none p-2 bg-[#0e0e0e] border border-[#2a2a2a] text-[#8bd6b6]">
                     <Icon className="h-4 w-4" />
                   </span>
-                  <span className="text-[10px] font-mono text-slate-400 font-semibold">
-                    #LiveMetric
+                  <span className="text-[9px] font-['Silkscreen'] text-[#89938d] uppercase">
+                    #Live
                   </span>
                 </div>
-                <div className="text-2xl sm:text-3xl font-black text-slate-950 tracking-tight">
+                <div className="text-xl sm:text-2xl font-pixel font-bold text-white tracking-wider">
                   {stat.value}
                 </div>
-                <div className="text-xs font-bold text-slate-800 mt-1">
+                <div className="text-xs font-mono font-bold text-[#8bd6b6] mt-2">
                   {stat.label}
                 </div>
-                <div className="text-[11px] text-slate-400 mt-0.5">
+                <div className="text-[10px] text-[#89938d] font-mono mt-0.5">
                   {stat.subtext}
                 </div>
               </div>

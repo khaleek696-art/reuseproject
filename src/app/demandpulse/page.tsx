@@ -263,7 +263,7 @@ export default function DemandPulsePage() {
                 </div>
                 <div>
                   <div className="flex flex-wrap items-center gap-2.5">
-                    <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight font-heading">
+                    <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white tracking-wider font-pixel uppercase">
                       DemandPulse
                     </h1>
                     <span className="inline-flex items-center gap-1.5 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#065f46]/30 text-[#8bd6b6] border border-[#065f46]/60">
@@ -452,7 +452,7 @@ export default function DemandPulsePage() {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div>
                 <div className="flex items-center gap-2">
-                  <h2 className="text-lg sm:text-xl font-black text-white flex items-center gap-2 tracking-tight font-heading">
+                  <h2 className="text-base sm:text-lg font-bold text-white flex items-center gap-2 font-pixel tracking-wider uppercase">
                     <Clock className="h-5 w-5 text-[#8bd6b6]" />
                     <span>24-Hour Rental Velocity Curve</span>
                   </h2>
@@ -621,7 +621,7 @@ export default function DemandPulsePage() {
             <div className="lg:col-span-2 rounded-3xl border border-[#2a2a2a] bg-[#1c1b1b] p-5 sm:p-7 shadow-xl space-y-6">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                  <h3 className="text-lg sm:text-xl font-black text-white flex items-center gap-2 tracking-tight font-heading">
+                  <h3 className="text-base sm:text-lg font-bold text-white flex items-center gap-2 font-pixel tracking-wider uppercase">
                     <Layers className="h-5 w-5 text-[#8bd6b6]" />
                     <span>Category Demand vs. Available Supply Matrix</span>
                   </h3>
@@ -743,7 +743,7 @@ export default function DemandPulsePage() {
               {/* Geospatial Hotspots */}
               <div className="rounded-3xl border border-[#2a2a2a] bg-[#1c1b1b] p-5 sm:p-7 shadow-xl space-y-5">
                 <div>
-                  <h3 className="text-lg sm:text-xl font-black text-white flex items-center gap-2 tracking-tight font-heading">
+                  <h3 className="text-base sm:text-lg font-bold text-white flex items-center gap-2 font-pixel tracking-wider uppercase">
                     <MapPin className="h-5 w-5 text-[#8bd6b6]" />
                     <span>Geospatial Hotspots</span>
                   </h3>
@@ -792,7 +792,7 @@ export default function DemandPulsePage() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Radio className="h-4 w-4 text-[#8bd6b6] animate-pulse" />
-                    <h4 className="text-sm font-black text-white uppercase tracking-wider font-heading">
+                    <h4 className="text-sm font-bold text-white uppercase tracking-wider font-pixel">
                       Live Telemetry Stream
                     </h4>
                   </div>

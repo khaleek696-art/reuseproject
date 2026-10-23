@@ -113,67 +113,67 @@ export function ReturnOtpRefundModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/75 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="relative w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl border border-slate-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
+      <div className="relative w-full max-w-md rounded-none bg-[#1c1b1b] p-6 shadow-[0_8px_0_0_#0f0f0f] border-2 border-[#2a2a2a]">
         {/* Close button */}
         <button
           onClick={handleResetAndClose}
-          className="absolute top-4 right-4 rounded-full p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+          className="absolute top-4 right-4 rounded-none p-2 bg-[#141414] border border-[#2a2a2a] text-[#bec9c2] hover:text-white hover:border-[#8bd6b6] transition-colors cursor-pointer"
         >
-          <X className="h-5 w-5" />
+          <X className="h-4 w-4" />
         </button>
 
         {!isSuccess ? (
           <div>
             {/* Header */}
             <div className="flex items-center gap-2 mb-2">
-              <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-100 text-emerald-800">
+              <span className="flex h-8 w-8 items-center justify-center rounded-none bg-[#065f46] border border-[#047857] text-[#8bd6b6]">
                 <RotateCcw className="h-4 w-4" />
               </span>
-              <span className="text-xs font-black uppercase tracking-wider text-emerald-800">
-                Razorpay Instant Escrow Refund
+              <span className="text-[10px] font-['Silkscreen'] uppercase tracking-wider text-[#8bd6b6]">
+                Razorpay Escrow Refund
               </span>
             </div>
 
-            <h3 className="text-xl font-black text-slate-900 tracking-tight">
-              Verify Item Return &amp; Release Deposit
+            <h3 className="text-base font-['Silkscreen'] uppercase tracking-wider text-white">
+              Verify Return &amp; Release Deposit
             </h3>
-            <p className="text-xs text-slate-500 mt-1">
-              Enter the 6-digit Return OTP provided by borrower <span className="font-bold text-slate-800">{borrowerName}</span> to instantly release <span className="font-bold text-emerald-700">₹{depositAmount}</span> back to their UPI account.
+            <p className="text-xs text-[#bec9c2] font-mono mt-1">
+              Enter the 6-digit Return OTP provided by borrower <span className="font-bold text-white">{borrowerName}</span> to instantly release <span className="font-bold text-[#8bd6b6]">₹{depositAmount}</span> back to their UPI account.
             </p>
 
             {/* Error Message */}
             {errorMessage && (
-              <div className="mt-3 rounded-xl bg-red-50 p-3 text-xs font-bold text-red-800 border border-red-200 flex items-center gap-2">
-                <AlertCircle className="h-4 w-4 text-red-600 shrink-0" />
+              <div className="mt-3 rounded-none bg-[#2a0808] p-3 text-xs font-mono font-bold text-red-300 border-2 border-red-800 flex items-center gap-2">
+                <AlertCircle className="h-4 w-4 text-red-400 shrink-0" />
                 <span>{errorMessage}</span>
               </div>
             )}
 
             {/* Item Card */}
-            <div className="mt-4 rounded-2xl bg-slate-50 p-3.5 border border-slate-200 flex items-center justify-between text-xs">
+            <div className="mt-4 rounded-none bg-[#141414] p-3.5 border-2 border-[#2a2a2a] flex items-center justify-between text-xs font-mono">
               <div>
-                <span className="text-[10px] text-slate-400 font-bold uppercase block">Rental Item</span>
-                <span className="font-bold text-slate-900 truncate block max-w-[200px]">{itemTitle}</span>
+                <span className="text-[9px] text-[#89938d] font-['Silkscreen'] uppercase block">Rental Item</span>
+                <span className="font-bold text-white truncate block max-w-[200px]">{itemTitle}</span>
               </div>
               <div className="text-right">
-                <span className="text-[10px] text-slate-400 font-bold uppercase block">Refund Deposit</span>
-                <span className="font-black text-emerald-700 text-sm">₹{depositAmount}</span>
+                <span className="text-[9px] text-[#89938d] font-['Silkscreen'] uppercase block">Refund Deposit</span>
+                <span className="font-['Silkscreen'] text-[#8bd6b6] text-sm">₹{depositAmount}</span>
               </div>
             </div>
 
             {/* 6 OTP Boxes */}
             <div className="my-5">
               <div className="flex items-center justify-between mb-2">
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700">
+                <label className="block text-[10px] font-['Silkscreen'] uppercase tracking-wider text-[#bec9c2]">
                   6-Digit Return Verification OTP
                 </label>
                 <button
                   type="button"
                   onClick={handleAutoFillOtp}
-                  className="text-[10px] font-bold text-emerald-700 hover:underline"
+                  className="text-[10px] font-mono text-[#8bd6b6] font-bold hover:underline cursor-pointer"
                 >
-                  + Auto-fill Return OTP (849201)
+                  + Auto-fill OTP (849201)
                 </button>
               </div>
 
@@ -193,31 +193,31 @@ export function ReturnOtpRefundModal({
                         document.getElementById(`return-otp-${i + 1}`)?.focus();
                       }
                     }}
-                    className="h-12 w-11 text-center text-xl font-mono font-black rounded-xl border border-slate-300 bg-slate-50 text-slate-900 focus:border-emerald-600 focus:bg-white focus:outline-none shadow-xs"
+                    className="h-12 w-11 text-center text-xl font-['Silkscreen'] rounded-none border-2 border-[#2a2a2a] bg-[#0e0e0e] text-[#8bd6b6] focus:border-[#8bd6b6] focus:outline-none"
                   />
                 ))}
               </div>
             </div>
 
             {/* Verification Checklist */}
-            <div className="rounded-2xl bg-slate-50 p-3.5 border border-slate-200 space-y-2 mb-5 text-xs">
+            <div className="rounded-none bg-[#141414] p-3.5 border-2 border-[#2a2a2a] space-y-2 mb-5 text-xs font-mono">
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={checkedItems.condition}
                   onChange={(e) => setCheckedItems((p) => ({ ...p, condition: e.target.checked }))}
-                  className="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 h-4 w-4"
+                  className="rounded-none border-[#2a2a2a] accent-[#065f46] h-4 w-4"
                 />
-                <span className="font-semibold text-slate-800">Equipment inspected &amp; in original condition</span>
+                <span className="text-[#bec9c2]">Equipment inspected &amp; in original condition</span>
               </label>
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={checkedItems.accessories}
                   onChange={(e) => setCheckedItems((p) => ({ ...p, accessories: e.target.checked }))}
-                  className="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 h-4 w-4"
+                  className="rounded-none border-[#2a2a2a] accent-[#065f46] h-4 w-4"
                 />
-                <span className="font-semibold text-slate-800">All accessories, cables &amp; bag returned</span>
+                <span className="text-[#bec9c2]">All accessories, cables &amp; bag returned</span>
               </label>
             </div>
 
@@ -226,17 +226,17 @@ export function ReturnOtpRefundModal({
               type="button"
               onClick={handleExecuteRefund}
               disabled={isRefunding}
-              className="w-full flex items-center justify-center gap-2 rounded-2xl bg-emerald-800 hover:bg-emerald-900 py-3.5 text-xs font-bold text-white shadow-md active:scale-95 transition-all disabled:opacity-50"
+              className="w-full flex items-center justify-center gap-2 rounded-none bg-[#065f46] border-2 border-[#047857] shadow-[0_4px_0_0_#003828] hover:bg-[#047857] py-3.5 text-xs font-['Silkscreen'] uppercase tracking-wider text-white active:translate-y-1 active:shadow-none transition-all disabled:opacity-50 cursor-pointer"
             >
               {isRefunding ? (
                 <>
-                  <Sparkles className="h-4 w-4 text-emerald-300 animate-spin" />
-                  <span>Processing Razorpay Refund...</span>
+                  <Sparkles className="h-4 w-4 text-[#8bd6b6] animate-spin" />
+                  <span>Processing Refund...</span>
                 </>
               ) : (
                 <>
-                  <Zap className="h-4 w-4 text-emerald-300" />
-                  <span>Verify OTP &amp; Refund ₹{depositAmount} Deposit</span>
+                  <Zap className="h-4 w-4 text-[#8bd6b6]" />
+                  <span>Verify OTP &amp; Refund ₹{depositAmount}</span>
                 </>
               )}
             </button>
@@ -244,41 +244,41 @@ export function ReturnOtpRefundModal({
         ) : (
           /* SUCCESS SCREEN */
           <div className="text-center py-4 animate-in zoom-in-95 duration-200">
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl bg-emerald-100 text-emerald-700 mb-3 animate-bounce">
-              <CheckCircle2 className="h-9 w-9" />
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-none bg-[#065f46]/30 text-[#8bd6b6] border-2 border-[#8bd6b6] shadow-[0_4px_0_0_#003828] mb-3">
+              <CheckCircle2 className="h-8 w-8 text-[#8bd6b6]" />
             </div>
 
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-black text-emerald-900 border border-emerald-300 mb-2">
-              <ShieldCheck className="h-4 w-4 text-emerald-700" />
+            <span className="inline-flex items-center gap-1.5 rounded-none bg-[#065f46]/30 px-3 py-1 text-[10px] font-['Silkscreen'] uppercase tracking-wider text-[#8bd6b6] border border-[#8bd6b6]/40 mb-2">
+              <ShieldCheck className="h-4 w-4 text-[#8bd6b6]" />
               <span>Refund Completed &bull; {refundTxnId}</span>
             </span>
 
-            <h3 className="text-xl font-black text-slate-900 tracking-tight">
+            <h3 className="text-base font-['Silkscreen'] uppercase tracking-wider text-white">
               Deposit ₹{depositAmount} Refund Released!
             </h3>
-            <p className="mt-1 text-xs text-slate-500 max-w-xs mx-auto">
-              Security Deposit of ₹{depositAmount} was instantly credited back to borrower <span className="font-bold text-slate-800">{borrowerName}</span> via Razorpay UPI Instant Refund.
+            <p className="mt-1 text-xs text-[#bec9c2] font-mono max-w-xs mx-auto">
+              Security Deposit of ₹{depositAmount} was instantly credited back to borrower <span className="font-bold text-white">{borrowerName}</span> via Razorpay UPI Instant Refund.
             </p>
 
             {/* Receipt Summary Card */}
-            <div className="mt-5 rounded-2xl bg-slate-950 p-4 text-white text-left space-y-2 text-xs border border-slate-800">
-              <div className="flex justify-between border-b border-slate-800 pb-2">
-                <span className="text-slate-400">Refund Amount</span>
-                <span className="font-mono font-black text-emerald-400 text-sm">₹{depositAmount}.00</span>
+            <div className="mt-5 rounded-none bg-[#141414] p-4 text-white text-left space-y-2 text-xs border-2 border-[#2a2a2a] font-mono">
+              <div className="flex justify-between border-b border-[#2a2a2a] pb-2">
+                <span className="text-[#89938d]">Refund Amount</span>
+                <span className="font-['Silkscreen'] text-[#8bd6b6] text-sm">₹{depositAmount}.00</span>
               </div>
-              <div className="flex justify-between border-b border-slate-800 pb-2">
-                <span className="text-slate-400">Borrower UPI ID</span>
-                <span className="font-mono font-bold text-slate-200">student@okaxis</span>
+              <div className="flex justify-between border-b border-[#2a2a2a] pb-2">
+                <span className="text-[#89938d]">Borrower UPI ID</span>
+                <span className="font-mono font-bold text-white">student@okaxis</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-400">Escrow Vault Status</span>
-                <span className="font-bold text-emerald-300">RELEASED &amp; CLOSED 🟢</span>
+                <span className="text-[#89938d]">Escrow Vault Status</span>
+                <span className="font-['Silkscreen'] text-xs text-[#8bd6b6]">RELEASED &amp; CLOSED 🟢</span>
               </div>
             </div>
 
             <button
               onClick={handleResetAndClose}
-              className="mt-5 w-full rounded-2xl bg-emerald-800 hover:bg-emerald-900 py-3.5 text-xs font-bold text-white shadow-md transition-all"
+              className="mt-5 w-full rounded-none bg-[#065f46] border-2 border-[#047857] shadow-[0_4px_0_0_#003828] hover:bg-[#047857] py-3.5 text-xs font-['Silkscreen'] uppercase tracking-wider text-white active:translate-y-1 active:shadow-none transition-all cursor-pointer"
             >
               Done &amp; Finalize Booking
             </button>

@@ -43,7 +43,6 @@ export function Navbar({ onOpenShareModal }: NavbarProps) {
     openAuthModal,
     closeAuthModal,
     authModalMode,
-    isBackendConnected,
   } = useRole();
 
   const [roleDropdownOpen, setRoleDropdownOpen] = useState(false);
@@ -139,33 +138,20 @@ export function Navbar({ onOpenShareModal }: NavbarProps) {
         {/* Main Header Bar */}
         <div className="h-16 max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
           
-          {/* Brand Logo & Backend Status Badge */}
-          <div className="flex items-center gap-3 shrink-0">
-            <Link href="/" className="flex items-center gap-2.5 group">
-              {/* Voxel Grass/Dirt Block Icon */}
-              <div className="w-8 h-8 rounded-none border border-[#2d5f00] relative overflow-hidden flex flex-col shadow-[inset_1px_1px_0_#94db5e,inset_-1px_-1px_0_#183800] bg-[#60452F]">
-                <div className="h-4 w-full bg-[#65A832] relative flex">
-                  <div className="absolute bottom-0 left-1 w-1.5 h-1.5 bg-[#4A7A23]"></div>
-                  <div className="absolute bottom-[-2px] left-3 w-1.5 h-1.5 bg-[#65A832]"></div>
-                  <div className="absolute bottom-[-1px] left-5 w-1.5 h-1.5 bg-[#4A7A23]"></div>
-                </div>
-                <div className="h-4 w-full bg-[#60452F] relative">
-                  <div className="absolute top-1 left-2 w-1 h-1 bg-[#3f2b1d]"></div>
-                  <div className="absolute top-2 left-5 w-1 h-1 bg-[#805a3e]"></div>
-                </div>
-              </div>
-              <span className="font-['Silkscreen'] text-lg font-bold tracking-wider text-[#65A832] group-hover:text-[#8bd6b6] transition-colors">
-                RE:USE
-              </span>
+          {/* Brand Logo */}
+          <div className="flex items-center shrink-0">
+            <Link
+              href="/"
+              className="flex items-center group transition-transform duration-200 hover:scale-[1.03] active:scale-95"
+              title="RE:USE — Hyperlocal Resource Sharing"
+            >
+              <img
+                src="/logo.png"
+                alt="RE:USE"
+                className="h-10 sm:h-11 md:h-12 w-auto object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]"
+                loading="eager"
+              />
             </Link>
-
-            {/* FastAPI Backend Connection Live Badge */}
-            {isBackendConnected && (
-              <span className="hidden xl:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#201f1f] border border-[#047857] text-[#8bd6b6] font-mono text-[10px] tracking-wider uppercase shadow-[inset_1px_1px_0_#0a0a0a]">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#8bd6b6] animate-pulse"></span>
-                FastAPI Live
-              </span>
-            )}
           </div>
 
           {/* Desktop Navigation Links — Clean, Non-wrapping, High Contrast */}

@@ -234,37 +234,37 @@ export function InteractiveMap({
 
       {/* 6. SELECTED RESOURCE PREVIEW DRAWER (BOTTOM ITEM CARD) */}
       {selectedRes && (
-        <div className="absolute bottom-4 left-4 right-4 z-40 mx-auto max-w-2xl rounded-3xl bg-white/95 backdrop-blur-md p-4 shadow-2xl border border-slate-200 animate-in slide-in-from-bottom-4">
+        <div className="absolute bottom-4 left-4 right-4 z-40 mx-auto max-w-2xl rounded-none bg-[#1c1b1b]/95 backdrop-blur-md p-4 shadow-[0_8px_0_0_#0f0f0f] border-2 border-[#2a2a2a] animate-in slide-in-from-bottom-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center gap-3.5">
               <img
                 src={selectedRes.photos && selectedRes.photos[0] ? selectedRes.photos[0] : "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=500&auto=format&fit=crop&q=80"}
                 alt={selectedRes.title || "Resource"}
-                className="h-16 w-16 rounded-2xl object-cover border border-slate-200 shrink-0"
+                className="h-16 w-16 rounded-none object-cover border-2 border-[#2a2a2a] shrink-0 bg-[#141414]"
               />
 
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-extrabold text-emerald-900 uppercase tracking-wider border border-emerald-300">
+                  <span className="rounded-none bg-[#065f46]/30 px-2 py-0.5 text-[9px] font-['Silkscreen'] uppercase tracking-wider text-[#8bd6b6] border border-[#8bd6b6]/30">
                     {selectedRes.category}
                   </span>
-                  <span className="text-xs font-bold text-slate-500">
-                    {haversine(userLat, userLng, selectedRes.location.lat, selectedRes.location.lng).toFixed(1)} km walking distance
+                  <span className="text-xs font-mono text-[#89938d]">
+                    {haversine(userLat, userLng, selectedRes.location.lat, selectedRes.location.lng).toFixed(1)} km distance
                   </span>
                 </div>
 
-                <h4 className="text-sm font-black text-slate-900 line-clamp-1 mt-0.5">
+                <h4 className="text-xs sm:text-sm font-['Silkscreen'] uppercase tracking-wider text-white line-clamp-1 mt-1">
                   {selectedRes.title}
                 </h4>
 
-                <div className="flex items-center gap-2 text-xs text-slate-500 mt-0.5">
-                  <span className="font-extrabold text-slate-900 text-sm">
-                    ₹{selectedRes.pricePerDay} <span className="text-[10px] font-normal text-slate-500">/day</span>
+                <div className="flex items-center gap-2 text-xs font-mono text-[#bec9c2] mt-1">
+                  <span className="font-['Silkscreen'] text-[#8bd6b6] text-xs">
+                    ₹{selectedRes.pricePerDay} <span className="text-[10px] text-[#89938d]">/day</span>
                   </span>
                   <span>&bull;</span>
-                  <span className="flex items-center gap-1 font-bold text-slate-700">
-                    <Star className="h-3 w-3 text-amber-500 fill-amber-500" />
-                    4.9 PeerTrust
+                  <span className="flex items-center gap-1 font-bold text-amber-400">
+                    <Star className="h-3 w-3 text-amber-400 fill-amber-400" />
+                    4.9 Trust
                   </span>
                 </div>
               </div>
@@ -274,15 +274,15 @@ export function InteractiveMap({
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setIsChatOpen(true)}
-                className="flex items-center gap-1.5 rounded-xl border border-emerald-300 bg-emerald-50 px-3.5 py-2 text-xs font-bold text-emerald-900 hover:bg-emerald-100 transition-colors shadow-xs"
+                className="flex items-center gap-1.5 rounded-none border-2 border-[#2a2a2a] bg-[#141414] px-3.5 py-2 text-xs font-['Silkscreen'] uppercase tracking-wider text-[#bec9c2] hover:text-white hover:border-[#8bd6b6] transition-colors cursor-pointer"
               >
-                <MessageSquare className="h-4 w-4 text-emerald-700" />
-                <span>Chat Owner</span>
+                <MessageSquare className="h-4 w-4 text-[#8bd6b6]" />
+                <span>Chat</span>
               </button>
 
               <button
                 onClick={() => setIsBookingOpen(true)}
-                className="flex items-center gap-1.5 rounded-xl bg-emerald-800 hover:bg-emerald-900 px-4 py-2 text-xs font-bold text-white shadow-md active:scale-95 transition-all"
+                className="flex items-center gap-1.5 rounded-none bg-[#065f46] border-2 border-[#047857] shadow-[0_3px_0_0_#003828] hover:bg-[#047857] px-4 py-2 text-xs font-['Silkscreen'] uppercase tracking-wider text-white active:translate-y-0.5 transition-all cursor-pointer"
               >
                 <span>Book Item</span>
                 <ArrowRight className="h-4 w-4" />

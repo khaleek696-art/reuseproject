@@ -170,7 +170,7 @@ export function DigiLockerModal({
                 <ShieldCheck className="h-3.5 w-3.5" />
                 <span>Zero-Fraud Campus Trust Protocol</span>
               </span>
-              <h2 className="text-xl font-black text-white tracking-tight">
+              <h2 className="text-base sm:text-lg font-bold text-white font-pixel tracking-wider uppercase">
                 Authorize RE:USE with DigiLocker
               </h2>
               <p className="text-xs text-slate-400 mt-1 leading-relaxed">

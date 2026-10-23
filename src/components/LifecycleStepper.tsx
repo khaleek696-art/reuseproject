@@ -96,3 +96,4 @@ export function LifecycleStepper() {
     </div>
   );
 }
+// RE:USE — Modular Circular Economy Architecture

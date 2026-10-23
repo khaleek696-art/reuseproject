@@ -92,3 +92,4 @@ export function HowItWorks() {
     </div>
   );
 }
+// RE:USE — Modular Circular Economy Architecture

@@ -31,3 +31,4 @@ export default function RootLayout({
     </html>
   );
 }
+// RE:USE — Modular Circular Economy Architecture

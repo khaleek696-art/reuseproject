@@ -236,3 +236,4 @@ async def create_resource(
     # Also keep in SEED_RESOURCES for RAM fallback
     SEED_RESOURCES.insert(0, res_dict)
     return res_dict
+# RE:USE — Modular Circular Economy Architecture

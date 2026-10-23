@@ -91,3 +91,4 @@ export function ImpactBar() {
     </div>
   );
 }
+// RE:USE — Modular Circular Economy Architecture

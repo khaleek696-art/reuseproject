@@ -80,3 +80,4 @@ async def upload_file_to_s3_or_local(
     local_url = f"/static/uploads/{unique_filename}"
     logger.info(f"💾 File saved locally: {local_url}")
     return True, local_url, "local"
+# RE:USE — Modular Circular Economy Architecture

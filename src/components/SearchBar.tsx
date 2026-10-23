@@ -95,3 +95,4 @@ export function SearchBar({
     </div>
   );
 }
+// RE:USE — Modular Circular Economy Architecture

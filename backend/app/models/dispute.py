@@ -15,3 +15,4 @@ class Dispute(Base):
     status = Column(String(30), default="OPEN")  # OPEN, RESOLVED_REFUND, RESOLVED_RELEASE
     admin_notes = Column(Text, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
+# RE:USE — Modular Circular Economy Architecture

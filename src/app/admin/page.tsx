@@ -353,3 +353,4 @@ export default function AdminPage() {
     </div>
   );
 }
+// RE:USE — Modular Circular Economy Architecture

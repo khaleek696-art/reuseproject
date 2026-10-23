@@ -117,3 +117,4 @@ export function SystemFallbackBanner() {
     </div>
   );
 }
+// RE:USE — Modular Circular Economy Architecture

@@ -117,3 +117,4 @@ export function formatDate(timestamp: string): string {
 export function cn(...inputs: (string | boolean | undefined | null)[]): string {
   return inputs.filter(Boolean).join(" ");
 }
+// RE:USE — Modular Circular Economy Architecture

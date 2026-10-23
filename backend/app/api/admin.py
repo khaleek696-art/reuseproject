@@ -30,3 +30,4 @@ async def resolve_dispute(dispute_id: str, action: str):
         "action": action,
         "message": f"Dispute {dispute_id} resolved with action '{action}'. Escrow updated."
     }
+# RE:USE — Modular Circular Economy Architecture

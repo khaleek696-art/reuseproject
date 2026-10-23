@@ -17,3 +17,4 @@ const eslintConfig = defineConfig([
 ]);
 
 export default eslintConfig;
+// RE:USE — Modular Circular Economy Architecture

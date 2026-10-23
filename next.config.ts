@@ -6,3 +6,4 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
+// RE:USE — Modular Circular Economy Architecture

@@ -185,3 +185,4 @@ python-multipart>=0.0.6
 * **Environment:** Python 3.10+
 * **Build Command:** `pip install -r backend/requirements.txt`
 * **Start Command:** `cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+<!-- RE:USE — Modular Circular Economy Architecture -->

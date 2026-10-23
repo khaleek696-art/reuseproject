@@ -661,3 +661,4 @@ export default function DashboardPage() {
     </Suspense>
   );
 }
+// RE:USE — Modular Circular Economy Architecture

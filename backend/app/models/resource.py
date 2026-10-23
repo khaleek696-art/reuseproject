@@ -26,3 +26,4 @@ class Resource(Base):
     allow_delivery = Column(Boolean, default=True)
     is_available = Column(Boolean, default=True)
     created_at = Column(DateTime, default=datetime.utcnow)
+# RE:USE — Modular Circular Economy Architecture

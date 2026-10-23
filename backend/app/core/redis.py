@@ -55,3 +55,4 @@ class RedisManager:
         self._memory_cache.pop(key, None)
 
 redis_manager = RedisManager()
+# RE:USE — Modular Circular Economy Architecture

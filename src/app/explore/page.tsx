@@ -407,3 +407,4 @@ export default function ExplorePage() {
     </Suspense>
   );
 }
+// RE:USE — Modular Circular Economy Architecture

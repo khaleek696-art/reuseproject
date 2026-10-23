@@ -315,3 +315,4 @@ export function AIChatDrawer() {
 
   return createPortal(content, document.body);
 }
+// RE:USE — Modular Circular Economy Architecture

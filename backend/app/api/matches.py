@@ -181,3 +181,4 @@ async def get_ai_matches(
 
     # Return top 6 items
     return scored_results[:6]
+# RE:USE — Modular Circular Economy Architecture

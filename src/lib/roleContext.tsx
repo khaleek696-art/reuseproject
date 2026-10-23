@@ -671,3 +671,4 @@ export function useRole() {
   }
   return context;
 }
+// RE:USE — Modular Circular Economy Architecture

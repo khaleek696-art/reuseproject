@@ -141,3 +141,4 @@ export function RentalAgreementModal({
     </div>
   );
 }
+// RE:USE — Modular Circular Economy Architecture

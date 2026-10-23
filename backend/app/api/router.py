@@ -27,3 +27,4 @@ api_router.include_router(ai_router)
 api_router.include_router(admin_router)
 api_router.include_router(trust_router)
 api_router.include_router(analytics_router)
+# RE:USE — Modular Circular Economy Architecture

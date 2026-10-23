@@ -208,3 +208,4 @@ export function MatchCard({ match, rank, onRequestBorrow }: MatchCardProps) {
     </div>
   );
 }
+// RE:USE — Modular Circular Economy Architecture

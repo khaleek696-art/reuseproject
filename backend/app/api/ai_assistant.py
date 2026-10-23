@@ -105,3 +105,4 @@ async def chat_with_groq_ai(req: AIChatRequest):
             "reply": fallback_reply,
             "model_used": "groq-fallback",
         }
+# RE:USE — Modular Circular Economy Architecture

@@ -996,3 +996,4 @@ export function BookingModal({
     </div>
   );
 }
+// RE:USE — Modular Circular Economy Architecture

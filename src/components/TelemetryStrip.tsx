@@ -60,3 +60,4 @@ export function TelemetryStrip() {
     </div>
   );
 }
+// RE:USE — Modular Circular Economy Architecture

@@ -262,3 +262,4 @@ npm run build
 ## 📄 License & Attribution
 
 Crafted for sustainable campus communities and circular economy initiatives. Built with ❤️ for zero single-use waste.
+<!-- RE:USE — Modular Circular Economy Architecture -->

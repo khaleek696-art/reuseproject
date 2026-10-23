@@ -72,3 +72,4 @@ async def websocket_chat_endpoint(websocket: WebSocket, booking_id: str):
 
     except WebSocketDisconnect:
         manager.disconnect(booking_id, websocket)
+# RE:USE — Modular Circular Economy Architecture

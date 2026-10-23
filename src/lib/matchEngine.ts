@@ -195,3 +195,4 @@ export function getTopMatches(
   // STEP 4: RANK & RETURN
   return scoredMatches.sort((a, b) => b.factors.finalScore - a.factors.finalScore);
 }
+// RE:USE — Modular Circular Economy Architecture

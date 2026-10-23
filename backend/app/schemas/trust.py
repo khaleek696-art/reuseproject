@@ -60,3 +60,4 @@ class AdminTrustDiagnostic(BaseModel):
     top_counterparty_share: float
     graph_edge_count: int
     details: dict
+# RE:USE — Modular Circular Economy Architecture

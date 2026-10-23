@@ -55,3 +55,4 @@ class AIMatchResult(BaseModel):
     distanceScore: int
     trustScore: int
     aiRationale: str
+# RE:USE — Modular Circular Economy Architecture

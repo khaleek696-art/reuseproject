@@ -222,3 +222,4 @@ export function FilterSidebar({
     </div>
   );
 }
+// RE:USE — Modular Circular Economy Architecture

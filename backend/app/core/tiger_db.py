@@ -211,3 +211,4 @@ async def get_analytics_db() -> AsyncGenerator[AsyncSession, None]:
             raise
         finally:
             await session.close()
+# RE:USE — Modular Circular Economy Architecture

@@ -446,3 +446,4 @@ class DemandPulseEngine:
                 logger.info("Successfully seeded DemandPulse time-series events.")
         except Exception as e:
             logger.warning(f"Note on seeding time-series data: {e}")
+# RE:USE — Modular Circular Economy Architecture

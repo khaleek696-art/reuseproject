@@ -437,3 +437,4 @@ export default function ProfilePage() {
     </div>
   );
 }
+// RE:USE — Modular Circular Economy Architecture

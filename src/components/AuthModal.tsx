@@ -1017,3 +1017,4 @@ export function AuthModal({
     </div>
   );
 }
+// RE:USE — Modular Circular Economy Architecture

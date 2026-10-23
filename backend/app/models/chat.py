@@ -14,3 +14,4 @@ class ChatMessage(Base):
     recipient_id = Column(String(50), ForeignKey("users.id"), nullable=False)
     content = Column(Text, nullable=False)
     timestamp = Column(DateTime, default=datetime.utcnow)
+# RE:USE — Modular Circular Economy Architecture

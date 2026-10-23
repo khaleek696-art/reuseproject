@@ -104,3 +104,4 @@ def test_demandpulse_hourly_series_and_hotspots():
             assert "locality" in spots[0]
 
     asyncio.run(run())
+# RE:USE — Modular Circular Economy Architecture

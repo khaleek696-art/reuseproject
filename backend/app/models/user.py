@@ -31,3 +31,4 @@ class User(Base):
     trust_score = Column(Float, default=4.90)
     avatar_url = Column(String(255), nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
+# RE:USE — Modular Circular Economy Architecture

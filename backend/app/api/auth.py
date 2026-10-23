@@ -185,3 +185,4 @@ async def kyc_upload(file: UploadFile = File(...)):
         "doc_url": doc_url,
         "storage": storage_type
     }
+# RE:USE — Modular Circular Economy Architecture

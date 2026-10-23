@@ -341,3 +341,4 @@ async def get_user_reviews(
     stmt = select(Review).where(Review.reviewee_id == user_id).order_by(Review.created_at.desc())
     res = await db.execute(stmt)
     return res.scalars().all()
+# RE:USE — Modular Circular Economy Architecture

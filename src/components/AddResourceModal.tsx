@@ -701,3 +701,4 @@ export function AddResourceModal({
     </div>
   );
 }
+// RE:USE — Modular Circular Economy Architecture

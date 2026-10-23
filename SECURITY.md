@@ -819,3 +819,4 @@ For security vulnerability disclosures, incident notifications, or audit inquiri
 - **Security Team Contact:** security@reuse.marketplace
 - **Responsible Disclosure:** We welcome reports from security researchers. Please allow 48 hours for triage before coordinated public disclosure.
 - **PGP Fingerprint for Encrypted Disclosures:** `4A9F 88C2 12E0 55B1 E87D  7129 A41C 3B70 9E21 D04F`
+<!-- RE:USE — Modular Circular Economy Architecture -->

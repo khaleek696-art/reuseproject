@@ -31,3 +31,4 @@ EXPOSE 8000
 
 # Run with Gunicorn multi-worker Uvicorn workers for high concurrency (Never crash under high load)
 CMD ["gunicorn", "-k", "uvicorn.workers.UvicornWorker", "-w", "4", "-b", "0.0.0.0:8000", "app.main:app"]
+# RE:USE — Modular Circular Economy Architecture

@@ -94,3 +94,4 @@ Explain that all transactions feature 100% refundable security deposits held saf
     return NextResponse.json({ error: err.message || "Internal server error" }, { status: 500 });
   }
 }
+// RE:USE — Modular Circular Economy Architecture

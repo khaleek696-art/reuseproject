@@ -107,3 +107,4 @@ export interface ScoredMatch {
   owner: User;
   factors: MatchScoreFactors;
 }
+// RE:USE — Modular Circular Economy Architecture

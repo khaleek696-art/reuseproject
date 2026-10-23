@@ -1,3 +1,4 @@
 # RE:USE Hyperlocal Resource Sharing Platform
 User-agent: *
 Allow: /
+# RE:USE — Modular Circular Economy Architecture

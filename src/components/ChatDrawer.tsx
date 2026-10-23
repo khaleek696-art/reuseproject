@@ -417,3 +417,4 @@ export function ChatDrawer({
     </div>
   );
 }
+// RE:USE — Modular Circular Economy Architecture

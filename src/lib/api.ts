@@ -335,6 +335,4 @@ export async function fetchHotspotLocalities(): Promise<HotspotLocality[]> {
     return [];
   }
 }
-
-
-
+// RE:USE — Modular Circular Economy Architecture

@@ -1,6 +1,6 @@
 {
   "name": "reuseai",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "RE:USE - Hyperlocal Resource Sharing & Circular Marketplace",
   "private": true,
   "scripts": {

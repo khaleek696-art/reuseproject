@@ -31,3 +31,4 @@ class BookingResponse(BaseModel):
 
     class Config:
         from_attributes = True
+# RE:USE — Modular Circular Economy Architecture

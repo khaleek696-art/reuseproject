@@ -19,3 +19,4 @@ class Review(Base):
     comment = Column(Text, nullable=True)
     is_eligible = Column(Boolean, default=True)  # True if linked to clean completed rental without active dispute
     created_at = Column(DateTime, default=datetime.utcnow)
+# RE:USE — Modular Circular Economy Architecture

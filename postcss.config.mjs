@@ -6,3 +6,4 @@ const config = {
 };
 
 export default config;
+// RE:USE — Modular Circular Economy Architecture

@@ -164,3 +164,4 @@ async def refund_security_deposit(req: RefundDepositRequest):
         "refund_amount": req.refund_amount,
         "message": f"₹{req.refund_amount} Security Deposit refunded to student UPI account!"
     }
+# RE:USE — Modular Circular Economy Architecture

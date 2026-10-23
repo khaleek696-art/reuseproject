@@ -91,3 +91,4 @@ When generating, refactoring, or modifying code for this project, AI Agents MUST
 ### 6. Step-by-Step Thinking & Runtime Verification
 * Before implementing complex flows (like Escrow payment, AWS S3 upload, or AI matching), outline steps in code comments.
 * Always verify backend endpoints with runtime test commands (`curl`, pytest) before completing tasks.
+<!-- RE:USE — Modular Circular Economy Architecture -->

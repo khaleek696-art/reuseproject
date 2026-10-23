@@ -390,3 +390,4 @@ export function DigiLockerModal({
     </div>
   );
 }
+// RE:USE — Modular Circular Economy Architecture

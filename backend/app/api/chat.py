@@ -105,3 +105,4 @@ async def send_chat_message(booking_id: str, request: SendMessageRequest):
     })
 
     return new_msg
+# RE:USE — Modular Circular Economy Architecture

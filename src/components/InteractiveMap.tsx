@@ -314,3 +314,4 @@ export function InteractiveMap({
     </div>
   );
 }
+// RE:USE — Modular Circular Economy Architecture

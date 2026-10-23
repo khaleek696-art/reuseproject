@@ -56,3 +56,4 @@ if not settings.S3_BUCKET_NAME and settings.AWS_S3_BUCKET_NAME:
     settings.S3_BUCKET_NAME = settings.AWS_S3_BUCKET_NAME
 if not settings.AWS_S3_BUCKET_NAME and settings.S3_BUCKET_NAME:
     settings.AWS_S3_BUCKET_NAME = settings.S3_BUCKET_NAME
+# RE:USE — Modular Circular Economy Architecture

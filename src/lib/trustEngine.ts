@@ -139,3 +139,4 @@ export function computeTrustScore(
     explanation,
   };
 }
+// RE:USE — Modular Circular Economy Architecture

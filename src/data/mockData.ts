@@ -1028,3 +1028,4 @@ export const MOCK_REVIEWS: Review[] = [
     itemTitle: "Bosch Impact Drill",
   },
 ];
+// RE:USE — Modular Circular Economy Architecture

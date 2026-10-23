@@ -861,3 +861,4 @@ The RE:USE scalability architecture balances **lean startup economics today** wi
 * **Today (MVP):** $0/month infrastructure cost utilizing Netlify CDN, Render, and S3 free tiers handling 100 concurrent users.
 * **Scalable Primitives:** Built on non-blocking async Python, stateless Next.js 16 App Router, direct client-to-S3 asset streaming, and sub-100ms Groq LPU inference.
 * **Tomorrow (Scale):** Zero-downtime migration path to AWS ECS/EKS, RDS Multi-AZ, and PgBouncer supporting 100,000+ users, 500,000 listings, and 1,000,000 monthly circular economy bookings.
+<!-- RE:USE — Modular Circular Economy Architecture -->

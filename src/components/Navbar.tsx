@@ -495,3 +495,4 @@ export function Navbar({ onOpenShareModal }: NavbarProps) {
     </>
   );
 }
+// RE:USE — Modular Circular Economy Architecture

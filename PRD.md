@@ -200,3 +200,4 @@ When moving or rebuilding this repository in a new directory:
 3. **Frontend Install & Run:** `npm install` $\rightarrow$ `npm run dev`
 4. **Backend Install & Run:** `cd backend` $\rightarrow$ `pip install -r requirements.txt` $\rightarrow$ `uvicorn app.main:app --reload`
 5. **AI Agent Instruction:** Point your AI Assistant (Gemini / Antigravity) to `AGENTS.md` and `PRD.md`. The AI will automatically maintain full architecture integrity without introducing mock data bugs or broken imports.
+<!-- RE:USE — Modular Circular Economy Architecture -->

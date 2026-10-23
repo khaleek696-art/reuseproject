@@ -339,3 +339,4 @@ class TrustLensEngine:
                 "dispute_ids": [d.id for d in disputes]
             }
         )
+# RE:USE — Modular Circular Economy Architecture

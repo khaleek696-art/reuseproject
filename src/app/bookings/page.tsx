@@ -973,3 +973,4 @@ export default function BookingsPage() {
     </Suspense>
   );
 }
+// RE:USE — Modular Circular Economy Architecture

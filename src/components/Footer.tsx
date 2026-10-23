@@ -126,3 +126,4 @@ export function Footer() {
     </footer>
   );
 }
+// RE:USE — Modular Circular Economy Architecture

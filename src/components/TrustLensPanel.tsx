@@ -372,3 +372,4 @@ export function TrustLensPanel({ userId, userName = "Citizen" }: TrustLensPanelP
     </div>
   );
 }
+// RE:USE — Modular Circular Economy Architecture

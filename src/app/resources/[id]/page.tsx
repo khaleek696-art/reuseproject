@@ -431,3 +431,4 @@ export default function ResourceDetailPage({ params }: PageProps) {
     </div>
   );
 }
+// RE:USE — Modular Circular Economy Architecture

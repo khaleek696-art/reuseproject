@@ -235,3 +235,4 @@ async def send_real_email_otp(recipient_email: str, otp_code: str) -> bool:
     Non-blocking async wrapper that dispatches email sending to background thread.
     """
     return await asyncio.to_thread(send_smtp_email, recipient_email, otp_code)
+# RE:USE — Modular Circular Economy Architecture

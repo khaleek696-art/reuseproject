@@ -64,3 +64,4 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: err.message || "S3 Upload failed" }, { status: 500 });
   }
 }
+// RE:USE — Modular Circular Economy Architecture

@@ -34,3 +34,4 @@ class Booking(Base):
     return_otp = Column(String(6), default="918234")
     escrow_status = Column(String(30), default=EscrowStatus.HELD.value)
     created_at = Column(DateTime, default=datetime.utcnow)
+# RE:USE — Modular Circular Economy Architecture

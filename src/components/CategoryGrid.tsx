@@ -77,7 +77,7 @@ export function CategoryGrid({
                 <Icon className="h-5 w-5 sm:h-6 sm:w-6" />
               </div>
               <span
-                className={`text-xs font-bold font-headline-sm uppercase tracking-wider line-clamp-1 leading-snug ${
+                className={`text-[11px] sm:text-xs font-bold font-headline-sm uppercase tracking-wide leading-tight line-clamp-2 h-7 sm:h-8 flex items-center justify-center text-center ${
                   isSelected ? "text-white" : "text-[#e5e2e1]"
                 }`}
               >

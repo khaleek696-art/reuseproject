@@ -137,8 +137,9 @@ function ResourcesContent() {
 
   const openChatForRes = (res: Resource) => {
     const owner = MOCK_USERS.find((u) => u.id === res.ownerId);
+    const validName = res.ownerName && !res.ownerName.toLowerCase().includes("verified") ? res.ownerName : (owner?.name || "Rahul Sharma");
     setChatTarget({
-      name: owner?.name || "Equipment Owner",
+      name: validName,
       role: "Verified Resource Owner",
       title: res.title,
     });

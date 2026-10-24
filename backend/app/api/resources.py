@@ -40,8 +40,8 @@ async def upload_resource_image(file: UploadFile = File(...)):
 SEED_RESOURCES = [
     {
         "id": "r1",
-        "ownerId": "u_owner_rahul",
-        "ownerName": "Verified Owner",
+        "ownerId": "u1",
+        "ownerName": "Rahul Sharma",
         "title": "Sony Alpha 7 IV Mirrorless Camera",
         "category": "tech",
         "condition": "like_new",
@@ -60,8 +60,8 @@ SEED_RESOURCES = [
     },
     {
         "id": "r2",
-        "ownerId": "u_owner_rahul",
-        "ownerName": "Verified Owner",
+        "ownerId": "u11",
+        "ownerName": "Devendra Patil",
         "title": "DeWalt 20V Max Cordless Drill Kit",
         "category": "tools",
         "condition": "good",
@@ -80,8 +80,8 @@ SEED_RESOURCES = [
     },
     {
         "id": "r3",
-        "ownerId": "u_owner_rahul",
-        "ownerName": "Verified Owner",
+        "ownerId": "u6",
+        "ownerName": "Ananya Iyer",
         "title": "Bose SoundLink Revolve+ II Bluetooth Speaker",
         "category": "audio",
         "condition": "like_new",
@@ -96,6 +96,86 @@ SEED_RESOURCES = [
         "borrowerPolicy": "verified_id",
         "allowPickup": True,
         "allowDelivery": True,
+        "isAvailable": True
+    },
+    {
+        "id": "r4",
+        "ownerId": "u3",
+        "ownerName": "Amit Kulkarni",
+        "title": "Rode Wireless GO II Dual Wireless Microphone",
+        "category": "tech",
+        "condition": "like_new",
+        "description": "Broadcast-grade dual channel wireless microphone with on-board recording memory. Ideal for vlogging, interviews and podcasts.",
+        "dailyRate": 300,
+        "deposit": 800,
+        "neighborhood": "Media Center / Campus Lab",
+        "lat": 18.5210,
+        "lng": 73.8570,
+        "photos": ["https://images.unsplash.com/photo-1590602847861-f357a9332bbc?w=800&auto=format&fit=crop&q=80"],
+        "serialNumber": "RODE-WGO2-5519",
+        "borrowerPolicy": "verified_id",
+        "allowPickup": True,
+        "allowDelivery": True,
+        "isAvailable": True
+    },
+    {
+        "id": "r5",
+        "ownerId": "u4",
+        "ownerName": "Sneha Patel",
+        "title": "Apple MacBook Air M1 (16GB RAM, 512GB SSD)",
+        "category": "laptop",
+        "condition": "like_new",
+        "description": "Supercharged with M1 chip. Perfect for iOS/Flutter development, video editing, and coding hackathons.",
+        "dailyRate": 850,
+        "deposit": 2500,
+        "neighborhood": "Library Tech Hub",
+        "lat": 18.5215,
+        "lng": 73.8560,
+        "photos": ["https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=800&auto=format&fit=crop&q=80"],
+        "serialNumber": "APPLE-M1-88412",
+        "borrowerPolicy": "verified_id",
+        "allowPickup": True,
+        "allowDelivery": False,
+        "isAvailable": True
+    },
+    {
+        "id": "r6",
+        "ownerId": "u7",
+        "ownerName": "Vikram Joshi",
+        "title": "Epson Full HD Home & Presentation Projector",
+        "category": "projector",
+        "condition": "good",
+        "description": "3,300 lumens vivid color brightness, 1080p Full HD resolution with HDMI and wireless casting for movie nights and slide pitches.",
+        "dailyRate": 600,
+        "deposit": 1500,
+        "neighborhood": "Auditorium Annex",
+        "lat": 18.5225,
+        "lng": 73.8575,
+        "photos": ["https://images.unsplash.com/photo-1535016120720-40c646be5580?w=800&auto=format&fit=crop&q=80"],
+        "serialNumber": "EPSON-HD-2041",
+        "borrowerPolicy": "verified_id",
+        "allowPickup": True,
+        "allowDelivery": True,
+        "isAvailable": True
+    },
+    {
+        "id": "r7",
+        "ownerId": "u5",
+        "ownerName": "Rohan Deshmukh",
+        "title": "Quechua 4-Person Waterproof Camping Tent",
+        "category": "spaces",
+        "condition": "like_new",
+        "description": "Easy 2-minute pitch waterproof tent with blackout fabric and thermal insulation. Includes ground pegs and compact carry pouch.",
+        "dailyRate": 400,
+        "deposit": 1000,
+        "neighborhood": "Sports Complex South",
+        "lat": 18.5195,
+        "lng": 73.8545,
+        "photos": ["https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=800&auto=format&fit=crop&q=80"],
+        "serialNumber": "QUECHUA-TENT-4P",
+        "borrowerPolicy": "all",
+        "allowPickup": True,
+        "allowDelivery": False,
         "isAvailable": True
     }
 ]
@@ -135,11 +215,49 @@ async def get_resources(
 
         if db_items:
             res_list = []
+            owner_map = {
+                "u_khaleeq": "Khaleeq Ahmad",
+                "u1": "Rahul Sharma",
+                "u_owner_rahul": "Rahul Sharma",
+                "u2": "Priya Mehta",
+                "u3": "Amit Kulkarni",
+                "u4": "Sneha Patel",
+                "u5": "Rohan Deshmukh",
+                "u6": "Ananya Iyer",
+                "u7": "Vikram Joshi",
+                "u8": "Tanvi Rao",
+                "u9": "Aryan Verma",
+                "u10": "Neha Gupta",
+                "u11": "Devendra Patil",
+                "u12": "Meera Kadam",
+                "u_owner_active": "Khaleeq Ahmad",
+                "u_owner_global": "Rahul Sharma",
+            }
             for item in db_items:
+                matched_name = owner_map.get(item.owner_id)
+                if not matched_name:
+                    t = (item.title or "").lower()
+                    if "macbook" in t or "laptop" in t:
+                        matched_name = "Sneha Patel"
+                    elif "calculator" in t:
+                        matched_name = "Rahul Sharma"
+                    elif "drill" in t or "tool" in t:
+                        matched_name = "Devendra Patil"
+                    elif "tent" in t or "camp" in t:
+                        matched_name = "Rohan Deshmukh"
+                    elif "camera" in t:
+                        matched_name = "Rahul Sharma"
+                    elif "speaker" in t or "bose" in t or "mic" in t:
+                        matched_name = "Ananya Iyer"
+                    elif "projector" in t:
+                        matched_name = "Vikram Joshi"
+                    else:
+                        matched_name = "Rahul Sharma"
+
                 res_dict = {
                     "id": item.id,
                     "ownerId": item.owner_id,
-                    "ownerName": "Verified Owner",
+                    "ownerName": matched_name,
                     "title": item.title,
                     "category": item.category,
                     "condition": item.condition,
@@ -185,10 +303,11 @@ async def create_resource(
     """
     photos = new_res.photos if (new_res.photos and len(new_res.photos) > 0) else ["https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&auto=format&fit=crop&q=80"]
     res_id = f"r_{int(time.time())}"
+    res_owner_id = new_res.ownerId or "u_owner_rahul"
 
     res_dict = {
         "id": res_id,
-        "ownerId": "u_owner_rahul",
+        "ownerId": res_owner_id,
         "ownerName": new_res.ownerName or "Verified Owner",
         "title": new_res.title,
         "category": new_res.category,
@@ -211,7 +330,7 @@ async def create_resource(
     try:
         db_item = ResourceModel(
             id=res_id,
-            owner_id="u_owner_rahul",
+            owner_id=res_owner_id,
             title=new_res.title,
             category=new_res.category,
             condition=new_res.condition,

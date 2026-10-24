@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import Link from "next/link";
 import {
   MapPin,
@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { Resource, User } from "@/lib/types";
 import { formatDistance, formatPrice, haversine } from "@/lib/utils";
-import { MOCK_USERS } from "@/data/mockData";
+import { MOCK_USERS, MOCK_RESOURCES } from "@/data/mockData";
 import { useRole } from "@/lib/roleContext";
 
 interface ResourceCardProps {
@@ -48,23 +48,82 @@ export function ResourceCard({
 
   const isMine =
     Boolean(currentUser) &&
-    (resource.ownerId === currentUser.id ||
-      resource.ownerId === currentUser.name ||
-      propOwner?.id === currentUser.id ||
-      propOwner?.name === currentUser.name ||
-      (currentUser.id !== "u_khaleeq" && resource.id.startsWith("r_")));
+    Boolean(currentUser.id) &&
+    (
+      (Boolean(resource.ownerId) && (resource.ownerId === currentUser.id || resource.ownerId === currentUser.name)) ||
+      (Boolean(propOwner?.id) && (propOwner?.id === currentUser.id || propOwner?.name === currentUser.name))
+    );
 
-  const owner = isMine
-    ? {
+  const owner = useMemo(() => {
+    if (isMine) {
+      return {
         id: currentUser.id,
         name: currentUser.name,
-        avatar: currentUser.avatar,
+        avatar: currentUser.avatar || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80",
         trustScore: currentUser.trustScore || 4.9,
         isVerified: true,
-      }
-    : propOwner ||
-      MOCK_USERS.find((u) => u.id === resource.ownerId) ||
-      MOCK_USERS[0];
+      };
+    }
+    if (propOwner) return propOwner;
+
+    // 1. Direct ID match in MOCK_USERS
+    const foundUser = MOCK_USERS.find(
+      (u) => u.id === resource.ownerId || u.name === resource.ownerId
+    );
+    if (foundUser) return foundUser;
+
+    // 2. Check if resource.ownerName is a valid real person's name
+    const rawName = (resource.ownerName || "").trim();
+    const isPlaceholder =
+      !rawName ||
+      rawName.toLowerCase().includes("verified") ||
+      rawName.toLowerCase().includes("campus lender") ||
+      rawName.toLowerCase().includes("owner");
+
+    if (!isPlaceholder) {
+      return {
+        id: resource.ownerId || "u_owner_custom",
+        name: rawName,
+        avatar: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=150&auto=format&fit=crop&q=80",
+        trustScore: 4.8,
+        isVerified: true,
+      };
+    }
+
+    // 3. Match from MOCK_RESOURCES by resource.id
+    const mockRes = MOCK_RESOURCES.find((m) => m.id === resource.id);
+    if (mockRes) {
+      const mockOwner = MOCK_USERS.find((u) => u.id === mockRes.ownerId);
+      if (mockOwner) return mockOwner;
+    }
+
+    // 4. Deterministic mapping based on equipment title / category
+    const title = (resource.title || "").toLowerCase();
+    if (title.includes("macbook") || title.includes("laptop")) {
+      return MOCK_USERS.find((u) => u.id === "u4") || MOCK_USERS[4]; // Sneha Patel
+    }
+    if (title.includes("calculator") || title.includes("casio")) {
+      return MOCK_USERS.find((u) => u.id === "u1") || MOCK_USERS[1]; // Rahul Sharma
+    }
+    if (title.includes("tent") || title.includes("camp") || title.includes("outdoor")) {
+      return MOCK_USERS.find((u) => u.id === "u5") || MOCK_USERS[5]; // Rohan Deshmukh
+    }
+    if (title.includes("drill") || title.includes("tool")) {
+      return MOCK_USERS.find((u) => u.id === "u11") || MOCK_USERS[11]; // Devendra Patil
+    }
+    if (title.includes("camera") || title.includes("dslr") || title.includes("lens") || title.includes("sony") || title.includes("canon")) {
+      return MOCK_USERS.find((u) => u.id === "u1") || MOCK_USERS[1]; // Rahul Sharma
+    }
+    if (title.includes("speaker") || title.includes("bose") || title.includes("mic") || title.includes("audio") || title.includes("acoustic")) {
+      return MOCK_USERS.find((u) => u.id === "u6") || MOCK_USERS[6]; // Ananya Iyer
+    }
+    if (title.includes("projector") || title.includes("epson")) {
+      return MOCK_USERS.find((u) => u.id === "u7") || MOCK_USERS[7]; // Vikram Joshi
+    }
+
+    // 5. Default fallback to Rahul Sharma
+    return MOCK_USERS.find((u) => u.id === "u1") || MOCK_USERS[1];
+  }, [isMine, currentUser, propOwner, resource]);
 
   const distance = haversine(
     userCoords.lat,
@@ -214,8 +273,11 @@ export function ResourceCard({
                 </span>
               )}
             </div>
-            <span className="text-xs font-semibold text-[#bec9c2] line-clamp-1">
-              {owner.name.split(" ")[0]}
+            <span
+              className="text-xs font-semibold text-[#bec9c2] truncate max-w-[100px] sm:max-w-[125px]"
+              title={owner.name}
+            >
+              {owner.name}
             </span>
             <div className="flex items-center gap-0.5 rounded bg-[#2a2004] px-1.5 py-0.5 text-[10px] font-bold text-[#fbbf24] border border-[#4a3505]">
               <Star className="h-2.5 w-2.5 fill-[#fbbf24] text-[#fbbf24]" />

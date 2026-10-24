@@ -47,14 +47,13 @@ function DashboardContent() {
         (r) =>
           r.ownerId === "u_khaleeq" ||
           r.ownerId === "u1" ||
-          r.id.startsWith("r_")
+          (Boolean(contextUser.name) && r.ownerId === contextUser.name)
       );
     }
     return resources.filter(
       (r) =>
-        r.ownerId === contextUser.id ||
-        r.ownerId === contextUser.name ||
-        r.id.startsWith(`r_${contextUser.id}`)
+        (Boolean(contextUser.id) && r.ownerId === contextUser.id) ||
+        (Boolean(contextUser.name) && r.ownerId === contextUser.name)
     );
   }, [resources, contextUser]);
 

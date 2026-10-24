@@ -281,7 +281,7 @@ export function AuthModal({
         neighborhood: locationLabel,
         verifiedPhone: true,
         verifiedEmail: true,
-        verifiedGovId: true,
+        verifiedGovId: false,
         trustTier: "not_established",
         trustScore: 3.0,
         totalTransactions: 0,

@@ -15,7 +15,8 @@ class ResourceCreate(BaseModel):
     lat: float = 18.5204
     lng: float = 73.8567
     photos: Optional[List[str]] = None
-    ownerName: Optional[str] = "Verified Owner"
+    ownerId: Optional[str] = None
+    ownerName: Optional[str] = "Rahul Sharma"
     serialNumber: Optional[str] = None
     borrowerPolicy: Optional[str] = "verified_id"
     allowPickup: bool = True
@@ -24,7 +25,7 @@ class ResourceCreate(BaseModel):
 class ResourceResponse(BaseModel):
     id: str
     ownerId: str
-    ownerName: Optional[str] = "Verified Owner"
+    ownerName: Optional[str] = "Rahul Sharma"
     title: str
     category: str
     condition: str

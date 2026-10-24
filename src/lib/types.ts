@@ -47,6 +47,7 @@ export interface Review {
 export interface Resource {
   id: string;
   ownerId: string;
+  ownerName?: string;
   title: string;
   category: CategoryId;
   condition: Condition;

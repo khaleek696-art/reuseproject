@@ -37,6 +37,8 @@ import {
   ArrowUpRight,
   Tag,
   CheckCheck,
+  PackageSearch,
+  Package,
 } from "lucide-react";
 import { MOCK_RESOURCES, MOCK_USERS } from "@/data/mockData";
 import { Resource } from "@/lib/types";
@@ -53,19 +55,43 @@ const STOP_WORDS = new Set([
   "campus", "college", "good", "best", "and", "or", "some", "item", "gear", "equipment",
   // Hinglish colloquialisms
   "chahiye", "mujhe", "mera", "meri", "kya", "hai", "ho", "hoga", "din", "ke", "liye",
-  "se", "me", "mein", "par", "pe", "koi", "bhi", "accha", "sasta", "batao", "dikhao"
+  "se", "me", "mein", "par", "pe", "koi", "bhi", "accha", "sasta", "batao", "dikhao",
+  "rent", "borrow", "bhai", "karo", "do", "ka", "ki", "ek", "kuch"
 ]);
 
-const CATEGORY_MAP: Record<string, string[]> = {
-  tech: ["camera", "dslr", "sony", "canon", "nikon", "lens", "photo", "cinema", "gopro", "vlog", "tripod", "mic", "microphone", "audio", "speaker", "sound", "headphone"],
-  tools: ["drill", "tool", "hardware", "dewalt", "bosch", "hammer", "wrench", "screwdriver", "saw", "plier", "repair", "driver"],
-  spaces: ["tent", "camping", "camp", "outdoor", "sleeping", "bag", "bonfire", "trek", "backpack"],
-  projector: ["projector", "screen", "display", "monitor", "beamer", "movie"],
-  laptop: ["laptop", "macbook", "computer", "pc", "ipad", "tablet", "notebook"],
-  books: ["book", "notes", "textbook", "study", "engineering", "novel"],
-  transport: ["cycle", "bike", "scooter", "bicycle"],
-  food: ["fryer", "oven", "grill", "pot", "kitchen", "blender"],
+// Core Item Taxonomies - Defines what item a user is specifically looking for
+const ITEM_TAXONOMY: Record<string, string[]> = {
+  mic: ["mic", "microphone", "podcast", "rode", "boya", "audio recorder"],
+  camera: ["camera", "dslr", "mirrorless", "gopro", "action cam", "cam", "canon", "nikon", "sony a", "lumix", "cinema"],
+  drone: ["drone", "mavic", "quadcopter", "aerial", "dji"],
+  lens: ["lens", "zoom", "prime"],
+  lighting: ["ring light", "softbox", "led light", "lighting"],
+  gimbal: ["gimbal", "stabilizer", "osmo", "ronin"],
+  laptop: ["laptop", "macbook", "notebook", "thinkpad", "dell xps", "pc", "computer"],
+  projector: ["projector", "beamer", "presentation screen"],
+  tools: ["drill", "impact driver", "cordless drill", "dewalt 20v", "bosch drill", "toolkit", "hammer", "wrench", "screwdriver", "multimeter", "soldering"],
+  spaces: ["tent", "camping", "sleeping bag", "quechua"],
+  transport: ["cycle", "bicycle", "mountain bike", "scooter", "kickscooter", "segway"],
+  food: ["cooker", "instant pot", "air fryer", "fryer", "blender", "grill", "oven"],
+  books: ["book", "textbook", "clrs", "ddia", "algorithms"],
+  speaker: ["speaker", "soundlink", "bose", "bluetooth speaker"]
 };
+
+// Context/Use-case words that describe usage, NOT the item itself (prevents false cross-matching)
+const CONTEXT_WORDS = new Set([
+  "video", "shoot", "shoots", "filming", "movie", "night", "diy", "hostel", "room", 
+  "fest", "event", "trip", "travel", "weekend", "kit", "set", "pack", "professional", 
+  "portable", "mini", "smart", "heavy", "high", "duty", "outdoor", "indoor", "quality", "hackathon"
+]);
+
+function matchesWord(text: string, term: string): boolean {
+  try {
+    const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    return new RegExp(`\\b${escaped}\\b`, "i").test(text);
+  } catch {
+    return text.toLowerCase().includes(term.toLowerCase());
+  }
+}
 
 const DEFAULT_IMAGE_FALLBACK = "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&auto=format&fit=crop&q=80";
 
@@ -124,11 +150,11 @@ function MatchesContent() {
       budget = parseInt(budgetMatch[1], 10);
     }
 
-    // Detected category intent
-    let targetCategory: string | null = null;
-    for (const [cat, words] of Object.entries(CATEGORY_MAP)) {
-      if (words.some((w) => text.includes(w))) {
-        targetCategory = cat;
+    // Detected item intent using word boundary match
+    let targetItemType: string | null = null;
+    for (const [itemType, words] of Object.entries(ITEM_TAXONOMY)) {
+      if (words.some((w) => matchesWord(text, w))) {
+        targetItemType = itemType;
         break;
       }
     }
@@ -139,14 +165,14 @@ function MatchesContent() {
       .split(/\s+/)
       .filter((k) => k.length > 1 && !STOP_WORDS.has(k) && !/^\d+$/.test(k));
 
-    return { budget, targetCategory, keywords: cleanTokens };
+    return { budget, targetItemType, keywords: cleanTokens };
   }, [prompt]);
 
   // 2. Intelligent Scoring Across Active Live Resources
   const { topMatch, otherMatches, hasDirectMatches } = useMemo(() => {
     const userLat = 18.5204;
     const userLng = 73.8567;
-    const { budget, targetCategory, keywords } = parsedAIIntent;
+    const { budget, targetItemType, keywords } = parsedAIIntent;
 
     const scoredList = activeResources.map((resource) => {
       const owner = MOCK_USERS.find((u) => u.id === resource.ownerId) || {
@@ -160,33 +186,61 @@ function MatchesContent() {
       const descLower = (resource.description || "").toLowerCase();
       const catLower = (resource.category || "").toLowerCase();
       const featuresLower = (resource.features || []).map((f) => f.toLowerCase()).join(" ");
+      const combinedText = `${titleLower} ${descLower} ${catLower} ${featuresLower}`;
 
-      let matchScore = 0;
-      const matchedTerms: string[] = [];
-
-      // A. Keyword matching
-      keywords.forEach((kw) => {
-        if (titleLower.includes(kw)) {
-          matchScore += 45;
-          matchedTerms.push(kw);
-        } else if (catLower.includes(kw)) {
-          matchScore += 30;
-          matchedTerms.push(kw);
-        } else if (descLower.includes(kw) || featuresLower.includes(kw)) {
-          matchScore += 18;
-          matchedTerms.push(kw);
+      // Identify what item type this resource represents
+      let resourceItemType: string | null = null;
+      for (const [itemType, syns] of Object.entries(ITEM_TAXONOMY)) {
+        if (syns.some((w) => matchesWord(titleLower, w))) {
+          resourceItemType = itemType;
+          break;
         }
-      });
-
-      // B. Category match
-      if (targetCategory && (catLower.includes(targetCategory) || targetCategory.includes(catLower))) {
-        matchScore += 35;
-        if (!matchedTerms.includes(targetCategory)) {
-          matchedTerms.push(targetCategory);
+      }
+      if (!resourceItemType) {
+        for (const [itemType, syns] of Object.entries(ITEM_TAXONOMY)) {
+          if (syns.some((w) => matchesWord(combinedText, w))) {
+            resourceItemType = itemType;
+            break;
+          }
         }
       }
 
-      // C. Budget score
+      let matchScore = 0;
+      const matchedTerms: string[] = [];
+      let isDirectMatch = false;
+
+      // STRICT PRIMARY ITEM CHECK:
+      if (targetItemType) {
+        // User asked for a specific item (e.g. mic, camera, drill, tent)
+        // If resource is not of that type, it CANNOT be a direct match!
+        if (resourceItemType === targetItemType) {
+          isDirectMatch = true;
+          matchScore += 60;
+          matchedTerms.push(targetItemType);
+
+          // Add extra score for matching individual keywords
+          keywords.forEach((kw) => {
+            if (matchesWord(combinedText, kw)) {
+              matchScore += 25;
+              if (!matchedTerms.includes(kw)) matchedTerms.push(kw);
+            }
+          });
+        } else {
+          isDirectMatch = false;
+        }
+      } else {
+        // User typed a custom/generic keyword (e.g. guitar, umbrella, ps5, etc.)
+        // Only match if keyword is directly in resource title!
+        keywords.forEach((kw) => {
+          if (kw.length >= 3 && !CONTEXT_WORDS.has(kw) && matchesWord(titleLower, kw)) {
+            isDirectMatch = true;
+            matchScore += 50;
+            matchedTerms.push(kw);
+          }
+        });
+      }
+
+      // Budget score
       const isUnderBudget = resource.pricePerDay <= budget;
       if (isUnderBudget) {
         matchScore += 20;
@@ -194,7 +248,7 @@ function MatchesContent() {
         matchScore -= 10;
       }
 
-      // D. Spatial distance (Hyperlocal Campus Distance Fix)
+      // Spatial distance (Hyperlocal Campus Distance Fix)
       // When coordinates are cross-city mock values, normalize to realistic walking distance on campus (0.3 - 2.2 km)
       let rawDistance = haversine(userLat, userLng, resource.location.lat, resource.location.lng);
       let campusDistanceKm = rawDistance;
@@ -206,14 +260,10 @@ function MatchesContent() {
       if (campusDistanceKm <= 1.0) matchScore += 15;
       else if (campusDistanceKm <= 3.0) matchScore += 8;
 
-      const isDirectMatch = matchedTerms.length > 0;
-
       // Realistic score: 75% to 98% for direct match
-      let finalScore = 45;
+      let finalScore = 0;
       if (isDirectMatch) {
-        finalScore = Math.min(98, Math.max(76, Math.round(55 + matchScore * 0.4)));
-      } else {
-        finalScore = Math.max(30, Math.min(60, Math.round(35 + (isUnderBudget ? 15 : 0))));
+        finalScore = Math.min(98, Math.max(76, Math.round(55 + matchScore * 0.3)));
       }
 
       return {
@@ -230,11 +280,10 @@ function MatchesContent() {
     const directMatches = scoredList.filter((item) => item.isDirectMatch);
     const hasMatches = directMatches.length > 0;
 
+    // Only return matching items! If no match, return empty array so "Not Listed" state is shown
     const sortedCandidates = hasMatches
       ? directMatches.sort((a, b) => b.finalScore - a.finalScore)
-      : scoredList
-          .sort((a, b) => (b.isUnderBudget ? 1 : 0) - (a.isUnderBudget ? 1 : 0) || a.distanceKm - b.distanceKm)
-          .slice(0, 4);
+      : [];
 
     return {
       topMatch: sortedCandidates[0] || null,
@@ -296,10 +345,6 @@ function MatchesContent() {
                   <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white tracking-wider font-pixel uppercase">
                     AI Semantic Matches &amp; Specs
                   </h1>
-                  <span className="inline-flex items-center gap-1.5 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#065f46]/30 text-[#8bd6b6] border border-[#065f46]/60">
-                    <Sparkles className="h-3 w-3 text-[#8bd6b6]" />
-                    <span>Groq Llama-3.3-70B Matcher</span>
-                  </span>
                 </div>
                 <p className="text-xs sm:text-sm text-[#9ca3af] mt-0.5">
                   Natural language requirement parsing &bull; Real-time budget, campus radius &amp; trust evaluation
@@ -340,33 +385,33 @@ function MatchesContent() {
               e.preventDefault();
               handleRunAISearch(prompt);
             }}
-            className="flex flex-col sm:flex-row items-center gap-3"
+            className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3"
           >
             <div className="relative flex-1 w-full">
-              <Search className="absolute left-4 top-3.5 h-4 w-4 text-[#9ca3af]" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#9ca3af]" />
               <input
                 type="text"
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
                 placeholder="Type naturally: 'I need a DSLR camera for college fest under ₹600'..."
-                className="w-full rounded-2xl border-2 border-[#2e2e2e] bg-[#141414] py-3.5 pl-11 pr-4 text-xs sm:text-sm font-semibold text-white placeholder-[#6b7280] focus:border-[#065f46] focus:bg-[#171717] focus:outline-none transition-all shadow-inner"
+                className="w-full h-12 rounded-xl border-2 border-[#2e2e2e] bg-[#141414] pl-11 pr-4 text-xs sm:text-sm font-medium text-white placeholder-[#6b7280] focus:border-[#10b981] focus:bg-[#161616] focus:outline-none transition-all shadow-inner"
               />
             </div>
 
             <button
               type="submit"
               disabled={isExtracting}
-              className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-2xl bg-[#065f46] hover:bg-[#047857] border-2 border-[#047857] px-7 py-3.5 text-xs font-extrabold text-white shadow-[0_4px_0_0_#003828] active:translate-y-1 active:shadow-none transition-all shrink-0 disabled:opacity-50 cursor-pointer"
+              className="h-12 w-full sm:w-auto px-6 flex items-center justify-center gap-2.5 rounded-xl bg-gradient-to-r from-[#065f46] to-[#047857] hover:from-[#047857] hover:to-[#059669] border-2 border-[#10b981]/50 hover:border-[#10b981] text-xs sm:text-sm font-bold text-white shadow-[0_2px_0_0_#003828] active:translate-y-0.5 active:shadow-none transition-all shrink-0 disabled:opacity-50 cursor-pointer"
             >
               {isExtracting ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin text-[#8bd6b6]" />
-                  <span>Parsing Semantics...</span>
+                  <span>Matching...</span>
                 </>
               ) : (
                 <>
                   <Zap className="h-4 w-4 text-[#8bd6b6]" />
-                  <span>AI Match Search</span>
+                  <span className="font-pixel tracking-wide">AI Match Search</span>
                 </>
               )}
             </button>
@@ -417,9 +462,9 @@ function MatchesContent() {
             <span className="inline-flex items-center gap-1 rounded-full bg-blue-500/15 px-3 py-0.5 text-xs font-bold text-[#38bdf8] border border-blue-500/30">
               <span>Budget &le; ₹{parsedAIIntent.budget}/day</span>
             </span>
-            {parsedAIIntent.targetCategory && (
+            {parsedAIIntent.targetItemType && (
               <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/15 px-3 py-0.5 text-xs font-bold text-[#fbbf24] border border-amber-500/30 uppercase">
-                <span>Category: {parsedAIIntent.targetCategory}</span>
+                <span>Item: {parsedAIIntent.targetItemType}</span>
               </span>
             )}
             <span className="inline-flex items-center gap-1 rounded-full bg-[#201f1f] px-3 py-0.5 text-xs font-bold text-[#bec9c2] border border-[#333333]">
@@ -429,18 +474,67 @@ function MatchesContent() {
         </div>
 
         {/* ======================================================== */}
-        {/* 4. HONEST NOTICE WHEN NO DIRECT MATCH EXISTS */}
+        {/* 4. NOT LISTED EMPTY STATE — WHEN ITEM IS NOT PRESENT */}
         {/* ======================================================== */}
         {!hasDirectMatches && (
-          <div className="rounded-3xl border-2 border-[#fbbf24]/40 bg-[#2a2004]/70 p-5 flex items-start gap-3.5 text-[#fbbf24] shadow-md">
-            <AlertCircle className="h-5 w-5 text-[#fbbf24] shrink-0 mt-0.5" />
-            <div className="space-y-1 text-xs sm:text-sm">
-              <h4 className="font-bold text-[#fbbf24]">
-                No exact listing matching &ldquo;{prompt}&rdquo; in current campus inventory
-              </h4>
-              <p className="text-[#fbbf24]/90 leading-relaxed text-xs">
-                We couldn&apos;t find an exact keyword match. Showing the highest-rated alternative equipment available in your campus hub below:
+          <div className="rounded-3xl border-2 border-[#2a2a2a] bg-[#181818] p-8 sm:p-12 text-center space-y-6 shadow-[0_6px_0_0_#0f0f0f] animate-in fade-in duration-200">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-500/10 border-2 border-amber-500/30 text-amber-400 shadow-inner">
+              <PackageSearch className="h-8 w-8 text-amber-400" />
+            </div>
+
+            <div className="max-w-xl mx-auto space-y-2">
+              <h3 className="text-xl sm:text-2xl font-bold text-white font-pixel tracking-wide uppercase">
+                Sorry, the item in the gear is not listed
+              </h3>
+              <p className="text-xs sm:text-sm text-[#9ca3af] leading-relaxed">
+                We searched our active campus catalog, but no equipment matching{" "}
+                <span className="text-[#8bd6b6] font-semibold">&ldquo;{prompt}&rdquo;</span> is currently available for rent.
               </p>
+            </div>
+
+            {/* Helpful Action Buttons */}
+            <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+              <Link
+                href="/needs"
+                className="flex items-center gap-2 rounded-xl bg-[#065f46] hover:bg-[#047857] border-2 border-[#10b981]/50 px-5 py-3 text-xs sm:text-sm font-bold text-white shadow-[0_3px_0_0_#003828] active:translate-y-0.5 transition-all"
+              >
+                <Sparkles className="h-4 w-4 text-[#8bd6b6]" />
+                <span>Post a Need on DemandPulse</span>
+              </Link>
+
+              <Link
+                href="/resources"
+                className="flex items-center gap-2 rounded-xl bg-[#222222] hover:bg-[#2a2a2a] border-2 border-[#333333] px-5 py-3 text-xs sm:text-sm font-bold text-white transition-all"
+              >
+                <Package className="h-4 w-4 text-[#8bd6b6]" />
+                <span>Browse All Available Gear</span>
+              </Link>
+            </div>
+
+            {/* Quick Suggestions */}
+            <div className="pt-4 border-t border-[#262626] max-w-lg mx-auto">
+              <span className="text-[11px] font-bold text-[#6b7280] uppercase tracking-wider block mb-2.5">
+                Popular items available in campus catalog:
+              </span>
+              <div className="flex flex-wrap justify-center gap-2">
+                {[
+                  "DSLR Camera under ₹600",
+                  "Apple MacBook Air M1",
+                  "Bosch Cordless Drill",
+                  "HD Projector & Screen",
+                  "Rode Wireless Mic",
+                  "Decathlon Mountain Bike"
+                ].map((gear) => (
+                  <button
+                    key={gear}
+                    type="button"
+                    onClick={() => handleRunAISearch(gear)}
+                    className="rounded-lg border border-[#333333] bg-[#141414] px-2.5 py-1 text-[11px] font-medium text-[#bec9c2] hover:border-[#10b981] hover:text-[#8bd6b6] transition-all cursor-pointer"
+                  >
+                    + {gear}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         )}

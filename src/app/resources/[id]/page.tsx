@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, use } from "react";
+import React, { useState, use, useMemo } from "react";
 import Link from "next/link";
 import {
   MapPin,
@@ -36,16 +36,18 @@ export default function ResourceDetailPage({ params }: PageProps) {
   const resource = resources.find((r) => r.id === id) || MOCK_RESOURCES.find((r) => r.id === id) || resources[0] || MOCK_RESOURCES[0];
   const isMine =
     Boolean(currentUser) &&
+    Boolean(currentUser.id) &&
+    Boolean(resource.ownerId) &&
     (resource.ownerId === currentUser.id ||
-      resource.ownerId === currentUser.name ||
-      (currentUser.id !== "u_khaleeq" && resource.id.startsWith("r_")));
+      resource.ownerId === currentUser.name);
 
-  const owner: User = isMine
-    ? {
+  const owner: User = useMemo(() => {
+    if (isMine) {
+      return {
         id: currentUser.id,
         name: currentUser.name,
         college: currentUser.neighborhood || "Campus Hub",
-        avatar: currentUser.avatar,
+        avatar: currentUser.avatar || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80",
         trustScore: currentUser.trustScore || 4.9,
         totalShares: 14,
         totalBorrows: 8,
@@ -54,8 +56,74 @@ export default function ResourceDetailPage({ params }: PageProps) {
         collegeVerified: true,
         disputesCount: 0,
         location: { lat: 18.5204, lng: 73.8567, campus: currentUser.neighborhood || "Campus Hub" },
-      }
-    : MOCK_USERS.find((u) => u.id === resource.ownerId) || MOCK_USERS[0];
+      };
+    }
+
+    // 1. Direct ID match in MOCK_USERS
+    const foundUser = MOCK_USERS.find(
+      (u) => u.id === resource.ownerId || u.name === resource.ownerId
+    );
+    if (foundUser) return foundUser;
+
+    // 2. Check if resource.ownerName is a valid real person's name
+    const rawName = (resource.ownerName || "").trim();
+    const isPlaceholder =
+      !rawName ||
+      rawName.toLowerCase().includes("verified") ||
+      rawName.toLowerCase().includes("campus lender") ||
+      rawName.toLowerCase().includes("owner");
+
+    if (!isPlaceholder) {
+      return {
+        id: resource.ownerId || "u_owner_custom",
+        name: rawName,
+        college: resource.location?.campus || "Campus Hub",
+        avatar: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=150&auto=format&fit=crop&q=80",
+        trustScore: 4.8,
+        totalShares: 12,
+        totalBorrows: 6,
+        isVerified: true,
+        phoneVerified: true,
+        collegeVerified: true,
+        disputesCount: 0,
+        location: resource.location || { lat: 18.5204, lng: 73.8567, campus: "Campus Hub" },
+      };
+    }
+
+    // 3. Match from MOCK_RESOURCES by resource.id
+    const mockRes = MOCK_RESOURCES.find((m) => m.id === resource.id);
+    if (mockRes) {
+      const mockOwner = MOCK_USERS.find((u) => u.id === mockRes.ownerId);
+      if (mockOwner) return mockOwner;
+    }
+
+    // 4. Deterministic mapping based on equipment title / category
+    const title = (resource.title || "").toLowerCase();
+    if (title.includes("macbook") || title.includes("laptop")) {
+      return MOCK_USERS.find((u) => u.id === "u4") || MOCK_USERS[4]; // Sneha Patel
+    }
+    if (title.includes("calculator") || title.includes("casio")) {
+      return MOCK_USERS.find((u) => u.id === "u1") || MOCK_USERS[1]; // Rahul Sharma
+    }
+    if (title.includes("tent") || title.includes("camp") || title.includes("outdoor")) {
+      return MOCK_USERS.find((u) => u.id === "u5") || MOCK_USERS[5]; // Rohan Deshmukh
+    }
+    if (title.includes("drill") || title.includes("tool")) {
+      return MOCK_USERS.find((u) => u.id === "u11") || MOCK_USERS[11]; // Devendra Patil
+    }
+    if (title.includes("camera") || title.includes("dslr") || title.includes("lens") || title.includes("sony") || title.includes("canon")) {
+      return MOCK_USERS.find((u) => u.id === "u1") || MOCK_USERS[1]; // Rahul Sharma
+    }
+    if (title.includes("speaker") || title.includes("bose") || title.includes("mic") || title.includes("audio") || title.includes("acoustic")) {
+      return MOCK_USERS.find((u) => u.id === "u6") || MOCK_USERS[6]; // Ananya Iyer
+    }
+    if (title.includes("projector") || title.includes("epson")) {
+      return MOCK_USERS.find((u) => u.id === "u7") || MOCK_USERS[7]; // Vikram Joshi
+    }
+
+    // 5. Default fallback to Rahul Sharma
+    return MOCK_USERS.find((u) => u.id === "u1") || MOCK_USERS[1];
+  }, [isMine, currentUser, resource]);
   const categoryMeta = CATEGORIES.find((c) => c.id === resource.category);
 
   const [activePhotoIdx, setActivePhotoIdx] = useState(0);

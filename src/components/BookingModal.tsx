@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   X,
   ShieldCheck,
@@ -60,10 +60,23 @@ export function BookingModal({
     "MIT Campus Central Library Lawn"
   );
 
-  // Flow steps: "details" | "payment_gateway" | "otp_verification" | "processing" | "confirmed"
+  // Flow steps: "details" | "digilocker_consent" | "digilocker_otp" | "payment_gateway" | "otp_verification" | "processing" | "confirmed"
   const [step, setStep] = useState<
-    "details" | "payment_gateway" | "otp_verification" | "processing" | "confirmed"
+    | "details"
+    | "digilocker_consent"
+    | "digilocker_otp"
+    | "payment_gateway"
+    | "otp_verification"
+    | "processing"
+    | "confirmed"
   >("details");
+
+  // DigiLocker In-Modal Verification State
+  const [dlOtpDigits, setDlOtpDigits] = useState<string[]>(["", "", "", "", "", ""]);
+  const dlInputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const [dlTimer, setDlTimer] = useState<number>(45);
+  const [dlError, setDlError] = useState<string>("");
+  const [isVerifyingDl, setIsVerifyingDl] = useState<boolean>(false);
 
   // Payment method: "upi_gpay" | "upi_qr" | "card" | "netbanking"
   const [paymentMethod, setPaymentMethod] = useState<
@@ -96,6 +109,7 @@ export function BookingModal({
     openAuthModal,
     isDigiLockerVerified,
     openDigiLockerModal,
+    verifyDigiLocker,
   } = useRole();
 
   // RESET ALL STATE WHEN MODAL OPENS OR RESOURCE CHANGES
@@ -116,8 +130,65 @@ export function BookingModal({
       setTxnId("");
       setIsVerifyingOtp(false);
       setIsLoadingRazorpay(false);
+      setDlOtpDigits(["", "", "", "", "", ""]);
+      setDlTimer(45);
+      setDlError("");
+      setIsVerifyingDl(false);
     }
   }, [isOpen, resource]);
+
+  // DigiLocker OTP Timer
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (step === "digilocker_otp" && dlTimer > 0) {
+      interval = setInterval(() => {
+        setDlTimer((prev) => prev - 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [step, dlTimer]);
+
+  const handleDlOtpChange = (index: number, value: string) => {
+    if (!/^\d*$/.test(value)) return;
+    const newDigits = [...dlOtpDigits];
+    newDigits[index] = value.slice(-1);
+    setDlOtpDigits(newDigits);
+    setDlError("");
+    if (value && index < 5) {
+      dlInputRefs.current[index + 1]?.focus();
+    }
+  };
+
+  const handleDlKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Backspace" && !dlOtpDigits[index] && index > 0) {
+      dlInputRefs.current[index - 1]?.focus();
+    }
+  };
+
+  const handleAutoFillDlDemoOtp = () => {
+    setDlOtpDigits(["7", "8", "4", "9", "1", "2"]);
+    setDlError("");
+    dlInputRefs.current[5]?.focus();
+  };
+
+  const handleVerifyDigiLocker = () => {
+    const entered = dlOtpDigits.join("");
+    if (entered.length < 6) {
+      setDlError("Please enter the complete 6-digit DigiLocker OTP.");
+      return;
+    }
+    setIsVerifyingDl(true);
+    setDlError("");
+    setTimeout(() => {
+      setIsVerifyingDl(false);
+      verifyDigiLocker({
+        aadhaarMasked: "4129",
+        panMasked: "4312X",
+        studentIdMasked: "2023CSB1109",
+      });
+      setStep("payment_gateway");
+    }, 1200);
+  };
 
   if (!isOpen || !resource) return null;
 
@@ -179,7 +250,11 @@ export function BookingModal({
 
   const handleStartPayment = () => {
     setFormError("");
-    setStep("payment_gateway");
+    if (!isDigiLockerVerified) {
+      setStep("digilocker_consent");
+    } else {
+      setStep("payment_gateway");
+    }
   };
 
   // Helper to complete booking, generate handover OTP, and show confirmed receipt
@@ -452,31 +527,34 @@ export function BookingModal({
 
             {/* DIGILOCKER ANTI-THEFT & DEPOSIT WAIVER GATE */}
             {!isDigiLockerVerified ? (
-              <div className="rounded-none border-2 border-[#2a2a2a] bg-[#141414] p-4 mb-5 space-y-2.5">
+              <div className="rounded-none border-2 border-amber-600/40 bg-amber-950/20 p-4 mb-5 space-y-2.5">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <span className="text-base">🇮🇳</span>
-                    <span className="text-xs font-['Silkscreen'] uppercase tracking-wider text-white">DigiLocker Verification</span>
+                    <span className="text-xs font-['Silkscreen'] uppercase tracking-wider text-amber-300">
+                      DigiLocker KYC Required
+                    </span>
                   </div>
                   <span className="rounded-none bg-[#2a2004] text-amber-300 border border-[#4a3505] text-[10px] font-['Silkscreen'] px-2 py-0.5">
-                    KYC PENDING
+                    VERIFY TO BORROW
                   </span>
                 </div>
 
                 <p className="text-[11px] text-[#bec9c2] font-mono leading-relaxed">
-                  Verify your Aadhaar &amp; PAN with DigiLocker to <strong className="text-[#8bd6b6]">waive ₹{depositWaiver}</strong> of security deposit and prevent rental fraud!
+                  Government ID verification is required to borrow gear on RE:USE. Verifying your identity via DigiLocker <strong className="text-[#8bd6b6]">waives 75% of the security deposit</strong> and guarantees zero-fraud physical handover!
                 </p>
 
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-t border-[#2a2a2a] pt-2.5">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-t border-[#3a2f15] pt-2.5">
                   <div className="text-[11px] text-[#bec9c2] font-mono">
-                    Deposit: <span className="line-through text-[#89938d]">₹{originalDeposit}</span> &rarr; <span className="font-bold text-[#8bd6b6]">₹{deposit}</span> (75% Off)
+                    Deposit: <span className="line-through text-[#89938d]">₹{originalDeposit}</span> &rarr;{" "}
+                    <span className="font-bold text-[#8bd6b6]">₹{Math.round(originalDeposit * 0.25)}</span> (75% Off)
                   </div>
                   <button
                     type="button"
-                    onClick={openDigiLockerModal}
+                    onClick={() => setStep("digilocker_consent")}
                     className="rounded-none bg-[#065f46] border-2 border-[#047857] shadow-[0_2px_0_0_#003828] hover:bg-[#047857] text-white text-[11px] font-['Silkscreen'] uppercase tracking-wider px-3 py-1.5 transition-all flex items-center justify-center gap-1.5 active:translate-y-0.5 cursor-pointer"
                   >
-                    <span>🇮🇳 Verify ID (Save ₹{depositWaiver})</span>
+                    <span>🇮🇳 Verify ID (Save ₹{Math.round(originalDeposit * 0.75)})</span>
                   </button>
                 </div>
               </div>
@@ -520,7 +598,10 @@ export function BookingModal({
                       <span className="text-[#8bd6b6] font-bold">₹{deposit}</span>
                     </>
                   ) : (
-                    `₹${deposit}`
+                    <>
+                      <span>₹{originalDeposit}</span>
+                      <span className="text-amber-400 text-[10px] ml-2">(₹{Math.round(originalDeposit * 0.25)} with DigiLocker)</span>
+                    </>
                   )}
                 </span>
               </div>
@@ -544,13 +625,242 @@ export function BookingModal({
               onClick={handleStartPayment}
               className="w-full flex items-center justify-center gap-2 rounded-none bg-[#065f46] border-2 border-[#047857] shadow-[0_4px_0_0_#003828] hover:bg-[#047857] py-3.5 text-xs font-['Silkscreen'] uppercase tracking-wider text-white active:translate-y-1 active:shadow-none transition-all cursor-pointer"
             >
-              <span>Proceed to Checkout (₹{grandTotal})</span>
+              <span>
+                {isDigiLockerVerified
+                  ? `Proceed to Escrow Checkout (₹${grandTotal})`
+                  : `🇮🇳 Verify DigiLocker to Borrow (Save ₹${Math.round(originalDeposit * 0.75)})`}
+              </span>
               <ArrowRight className="h-4 w-4" />
             </button>
           </div>
         )}
 
-        {/* 2. AUTHENTIC RAZORPAY PAYMENT GATEWAY STEP */}
+        {/* STEP 2: DIGILOCKER CONSENT & DOCUMENT SELECTION */}
+        {step === "digilocker_consent" && (
+          <div className="p-6 animate-in fade-in duration-200">
+            {/* Tricolor National Ribbon */}
+            <div className="h-1.5 w-full flex -mt-6 -mx-6 mb-5" style={{ width: "calc(100% + 3rem)" }}>
+              <div className="h-full w-1/3 bg-[#FF9933]"></div>
+              <div className="h-full w-1/3 bg-[#FFFFFF]"></div>
+              <div className="h-full w-1/3 bg-[#138808]"></div>
+            </div>
+
+            {/* DigiLocker Header */}
+            <div className="bg-[#141414] border-2 border-[#2a2a2a] p-4 text-white mb-5 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 bg-[#003366] border border-[#0055a5] flex items-center justify-center text-white font-['Silkscreen'] text-xs font-black">
+                  🇮🇳
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-['Silkscreen'] text-xs text-white tracking-wider uppercase">
+                      DigiLocker Identity Gateway
+                    </h3>
+                    <span className="bg-[#065f46]/30 text-[#8bd6b6] text-[9px] font-['Silkscreen'] px-1.5 py-0.5 border border-[#8bd6b6]/30">
+                      UIDAI / MEITY
+                    </span>
+                  </div>
+                  <p className="text-[10px] text-[#bec9c2] font-mono mt-0.5">
+                    Ministry of Electronics &amp; IT &bull; Government of India
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Explanation */}
+            <div className="space-y-4">
+              <div>
+                <h4 className="text-sm font-['Silkscreen'] uppercase tracking-wider text-white">
+                  Borrower Identity Verification
+                </h4>
+                <p className="text-xs text-[#bec9c2] font-mono mt-1 leading-relaxed">
+                  To ensure 100% safety &amp; prevent theft for owner <strong className="text-white">{owner?.name || "the equipment lender"}</strong>, please authorize RE:USE to pull verified digital credentials via DigiLocker.
+                </p>
+              </div>
+
+              {/* 3 Document Cards */}
+              <div className="space-y-2">
+                <div className="p-3 bg-[#141414] border border-[#2a2a2a] flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <span className="text-lg">🪪</span>
+                    <div>
+                      <div className="text-xs font-mono font-bold text-white">Aadhaar Identity Card</div>
+                      <div className="text-[10px] text-[#89938d] font-mono">UIDAI Digital Signature &bull; Biometric Address</div>
+                    </div>
+                  </div>
+                  <span className="text-[10px] font-['Silkscreen'] text-[#8bd6b6] bg-[#065f46]/30 px-2 py-0.5 border border-[#065f46]">
+                    REQUIRED
+                  </span>
+                </div>
+
+                <div className="p-3 bg-[#141414] border border-[#2a2a2a] flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <span className="text-lg">💳</span>
+                    <div>
+                      <div className="text-xs font-mono font-bold text-white">Income Tax PAN Verification</div>
+                      <div className="text-[10px] text-[#89938d] font-mono">Financial Custody &bull; NSDL Trust Token</div>
+                    </div>
+                  </div>
+                  <span className="text-[10px] font-['Silkscreen'] text-[#8bd6b6] bg-[#065f46]/30 px-2 py-0.5 border border-[#065f46]">
+                    REQUIRED
+                  </span>
+                </div>
+
+                <div className="p-3 bg-[#141414] border border-[#2a2a2a] flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <span className="text-lg">🎓</span>
+                    <div>
+                      <div className="text-xs font-mono font-bold text-white">Campus Institutional Enrollment</div>
+                      <div className="text-[10px] text-[#89938d] font-mono">Student ID &bull; Campus Neighborhood Match</div>
+                    </div>
+                  </div>
+                  <span className="text-[10px] font-['Silkscreen'] text-cyan-400 bg-cyan-950/40 px-2 py-0.5 border border-cyan-800">
+                    AUTO-LINK
+                  </span>
+                </div>
+              </div>
+
+              {/* Reward Callout */}
+              <div className="rounded-none border-2 border-[#047857] bg-[#065f46]/20 p-3.5 flex items-center gap-3">
+                <div className="h-8 w-8 rounded-none bg-[#065f46] text-[#8bd6b6] border border-[#047857] flex items-center justify-center shrink-0">
+                  <Sparkles className="h-4 w-4" />
+                </div>
+                <div>
+                  <div className="text-xs font-['Silkscreen'] text-[#8bd6b6] uppercase tracking-wider">
+                    75% Security Deposit Waiver Applied
+                  </div>
+                  <div className="text-[10px] text-[#bec9c2] font-mono">
+                    Deposit drops from <span className="line-through">₹{originalDeposit}</span> to <strong className="text-white">₹{Math.round(originalDeposit * 0.25)}</strong> upon DigiLocker authorization!
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex items-center gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setStep("details")}
+                  className="flex-1 py-3 px-4 rounded-none bg-[#141414] border-2 border-[#2a2a2a] text-[#bec9c2] font-['Silkscreen'] text-xs uppercase tracking-wider hover:text-white hover:border-[#8bd6b6] transition-all cursor-pointer"
+                >
+                  &larr; Back
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setStep("digilocker_otp")}
+                  className="flex-[2] py-3.5 px-4 rounded-none bg-[#065f46] border-2 border-[#047857] shadow-[0_4px_0_0_#003828] text-white font-['Silkscreen'] text-xs uppercase tracking-wider hover:bg-[#047857] active:translate-y-1 active:shadow-none transition-all flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <span>Send DigiLocker OTP</span>
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* STEP 3: DIGILOCKER 6-DIGIT OTP VERIFICATION */}
+        {step === "digilocker_otp" && (
+          <div className="p-6 animate-in fade-in duration-200">
+            {/* Tricolor National Ribbon */}
+            <div className="h-1.5 w-full flex -mt-6 -mx-6 mb-5" style={{ width: "calc(100% + 3rem)" }}>
+              <div className="h-full w-1/3 bg-[#FF9933]"></div>
+              <div className="h-full w-1/3 bg-[#FFFFFF]"></div>
+              <div className="h-full w-1/3 bg-[#138808]"></div>
+            </div>
+
+            {/* DigiLocker OTP Header */}
+            <div className="bg-[#141414] border-2 border-[#2a2a2a] p-4 text-white mb-5 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 bg-[#003366] border border-[#0055a5] flex items-center justify-center text-white font-['Silkscreen'] text-xs font-black">
+                  OTP
+                </div>
+                <div>
+                  <h3 className="font-['Silkscreen'] text-xs text-white tracking-wider uppercase">
+                    Aadhaar DigiLocker OTP
+                  </h3>
+                  <p className="text-[10px] text-[#bec9c2] font-mono mt-0.5">
+                    UIDAI Authentication Code sent to ******4129
+                  </p>
+                </div>
+              </div>
+              <div className="text-right">
+                <span className="text-[9px] text-[#89938d] block font-mono">Expires in</span>
+                <span className="text-xs font-mono font-bold text-amber-400">{dlTimer}s</span>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              {/* Auto-Fill Demo OTP Pill */}
+              <div className="flex items-center justify-between p-2.5 bg-[#141414] border border-[#2a2a2a]">
+                <div className="text-[11px] font-mono text-[#bec9c2]">
+                  Simulation Code: <strong className="text-[#8bd6b6]">784912</strong>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleAutoFillDlDemoOtp}
+                  className="px-2.5 py-1 text-[10px] font-['Silkscreen'] uppercase tracking-wider bg-[#065f46]/30 hover:bg-[#065f46] text-[#8bd6b6] hover:text-white border border-[#065f46] transition-all cursor-pointer"
+                >
+                  ⚡ Auto-Fill Code
+                </button>
+              </div>
+
+              {/* 6 Digit Input Boxes */}
+              <div className="flex justify-between gap-2 py-2">
+                {dlOtpDigits.map((digit, idx) => (
+                  <input
+                    key={idx}
+                    ref={(el) => {
+                      dlInputRefs.current[idx] = el;
+                    }}
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={1}
+                    value={digit}
+                    onChange={(e) => handleDlOtpChange(idx, e.target.value)}
+                    onKeyDown={(e) => handleDlKeyDown(idx, e)}
+                    className="w-12 h-14 text-center text-xl font-mono font-bold bg-[#141414] text-white border-2 border-[#2a2a2a] focus:border-[#8bd6b6] focus:outline-none transition-colors"
+                  />
+                ))}
+              </div>
+
+              {dlError && (
+                <div className="text-xs text-rose-400 font-mono bg-rose-950/30 border border-rose-800 p-2 text-center">
+                  {dlError}
+                </div>
+              )}
+
+              {/* Action Buttons */}
+              <div className="flex items-center gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setStep("digilocker_consent")}
+                  className="flex-1 py-3 px-4 rounded-none bg-[#141414] border-2 border-[#2a2a2a] text-[#bec9c2] font-['Silkscreen'] text-xs uppercase tracking-wider hover:text-white hover:border-[#8bd6b6] transition-all cursor-pointer"
+                >
+                  &larr; Back
+                </button>
+                <button
+                  type="button"
+                  disabled={isVerifyingDl}
+                  onClick={handleVerifyDigiLocker}
+                  className="flex-[2] py-3.5 px-4 rounded-none bg-[#065f46] border-2 border-[#047857] shadow-[0_4px_0_0_#003828] text-white font-['Silkscreen'] text-xs uppercase tracking-wider hover:bg-[#047857] active:translate-y-1 active:shadow-none transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
+                >
+                  {isVerifyingDl ? (
+                    <>
+                      <div className="h-4 w-4 border-2 border-white border-t-transparent animate-spin rounded-full"></div>
+                      <span>Verifying Signatures...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Authorize &amp; Link DigiLocker</span>
+                      <ArrowRight className="h-4 w-4" />
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* 4. AUTHENTIC RAZORPAY PAYMENT GATEWAY STEP */}
         {step === "payment_gateway" && (
           <div className="animate-in fade-in duration-200">
             {/* Authentic Razorpay Dark Header */}

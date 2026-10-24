@@ -211,24 +211,31 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
     if (typeof window !== "undefined") {
       try {
         const savedAuth = localStorage.getItem("reuse_is_logged_in");
+        let activeUserId = "u_khaleeq";
         if (savedAuth === "true") {
           setIsLoggedIn(true);
           const savedUser = localStorage.getItem("reuse_user_data");
           if (savedUser) {
             const parsedUser = JSON.parse(savedUser);
             setUser((prev) => ({ ...prev, ...parsedUser }));
+            activeUserId = parsedUser.id || activeUserId;
           }
         } else {
           setIsLoggedIn(false);
         }
 
-        const savedDigi = localStorage.getItem("reuse_digilocker_verified");
+        // DigiLocker verification must be checked per user account (not global leak)
+        const userDigiKey = `reuse_digilocker_verified_${activeUserId}`;
+        const savedDigi = localStorage.getItem(userDigiKey);
         if (savedDigi === "true") {
           setIsDigiLockerVerified(true);
-          const savedData = localStorage.getItem("reuse_digilocker_data");
+          const savedData = localStorage.getItem(`reuse_digilocker_data_${activeUserId}`) || localStorage.getItem("reuse_digilocker_data");
           if (savedData) {
             setDigiLockerData(JSON.parse(savedData));
           }
+        } else {
+          setIsDigiLockerVerified(false);
+          setDigiLockerData(null);
         }
 
         const savedBookings = localStorage.getItem("reuse_bookings");
@@ -269,9 +276,44 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
           return "tech";
         };
 
+        const inferOwnerName = (ownerId?: string, rawName?: string, title?: string): string => {
+          if (rawName && !rawName.toLowerCase().includes("verified") && !rawName.toLowerCase().includes("campus lender") && !rawName.toLowerCase().includes("owner")) {
+            return rawName;
+          }
+          const idMap: Record<string, string> = {
+            u_khaleeq: "Khaleeq Ahmad",
+            u1: "Rahul Sharma",
+            u_owner_rahul: "Rahul Sharma",
+            u2: "Priya Mehta",
+            u3: "Amit Kulkarni",
+            u4: "Sneha Patel",
+            u5: "Rohan Deshmukh",
+            u6: "Ananya Iyer",
+            u7: "Vikram Joshi",
+            u8: "Tanvi Rao",
+            u9: "Aryan Verma",
+            u10: "Neha Gupta",
+            u11: "Devendra Patil",
+            u12: "Meera Kadam",
+            u_owner_active: "Khaleeq Ahmad",
+            u_owner_global: "Rahul Sharma",
+          };
+          if (ownerId && idMap[ownerId]) return idMap[ownerId];
+          const t = (title || "").toLowerCase();
+          if (t.includes("macbook") || t.includes("laptop")) return "Sneha Patel";
+          if (t.includes("calculator") || t.includes("casio")) return "Rahul Sharma";
+          if (t.includes("tent") || t.includes("camp")) return "Rohan Deshmukh";
+          if (t.includes("drill") || t.includes("tool")) return "Devendra Patil";
+          if (t.includes("camera") || t.includes("dslr")) return "Rahul Sharma";
+          if (t.includes("speaker") || t.includes("mic") || t.includes("bose") || t.includes("audio")) return "Ananya Iyer";
+          if (t.includes("projector")) return "Vikram Joshi";
+          return "Rahul Sharma";
+        };
+
         const formattedRes: Resource[] = apiRes.map((r: any) => ({
           id: r.id,
           ownerId: r.ownerId || "u_owner_global",
+          ownerName: inferOwnerName(r.ownerId, r.ownerName, r.title),
           title: r.title,
           category: normalizeCategory(r.category),
           condition: (r.condition || "like_new") as Condition,
@@ -361,6 +403,8 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          ownerId: newRes.ownerId,
+          ownerName: newRes.ownerName || user.name || "Verified Owner",
           title: newRes.title,
           category: newRes.category,
           condition: newRes.condition,
@@ -371,7 +415,6 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
           lat: newRes.location.lat,
           lng: newRes.location.lng,
           photos: newRes.photos,
-          ownerName: user.name || "Verified Owner",
         }),
       });
 
@@ -382,6 +425,7 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
           const formattedRes: Resource[] = apiRes.map((r: any) => ({
             id: r.id,
             ownerId: r.ownerId || "u_owner_global",
+            ownerName: r.ownerName && !r.ownerName.toLowerCase().includes("verified") ? r.ownerName : (user.name || "Rahul Sharma"),
             title: r.title,
             category: (r.category || "tech") as CategoryId,
             condition: (r.condition || "like_new") as Condition,
@@ -551,6 +595,16 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
           ...userData,
           role: newRole || prev.role,
         };
+        const uId = updated.id || "u_user";
+        const isUserDigi = typeof window !== "undefined" && localStorage.getItem(`reuse_digilocker_verified_${uId}`) === "true";
+        setIsDigiLockerVerified(isUserDigi);
+        if (isUserDigi && typeof window !== "undefined") {
+          const s = localStorage.getItem(`reuse_digilocker_data_${uId}`);
+          if (s) setDigiLockerData(JSON.parse(s));
+        } else {
+          setDigiLockerData(null);
+        }
+
         if (typeof window !== "undefined") {
           localStorage.setItem("reuse_is_logged_in", "true");
           localStorage.setItem("reuse_user_data", JSON.stringify(updated));
@@ -566,6 +620,8 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
 
   const logout = () => {
     setIsLoggedIn(false);
+    setIsDigiLockerVerified(false);
+    setDigiLockerData(null);
     if (typeof window !== "undefined") {
       localStorage.removeItem("reuse_is_logged_in");
       localStorage.removeItem("reuse_user_data");
@@ -600,6 +656,9 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
       trustTier: "established",
     }));
     if (typeof window !== "undefined") {
+      const uId = user.id || "u_user";
+      localStorage.setItem(`reuse_digilocker_verified_${uId}`, "true");
+      localStorage.setItem(`reuse_digilocker_data_${uId}`, JSON.stringify(verifiedRecord));
       localStorage.setItem("reuse_digilocker_verified", "true");
       localStorage.setItem("reuse_digilocker_data", JSON.stringify(verifiedRecord));
     }
@@ -614,6 +673,9 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
       trustScore: 4.8,
     }));
     if (typeof window !== "undefined") {
+      const uId = user.id || "u_user";
+      localStorage.removeItem(`reuse_digilocker_verified_${uId}`);
+      localStorage.removeItem(`reuse_digilocker_data_${uId}`);
       localStorage.removeItem("reuse_digilocker_verified");
       localStorage.removeItem("reuse_digilocker_data");
     }

@@ -225,6 +225,7 @@ export function AddResourceModal({
     const newRes: Resource = {
       id: `r_${Date.now()}_${Math.floor(1000 + Math.random() * 9000)}`,
       ownerId: currentUser?.id || "u_owner_active",
+      ownerName: currentUser?.name || "Khaleeq Ahmad",
       title: title.trim() || "New Equipment Asset",
       category,
       condition,

@@ -99,6 +99,58 @@ const FALLBACK_HOURLY: HourlyDemandPoint[] = [
   { hour: "23:00", searches: 26, requests: 11, completed: 9 },
 ];
 
+// Complete 6 core marketplace categories for demand vs supply matrix
+const FALLBACK_DEMAND_SUPPLY: DemandVsSupply[] = [
+  {
+    category: "Cameras & Photography",
+    searches: 81,
+    active_listings: 8,
+    demand_supply_ratio: "10.1x",
+    market_urgency: "high",
+    recommendation: "STRONG DEMAND: High borrower interest",
+  },
+  {
+    category: "Laptops & Computing",
+    searches: 210,
+    active_listings: 5,
+    demand_supply_ratio: "42.0x",
+    market_urgency: "high",
+    recommendation: "CRITICAL DEFICIT: List now to earn max daily rate",
+  },
+  {
+    category: "Power Tools & Hardware",
+    searches: 165,
+    active_listings: 12,
+    demand_supply_ratio: "13.8x",
+    market_urgency: "high",
+    recommendation: "STRONG DEMAND: High borrower interest",
+  },
+  {
+    category: "Camping & Outdoor Gear",
+    searches: 138,
+    active_listings: 6,
+    demand_supply_ratio: "23.0x",
+    market_urgency: "high",
+    recommendation: "CRITICAL DEFICIT: List now to earn max daily rate",
+  },
+  {
+    category: "Audio & Musical Equipment",
+    searches: 98,
+    active_listings: 7,
+    demand_supply_ratio: "14.0x",
+    market_urgency: "medium",
+    recommendation: "STEADY DEMAND: Reliable local circulation",
+  },
+  {
+    category: "Mobility & E-Bikes",
+    searches: 84,
+    active_listings: 4,
+    demand_supply_ratio: "21.0x",
+    market_urgency: "high",
+    recommendation: "CRITICAL DEFICIT: List now to earn max daily rate",
+  },
+];
+
 interface LiveEventItem {
   id: string;
   time: string;
@@ -119,7 +171,7 @@ const INITIAL_LIVE_EVENTS: LiveEventItem[] = [
 export default function DemandPulsePage() {
   const [summary, setSummary] = useState<DemandSummary | null>(FALLBACK_SUMMARY);
   const [trends, setTrends] = useState<CategoryDemandTrend[]>([]);
-  const [demandSupply, setDemandSupply] = useState<DemandVsSupply[]>([]);
+  const [demandSupply, setDemandSupply] = useState<DemandVsSupply[]>(FALLBACK_DEMAND_SUPPLY);
   const [hourlySeries, setHourlySeries] = useState<HourlyDemandPoint[]>(FALLBACK_HOURLY);
   const [hotspots, setHotspots] = useState<HotspotLocality[]>([]);
   const [tigerStatus, setTigerStatus] = useState<TigerStatus | null>(FALLBACK_SUMMARY.tiger_cloud_status);
@@ -147,7 +199,18 @@ export default function DemandPulsePage() {
       ]);
       if (sum) setSummary(sum);
       if (tr && tr.length > 0) setTrends(tr);
-      if (dvs && dvs.length > 0) setDemandSupply(dvs);
+      if (dvs && dvs.length >= 5) {
+        setDemandSupply(dvs);
+      } else if (dvs && dvs.length > 0) {
+        // Merge live category numbers with the standard 6 core categories
+        const liveMap = new Map(dvs.map((item) => [item.category, item]));
+        const merged = FALLBACK_DEMAND_SUPPLY.map((fallbackItem) => {
+          return liveMap.get(fallbackItem.category) || fallbackItem;
+        });
+        setDemandSupply(merged);
+      } else {
+        setDemandSupply(FALLBACK_DEMAND_SUPPLY);
+      }
       if (hs && hs.length > 0) setHourlySeries(hs);
       if (spots && spots.length > 0) setHotspots(spots);
       if (status) setTigerStatus(status);
@@ -227,21 +290,21 @@ export default function DemandPulsePage() {
 
   // Filtered categories
   const filteredCategories = useMemo(() => {
-    if (!demandSupply.length) return [];
+    const list = demandSupply && demandSupply.length > 0 ? demandSupply : FALLBACK_DEMAND_SUPPLY;
     if (selectedCategoryFilter === "critical") {
-      return demandSupply.filter((c) => c.market_urgency === "high");
+      return list.filter((c) => c.market_urgency === "high");
     }
     if (selectedCategoryFilter === "tech") {
-      return demandSupply.filter((c) =>
+      return list.filter((c) =>
         c.category.includes("Camera") || c.category.includes("Laptop") || c.category.includes("Audio")
       );
     }
     if (selectedCategoryFilter === "tools") {
-      return demandSupply.filter((c) =>
+      return list.filter((c) =>
         c.category.includes("Tool") || c.category.includes("Camping") || c.category.includes("Mobility")
       );
     }
-    return demandSupply;
+    return list;
   }, [demandSupply, selectedCategoryFilter]);
 
   return (

@@ -9,6 +9,7 @@ import {
   Bot,
   User,
   MessageSquare,
+  Mic,
 } from "lucide-react";
 
 interface Message {
@@ -47,6 +48,17 @@ export function AIChatDrawer() {
   }, [messages, isOpen]);
 
   if (!mounted) return null;
+
+  const handleOpenVoice = (e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    setIsOpen(false);
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("open-voice-assistant"));
+    }
+  };
 
   const handleSendMessage = async (textToSend?: string) => {
     const query = textToSend || inputMsg;
@@ -158,10 +170,8 @@ export function AIChatDrawer() {
 
   const content = (
     <>
-      {/* FLOATING BOT BUTTON STRICTLY IN RIGHT BOTTOM CORNER */}
-      <button
-        onClick={() => setIsOpen(true)}
-        title="RE:USE Chatbot"
+      {/* FLOATING BOT & VOICE BUTTON STRICTLY IN RIGHT BOTTOM CORNER */}
+      <div
         style={{
           position: "fixed",
           bottom: "24px",
@@ -170,19 +180,44 @@ export function AIChatDrawer() {
           left: "auto",
           zIndex: 999999,
         }}
-        className="flex items-center gap-2 rounded-full bg-emerald-800 hover:bg-emerald-900 px-4 py-2.5 text-white shadow-2xl border-2 border-white/20 active:scale-95 transition-all cursor-pointer"
+        className="flex items-center gap-2"
       >
-        <div className="relative flex items-center justify-center">
-          <Bot className="h-4 w-4 text-emerald-200" />
-          <span className="absolute -top-1 -right-1 flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
+        {/* Quick Voice Mic Floating Trigger (Left side of Chatbot) */}
+        <button
+          onClick={handleOpenVoice}
+          title="Talk with ElevenLabs Voice AI"
+          className="flex items-center gap-2 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white px-3.5 py-2.5 shadow-2xl border-2 border-white/20 active:scale-95 transition-all cursor-pointer group"
+        >
+          <div className="relative flex items-center justify-center">
+            <Mic className="h-4 w-4 text-white group-hover:scale-110 transition-transform" />
+            <span className="absolute -top-1 -right-1 flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-300 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-300" />
+            </span>
+          </div>
+          <span className="text-xs font-bold tracking-wide text-white">
+            Voice AI
           </span>
-        </div>
-        <span className="text-xs font-bold tracking-wide text-white">
-          RE:USE Chatbot
-        </span>
-      </button>
+        </button>
+
+        {/* Regular Chatbot Toggle */}
+        <button
+          onClick={() => setIsOpen(true)}
+          title="RE:USE Chatbot"
+          className="flex items-center gap-2 rounded-full bg-emerald-800 hover:bg-emerald-900 px-4 py-2.5 text-white shadow-2xl border-2 border-white/20 active:scale-95 transition-all cursor-pointer"
+        >
+          <div className="relative flex items-center justify-center">
+            <Bot className="h-4 w-4 text-emerald-200" />
+            <span className="absolute -top-1 -right-1 flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
+            </span>
+          </div>
+          <span className="text-xs font-bold tracking-wide text-white">
+            RE:USE Chatbot
+          </span>
+        </button>
+      </div>
 
       {/* DRAWER MODAL */}
       {isOpen && (
@@ -205,12 +240,25 @@ export function AIChatDrawer() {
                 </div>
               </div>
 
-              <button
-                onClick={() => setIsOpen(false)}
-                className="rounded-none p-2 bg-[#1c1b1b] border border-[#2a2a2a] text-[#bec9c2] hover:text-white hover:border-[#8bd6b6] transition-colors cursor-pointer"
-              >
-                <X className="h-4 w-4" />
-              </button>
+              <div className="flex items-center gap-2">
+                {/* Switch to ElevenLabs Voice Mode Button */}
+                <button
+                  type="button"
+                  onClick={handleOpenVoice}
+                  className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 bg-[#065f46] hover:bg-[#047857] text-[#8bd6b6] hover:text-white border border-[#047857] text-[10px] font-mono font-bold uppercase transition-all cursor-pointer"
+                  title="Switch to ElevenLabs Voice AI Mode"
+                >
+                  <Mic className="h-3.5 w-3.5 animate-pulse" />
+                  <span>Voice Mode</span>
+                </button>
+
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="rounded-none p-2 bg-[#1c1b1b] border border-[#2a2a2a] text-[#bec9c2] hover:text-white hover:border-[#8bd6b6] transition-colors cursor-pointer"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
             </div>
 
             {/* Quick Suggestion Chips */}

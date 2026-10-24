@@ -1,5 +1,5 @@
 import React from "react";
-import { Search, X, Sparkles } from "lucide-react";
+import { Search, X, Sparkles, Mic } from "lucide-react";
 
 interface SearchBarProps {
   value: string;
@@ -34,6 +34,14 @@ export function SearchBar({
     }
   };
 
+  const handleOpenVoice = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("open-voice-assistant"));
+    }
+  };
+
   return (
     <div className="w-full">
       <form onSubmit={handleSubmit} className="relative flex items-center">
@@ -46,7 +54,7 @@ export function SearchBar({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
-          className="w-full rounded-xl border border-[#2a2a2a] bg-[#1c1b1b] py-3.5 pl-11 pr-24 text-sm font-medium text-[#e5e2e1] shadow-[inset_2px_2px_0_#0a0a0a] placeholder:text-[#89938d] focus:border-[#8bd6b6] focus:outline-none transition-all"
+          className="w-full rounded-xl border border-[#2a2a2a] bg-[#1c1b1b] py-3.5 pl-11 pr-32 text-sm font-medium text-[#e5e2e1] shadow-[inset_2px_2px_0_#0a0a0a] placeholder:text-[#89938d] focus:border-[#8bd6b6] focus:outline-none transition-all"
         />
 
         <div className="absolute right-2.5 flex items-center gap-1.5">
@@ -60,6 +68,16 @@ export function SearchBar({
               <X className="h-4 w-4" />
             </button>
           )}
+
+          {/* Voice Search Mic Button */}
+          <button
+            type="button"
+            onClick={handleOpenVoice}
+            className="flex items-center justify-center rounded-lg bg-[#1a231f] hover:bg-[#065f46] p-1.5 text-[#8bd6b6] hover:text-white border border-emerald-500/30 transition-all cursor-pointer group"
+            title="Search with Voice (ElevenLabs AI)"
+          >
+            <Mic className="h-4 w-4 group-hover:scale-110 transition-transform" />
+          </button>
 
           <button
             type="submit"

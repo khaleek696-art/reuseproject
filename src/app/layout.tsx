@@ -5,6 +5,7 @@ import { Footer } from "@/components/Footer";
 import { RoleProvider } from "@/lib/roleContext";
 import { AIChatDrawer } from "@/components/AIChatDrawer";
 import { DigiLockerModal } from "@/components/DigiLockerModal";
+import { VoiceAssistantModal } from "@/components/VoiceAssistantModal";
 
 export const metadata: Metadata = {
   title: "RE:USE — Production Hyperlocal Circular Marketplace",
@@ -25,6 +26,7 @@ export default function RootLayout({
           <main className="flex-1">{children}</main>
           <Footer />
           <AIChatDrawer />
+          <VoiceAssistantModal />
           <DigiLockerModal />
         </RoleProvider>
       </body>
